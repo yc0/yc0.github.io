@@ -55,19 +55,14 @@
   };
 </script>
 
-  <meta name="description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-<meta name="keywords" content="AWS, Storage">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AWS Storage Type">
-<meta property="og:url" content="http://yoursite.com/2019/10/01/AWS-Storage-Type/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="YC Note">
+<meta property="og:url" content="http://yoursite.com/categories/AWS/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-01T05:06:41.737Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWS Storage Type">
-<meta name="twitter:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-  <link rel="canonical" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
+<meta name="twitter:title" content="YC Note">
+  <link rel="canonical" href="http://yoursite.com/categories/AWS/">
 
 
 <script id="page-configurations">
@@ -75,13 +70,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: true,
+    isPost: false,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>AWS Storage Type | YC Note</title>
+  <title>Category: AWS | YC Note</title>
   
 
 
@@ -311,132 +306,91 @@
         <div class="content-wrap">
             
 
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+  
+
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-  <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Nelson">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="YC Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">AWS Storage Type
-
-          
+  <div class="post-block category">
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1 class="collection-header">AWS<small>Category</small>
         </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              
-                
-              
-
-              <time title="Created: 2019-10-01 11:59:16 / Modified: 13:06:41" itemprop="dateCreated datePublished" datetime="2019-10-01T11:59:16+08:00">2019-10-01</time>
-            </span>
-          
-            
-
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AWS/" itemprop="url" rel="index"><span itemprop="name">AWS</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+      </div>
 
       
-        <h2 id="AWS儲存型式"><a href="#AWS儲存型式" class="headerlink" title="AWS儲存型式"></a>AWS儲存型式</h2><p>Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what are the difference and what are they suitable for ? As a solution architect, there’re no absoluate answer for an answer. It depends on what kind of applications you face. Today, I want to mention two types : block-based(BLK) and file-based storage(NFS) , and counterparts in AWS. The materials come from Business Professional Accrediated</p><a id="more"></a>
-<h3 id="AWS-EBS"><a href="#AWS-EBS" class="headerlink" title="AWS EBS"></a>AWS EBS</h3><ul>
-<li>useful fro file-based workloads</li>
-<li>enterprise application</li>
-<li>relational database</li>
-<li>NOSQL database</li>
-<li>application where consistency &amp; <strong>low-latency</strong> performance is required</li>
-</ul>
-<p>In sum, low-latency and log-file- based databases whatever for transaction solutions, such as WSREP, WAL or partitioned files in Kafka, are all suitable for EBS.</p>
-<h3 id="AWS-EFS"><a href="#AWS-EFS" class="headerlink" title="AWS EFS"></a>AWS EFS</h3><p>A managed-services of NFS in AWS.</p>
-<ul>
-<li>file storage server</li>
-<li>create and configure file systems</li>
-<li>capacity is elastic<ul>
-<li>grow and shrink automatically as files are added or removed</li>
-</ul>
-</li>
-</ul>
-<p>In sum, just like traditional file storage server, but you might occur a little bit latency due to propagation for consistency. </p>
 
+  
+  
+
+  
+    
+    <div class="collection-year">
+      <h1 class="collection-header">2019</h1>
     </div>
-
-    
-    
-    
-        
-      
-
-      <footer class="post-footer">
-          
-            
-          
-          <div class="post-tags">
-            
-              <a href="/tags/AWS-Storage/" rel="tag"># AWS, Storage</a>
-            
-          </div>
-        
-
-        
-
-      </footer>
-    
-  </div>
   
-  
-  
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+          <a class="post-title-link" href="/2019/10/01/AWS-Storage-Type/" itemprop="url">
+            <span itemprop="name">AWS Storage Type</span>
+          </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2019-10-01T11:59:16+08:00"
+              content="2019-10-01">
+          10-01
+        </time>
+      </div>
+
+    </header>
   </article>
 
+
+
+    </div>
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
           
-    
-    <div class="comments" id="gitalk-container"></div>
-  
 
         </div>
           
@@ -451,11 +405,6 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
-        
-        
-        
-        
-      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
@@ -468,8 +417,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AWS儲存型式"><span class="nav-number">1.</span> <span class="nav-text">AWS儲存型式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EBS"><span class="nav-number">1.1.</span> <span class="nav-text">AWS EBS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EFS"><span class="nav-number">1.2.</span> <span class="nav-text">AWS EFS</span></a></li></ol></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
@@ -669,24 +616,6 @@ window.addEventListener('pjax:success', () => {
 
   
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
-    var gitalk = new Gitalk({
-      clientID: 'a5fc1ce139416ecb08cd',
-      clientSecret: '7c25b43f328e1e82fc5661a5d51f0f6b14ab1d0d',
-      repo: 'yc0.github.io',
-      owner: 'yc0',
-      admin: ['yc0'],
-      id: '10b25057cb2ea03edb63d3873bf79e62',
-        language: window.navigator.language || window.navigator.userLanguage,
-      
-      distractionFreeMode: 'true'
-    });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
-</script>
 
     </div>
 </body>
