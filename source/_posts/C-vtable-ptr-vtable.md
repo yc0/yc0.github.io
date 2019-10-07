@@ -48,6 +48,7 @@ Base myBase;
 1. 由該 instance的 vtable vptr 找到其 vtable。
 2. 找到 vtable 中，符合該函式的指標。
 3. 執行前一步指標所指向的位置
+
 ![](professional.PNG)
 
 
