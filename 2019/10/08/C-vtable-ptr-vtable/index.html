@@ -65,7 +65,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/professional.PNG">
 <meta property="og:image" content="http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/virtualInheritance.JPG">
-<meta property="og:updated_time" content="2019-10-07T17:31:05.171Z">
+<meta property="og:updated_time" content="2019-10-07T17:33:35.440Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ vtable ptr &amp; vtable">
 <meta name="twitter:description" content="C++ vtable/vtable ptr C++中的virtual本文參考C++中關於 virtual 的兩三事,並且加上自己的經驗而紀錄。">
@@ -351,7 +351,7 @@
                 
               
 
-              <time title="Created: 2019-10-08 00:50:18 / Modified: 01:31:05" itemprop="dateCreated datePublished" datetime="2019-10-08T00:50:18+08:00">2019-10-08</time>
+              <time title="Created: 2019-10-08 00:50:18 / Modified: 01:33:35" itemprop="dateCreated datePublished" datetime="2019-10-08T00:50:18+08:00">2019-10-08</time>
             </span>
           
             
@@ -401,8 +401,9 @@
 <ol>
 <li>由該 instance的 vtable vptr 找到其 vtable。</li>
 <li>找到 vtable 中，符合該函式的指標。</li>
-<li>執行前一步指標所指向的位置<br><img src="/2019/10/08/C-vtable-ptr-vtable/professional.PNG" alt></li>
+<li>執行前一步指標所指向的位置</li>
 </ol>
+<p><img src="/2019/10/08/C-vtable-ptr-vtable/professional.PNG" alt></p>
 <p>在這邊我們有 class Base 含有兩個 virtual 函式 func1(), func2() 與 non-virtual 函式 nonVirtualFunc()，class Derived 繼承 Base，含有 override 的 virtual 函式 func2() 與 non-virtual 函式 nonVirtualFunc()。假設我們有兩個物件：一個 Base 的 object myBase 與另一個 Derived 的 object myDerived。那麼我們可以這樣子想像他們的關係：<br>myBase 物件中包含ptr，該指標指向其 vtable。在這邊因為有兩個 virtual 函式 func1(), func2()，所以 vtable 包含了兩個元素。而這兩個元素分別指向 Base::func1() 的 implementation 與 Base::func2() 的implementation。<br>myDerived 物件同樣地也包含了指向其 vtable ptr，vtable 也有兩個元素因為有兩個 virtual 函式 func1(), func2()，其中因為 Derived 沒有 override 函式 func1()，所以其指標指向的是 Base::func1() 的 implementation。另一方面，關於函式 func2() 的指標則指向 Derived::func2() 的 implementation</p>
 <p>值得一提的是，vtable 中都不包含關於函式 nonVirtualFunc() 的元素，因為<strong>該函式不是 virtual</strong>。</p>
 <h3 id="Public-inheritance-裡-class-中的-virtual-函式"><a href="#Public-inheritance-裡-class-中的-virtual-函式" class="headerlink" title="Public inheritance 裡 class 中的 virtual 函式"></a>Public inheritance 裡 class 中的 virtual 函式</h3><p>接著這邊來討論一下在 inheritance 中，一個 class 裡的函式什麼時候該加 virtual，什麼時候不該加 virtual</p>
