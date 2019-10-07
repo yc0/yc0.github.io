@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="C++ vtable/vtable ptr C++中的virtual本文參考C++中關於 virtual 的兩三事,並且加上自己的經驗而紀錄。">
+<meta name="keywords" content="c++,vtable,virtual">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ vtable ptr &amp; vtable">
+<meta property="og:url" content="http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/index.html">
+<meta property="og:site_name" content="YC Note">
+<meta property="og:description" content="C++ vtable/vtable ptr C++中的virtual本文參考C++中關於 virtual 的兩三事,並且加上自己的經驗而紀錄。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/.com//Professional.PNG">
+<meta property="og:image" content="http://yoursite.com/.com//virtualInheritance.JPG">
+<meta property="og:updated_time" content="2019-10-07T16:58:55.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ vtable ptr &amp; vtable">
+<meta name="twitter:description" content="C++ vtable/vtable ptr C++中的virtual本文參考C++中關於 virtual 的兩三事,並且加上自己的經驗而紀錄。">
+<meta name="twitter:image" content="http://yoursite.com/.com//Professional.PNG">
+  <link rel="canonical" href="http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>C++ vtable ptr & vtable | YC Note</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YC Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives<span class="badge">3</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags<span class="badge">5</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+      
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories<span class="badge">3</span></a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-schedule">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/schedule/" rel="section"><i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>Schedule</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-sitemap">
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>Sitemap</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Nelson">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YC Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">C++ vtable ptr & vtable
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-08 00:50:18 / Modified: 00:58:55" itemprop="dateCreated datePublished" datetime="2019-10-08T00:50:18+08:00">2019-10-08</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/languague/" itemprop="url" rel="index"><span itemprop="name">languague</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/languague/c/" itemprop="url" rel="index"><span itemprop="name">c++</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="C-vtable-vtable-ptr-C-中的virtual"><a href="#C-vtable-vtable-ptr-C-中的virtual" class="headerlink" title="C++ vtable/vtable ptr C++中的virtual"></a>C++ vtable/vtable ptr C++中的virtual</h2><p>本文參考<a href="https://medium.com/theskyisblue/c-%E4%B8%AD%E9%97%9C%E6%96%BC-virtual-%E7%9A%84%E5%85%A9%E4%B8%89%E4%BA%8B-1b4e2a2dc373" target="_blank" rel="noopener">C++中關於 virtual 的兩三事</a>,並且加上自己的經驗而紀錄。</p>
+<a id="more"></a> 
+<h3 id="static-binding-vs-dynamic-binding"><a href="#static-binding-vs-dynamic-binding" class="headerlink" title="static binding vs. dynamic binding"></a>static binding vs. dynamic binding</h3><p>在 virtual 之前得先提到 binding。binding 一般指的是把一個東西對應到另一個東西上，在 C++ 中，binding 指的是函式呼叫與函式定義的連接，這個時機可能發生於 compile-time 或是 run-time，依據情況而定。<br>在 static binding 中，compiler 會在 compile-time 時就把函式定義與函式呼叫連結起來，因為比較早連接起來，所以又叫做 early binding。而在 dynamic binding 的情形中，這樣的連接會一直延遲至 run-time 才會發生，因此也可稱為 late binding。在 C++ 中，dynamic binding 主要可以透過 virtual 來達成。<br>在 static binding 中，由於呼叫函式的所有資訊都已經提前先知道了，所以在程式真正執行起來會比較快一些；反之，dynamic binding 的好處在於在 run-time 才決定，因此可以更彈性地呼叫函式。</p>
+<h3 id="vtable-vtable-ptr"><a href="#vtable-vtable-ptr" class="headerlink" title="vtable/ vtable ptr"></a>vtable/ vtable ptr</h3><p>當我們宣告某個 class 的函式為 virtual 時，代表若有 derived class 的話，該函式可以被 redefined。virtual function 的 implementation 是透過 virtual table, or vtable 與 virtual table pointer, or vtable ptr。<br>只要一個 class 中有一個以上的 virtual 函式，那麼該instance(每一個由該 class 產生的 object)都會包含一個vtable與一個指向這個vtable的指標,vtable ptr。我們可以將 virtual table 想像成陣列，而陣列中的每個元素都是個指向 virtual 函式的 implementation 的指標。 </p>
+<p>如底下的程式碼</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">nonVirtualFunc</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">func2</span><span class="params">()</span> override</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">nonVirtualFunc</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">Derived myDerived;</span><br><span class="line">Base myBase;</span><br></pre></td></tr></table></figure>
+
+<p>當我們呼叫一個 instance 的 virtual 函式時，compiler 其實做了這三件事情</p>
+<ol>
+<li>由該 instance的 vtable vptr 找到其 vtable。</li>
+<li>找到 vtable 中，符合該函式的指標。</li>
+<li>執行前一步指標所指向的位置<br><img src="/.com//Professional.PNG" alt="Professional C++, 4td Edition"></li>
+</ol>
+<p>在這邊我們有 class Base 含有兩個 virtual 函式 func1(), func2() 與 non-virtual 函式 nonVirtualFunc()，class Derived 繼承 Base，含有 override 的 virtual 函式 func2() 與 non-virtual 函式 nonVirtualFunc()。假設我們有兩個物件：一個 Base 的 object myBase 與另一個 Derived 的 object myDerived。那麼我們可以這樣子想像他們的關係：<br>myBase 物件中包含ptr，該指標指向其 vtable。在這邊因為有兩個 virtual 函式 func1(), func2()，所以 vtable 包含了兩個元素。而這兩個元素分別指向 Base::func1() 的 implementation 與 Base::func2() 的implementation。<br>myDerived 物件同樣地也包含了指向其 vtable ptr，vtable 也有兩個元素因為有兩個 virtual 函式 func1(), func2()，其中因為 Derived 沒有 override 函式 func1()，所以其指標指向的是 Base::func1() 的 implementation。另一方面，關於函式 func2() 的指標則指向 Derived::func2() 的 implementation</p>
+<p>值得一提的是，vtable 中都不包含關於函式 nonVirtualFunc() 的元素，因為<strong>該函式不是 virtual</strong>。</p>
+<h3 id="Public-inheritance-裡-class-中的-virtual-函式"><a href="#Public-inheritance-裡-class-中的-virtual-函式" class="headerlink" title="Public inheritance 裡 class 中的 virtual 函式"></a>Public inheritance 裡 class 中的 virtual 函式</h3><p>接著這邊來討論一下在 inheritance 中，一個 class 裡的函式什麼時候該加 virtual，什麼時候不該加 virtual</p>
+<p>首先我們先定義<strong>interface 函式宣告</strong> 和 <strong>函式定義</strong></p>
+<h4 id="interface-函式宣告"><a href="#interface-函式宣告" class="headerlink" title="interface 函式宣告"></a>interface 函式宣告</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="keyword">size_t</span> numDigits(<span class="keyword">int</span> number);</span><br></pre></td></tr></table></figure>
+
+<h4 id="implementation-函式定義"><a href="#implementation-函式定義" class="headerlink" title="implementation 函式定義"></a>implementation 函式定義</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="keyword">size_t</span> numDigits(<span class="keyword">int</span> number)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> digitsSoFar = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>((number/=<span class="number">10</span>)!=<span class="number">0</span>) ++digitsSoFar;</span><br><span class="line">    <span class="keyword">return</span> digitsSoFar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>當我們提到 inheritance 時，我們要先想清楚這個 function 想要繼承的是<strong>函式宣告</strong>還是<strong>函式定義</strong>; inheritance of interface 指的是我們只想要繼承函式的宣告，而 inheritance of implementation 則是繼承函式的定義。什麼時候該下 virtual 取決於我們想要繼承的是什麼：有時候只想要繼承函式宣告、有時候想要繼承函式宣告與定義，但允許 override 其定義、有時候想要繼承兩者但不允許 override 其定義。我們可以透過下面這個例子來說明:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shape</span> &#123;</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">error</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; msg)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">objectID</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    …</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span>:</span> <span class="keyword">public</span> Shape&#123;…&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Ellipse</span>:</span> <span class="keyword">public</span> Shape&#123;…&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在這邊 Shape 是個abstract class(不能被具現化instantiated)，因為它包含至少一個純虛擬函式，此外，考慮到 public inheritance 的意義是 is-a(as opposite to private inheritance is has-a)；在任何從 Shape public inherited 的 derived class 中，所有函式的 interface 都必須被繼承。</p>
+<h4 id="Pure-virtual-純虛擬函式"><a href="#Pure-virtual-純虛擬函式" class="headerlink" title="Pure virtual 純虛擬函式"></a>Pure virtual 純虛擬函式</h4><p>Pure virtual 的特性使得它們必須被 derived class <strong>重新宣告</strong>，且它們在 abstract class 沒有定義。宣告 pure virtual 函式的意義為，derived class 僅僅繼承函式的 interface。</p>
+<p>Shape::draw 告訴所有 derived class「你必須提供 draw 函式，至於你要如何 implement 我並不清楚」。在這個例子中也相當正確，畢竟要分別畫出 Rectangle 與 Ellipse 的演算法應該差異非常大</p>
+<blockquote>
+<p>宣告 pure virtual 函式的意義為，derived class 僅僅繼承函式的 interface</p>
+</blockquote>
+<h4 id="virtual-虛擬函式"><a href="#virtual-虛擬函式" class="headerlink" title="virtual 虛擬函式"></a>virtual 虛擬函式</h4><p>virtual function or simple virtual function 則稍有不同。首先 derived class 仍然繼承函式的 interface，第二是 simple virtual 函式提供了一個 implementation，即<strong>函式定義</strong>。但是 derived class 可以 override。意即</p>
+<blockquote>
+<p>宣告 simple virtual 函式的意義為，derived class 繼承函式的 interface 以及其 default implementation</p>
+</blockquote>
+<p>Shape 透過這個意思告訴所有 derived class「你要提供 error 函式，但如果你不想要寫自己的版本的話，你可以用我的版本」。</p>
+<h4 id="non-virtual-函式"><a href="#non-virtual-函式" class="headerlink" title="non-virtual 函式"></a>non-virtual 函式</h4><p>在 non-virtual 函式中，derived class 最好保留著函式原本的行為，不應該自己重新定義函式。同樣地，加上 derived class 繼承函式的 interface 後，我們可以這樣理解</p>
+<blockquote>
+<p>宣告 non-virtual 函式的意義為，繼承函式的 interface 以及不更改函式原本的 implementation。</p>
+</blockquote>
+<h4 id="pure-virtual-virtual-non-virtual-小結"><a href="#pure-virtual-virtual-non-virtual-小結" class="headerlink" title="pure virtual/ virtual / non-virtual 小結"></a>pure virtual/ virtual / non-virtual 小結</h4><p>綜合上述三者，當一個 class 預計被當成 base class 時，通常都會有為數不少的 virtual 函式。但倘若真的存在某些函式<code>不應該被重新定義時，請不要幫他們任意加上 virtual</code></p>
+<h3 id="derived-chain-inheritance-chain"><a href="#derived-chain-inheritance-chain" class="headerlink" title="derived chain / inheritance chain"></a>derived chain / inheritance chain</h3><p>在繼承階層中，第一個建立的建構子是base class，這裡要說明一下，virtual是有穿透性(沒有人這樣形容，但其行為很像，有人再修正我一下, 參考自 <a href="https://isocpp.org/wiki/faq/virtual-functions#virtual-dtors" target="_blank" rel="noopener">When should my destructor be virtual</a>)，Classes按一定的順序執行(Depth-first-left-to-right)，逐步更換vtable 中的implementation。 </p>
+<blockquote>
+<p>The very first constructors to be executed are the virtual base classes anywhere in the hierarchy. They are executed in the order they appear in a <strong>depth-first left-to-right traversal</strong> (從base class到derived classes) of the graph of base classes, where left to right refer to the order of appearance of base class names.</p>
+</blockquote>
+<blockquote>
+<p>After all virtual base class constructors are finished, the construction order is generally from base class to derived class. The details are easiest to understand if you imagine that the very first thing the compiler does in the derived class’s ctor is to make a hidden call to the ctors of its non-virtual base classes (hint: that’s the way many compilers actually do it). So if class D inherits multiply from B1 and B2, the constructor for B1 executes first, then the constructor for B2, then the constructor for D. This rule is applied recursively; for example, if B1 inherits from B1a and B1b, and B2 inherits from B2a and B2b, then the final order is B1a, B1b, B1, B2a, B2b, B2, D.</p>
+</blockquote>
+<h4 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h4><ul>
+<li>virtual是有穿透性:再你的繼承物件中，如果您的基類具有虛擬方法，則您自己的方法是自動虛擬的。由於其他原因，您可能需要明確定義(explicit)方法，但不需要重新聲明virtual，確保它是虛擬的。不管你用虛擬聲明它，沒有虛擬聲明它，或者根本不聲明它，它仍然是虛擬的。</li>
+<li>Classes按一定的順序執行(Depth-first-left-to-right)，逐步更換vtable 中的implementation</li>
+</ul>
+<h3 id="virtual-inheritance"><a href="#virtual-inheritance" class="headerlink" title="virtual inheritance."></a>virtual inheritance.</h3><p>多重繼承時，會有一種模擬兩可的情況，就是當兩個類別都繼承同一個基底類別，而這兩個類別又同時被另一個類別，以平行多重繼承的方式同時繼承<br><img src="/.com//virtualInheritance.JPG" alt="示意圖"></p>
+<p>C類別將會擁有兩個A類別的複本，一個來自B1所繼承下來的，一個來自B2所繼承下來的，Compiler將會Confuse C類別的A是來自B1 或B2</p>
+<p><strong>virtual inheritance</strong>可解決這個問題。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="comment">// implementation</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B1</span> :</span> **<span class="keyword">virtual</span> <span class="keyword">public</span> A** &#123;  </span><br><span class="line">    <span class="comment">// implementation</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B2</span> :</span> **<span class="keyword">virtual</span> <span class="keyword">public</span> A** &#123;  </span><br><span class="line">    <span class="comment">// implementation</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> :</span> <span class="keyword">public</span> B1, <span class="keyword">public</span> B2 &#123;</span><br><span class="line">    <span class="comment">// implementation</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>B1與B2以虛擬繼承的方式繼承了A類別，這個<code>好處是當有類別多重繼承了某個基底類別時，在該類別中將會只有一個基底類別存在</code>，而不會有多個複 本</p>
+<h3 id="virtual-destructor"><a href="#virtual-destructor" class="headerlink" title="virtual destructor"></a>virtual destructor</h3><p>為避免不可預期的錯誤，在security code中，要求base class的destrutor必須virtual。不多說，直接看例子，秒懂。 </p>
+<blockquote>
+<p>Deleting a derived class object using a pointer to a base class that has a non-virtual destructor results in undefined behavior. To correct this situation, the base class should be defined with a virtual destructor. For example, following program results in undefined behavior.</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span> &#123;</span> </span><br><span class="line">  <span class="keyword">public</span>: </span><br><span class="line">    base()      </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Constructing base \n"</span>; &#125; </span><br><span class="line">    ~base() </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Destructing base \n"</span>; &#125;      </span><br><span class="line">&#125;; </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">derived</span>:</span> <span class="keyword">public</span> base &#123; </span><br><span class="line">  <span class="keyword">public</span>: </span><br><span class="line">    derived()      </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Constructing derived \n"</span>; &#125; </span><br><span class="line">    ~derived() </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Destructing derived \n"</span>; &#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>output</strong></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Constructing <span class="keyword">base</span></span><br><span class="line">Constructing derived</span><br><span class="line">Destructing <span class="keyword">base</span></span><br></pre></td></tr></table></figure>
+
+<p>derived的 destructor並未執行，因為這不是override而是hidden。正確的寫法應是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span> &#123;</span> </span><br><span class="line">  <span class="keyword">public</span>: </span><br><span class="line">    base()      </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Constructing base \n"</span>; &#125; </span><br><span class="line">    <span class="keyword">virtual</span> ~base() </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Destructing base \n"</span>; &#125;      </span><br><span class="line">&#125;; </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">derived</span>:</span> <span class="keyword">public</span> base &#123; </span><br><span class="line">  <span class="keyword">public</span>: </span><br><span class="line">    derived()      </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Constructing derived \n"</span>; &#125; </span><br><span class="line">    ~derived() </span><br><span class="line">    &#123; <span class="built_in">cout</span>&lt;&lt;<span class="string">"Destructing derived \n"</span>; &#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>output</strong></p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Constructing <span class="keyword">base</span></span><br><span class="line">Constructing derived</span><br><span class="line">Destructing derived</span><br><span class="line">Destructing <span class="keyword">base</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h4><p>總結<br>virtual 的好處是避免冗余的程式碼，但需要多佔一些空間以及增加run-time，當然還有一些 virtual 的其他小細節</p>
+<ul>
+<li>polymorphic bases class destructor </li>
+<li>盡量要 virtual盡量避免讓 virtual 遇上 inline</li>
+<li>multiple inheritance 中 使用 virtual base class</li>
+<li>override virtual 函式加上 override確保你正在override一個interface而不是<strong><em>create</em></strong>一個函式。</li>
+</ul>
+<p>這裡補完<a href="https://medium.com/theskyisblue/c-%E4%B8%AD%E9%97%9C%E6%96%BC-virtual-%E7%9A%84%E5%85%A9%E4%B8%89%E4%BA%8B-1b4e2a2dc373" target="_blank" rel="noopener">C++中關於 virtual 的兩三事</a>提點的資料。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/c/" rel="tag"># c++</a>
+            
+              <a href="/tags/vtable/" rel="tag"># vtable</a>
+            
+              <a href="/tags/virtual/" rel="tag"># virtual</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/05/C-Print-Pretty/" rel="next" title="C++ Print Pretty">
+                  <i class="fa fa-chevron-left"></i> C++ Print Pretty
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-vtable-vtable-ptr-C-中的virtual"><span class="nav-number">1.</span> <span class="nav-text">C++ vtable/vtable ptr C++中的virtual</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#static-binding-vs-dynamic-binding"><span class="nav-number">1.1.</span> <span class="nav-text">static binding vs. dynamic binding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vtable-vtable-ptr"><span class="nav-number">1.2.</span> <span class="nav-text">vtable/ vtable ptr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Public-inheritance-裡-class-中的-virtual-函式"><span class="nav-number">1.3.</span> <span class="nav-text">Public inheritance 裡 class 中的 virtual 函式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#interface-函式宣告"><span class="nav-number">1.3.1.</span> <span class="nav-text">interface 函式宣告</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#implementation-函式定義"><span class="nav-number">1.3.2.</span> <span class="nav-text">implementation 函式定義</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pure-virtual-純虛擬函式"><span class="nav-number">1.3.3.</span> <span class="nav-text">Pure virtual 純虛擬函式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#virtual-虛擬函式"><span class="nav-number">1.3.4.</span> <span class="nav-text">virtual 虛擬函式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#non-virtual-函式"><span class="nav-number">1.3.5.</span> <span class="nav-text">non-virtual 函式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pure-virtual-virtual-non-virtual-小結"><span class="nav-number">1.3.6.</span> <span class="nav-text">pure virtual/ virtual / non-virtual 小結</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#derived-chain-inheritance-chain"><span class="nav-number">1.4.</span> <span class="nav-text">derived chain / inheritance chain</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小結"><span class="nav-number">1.4.1.</span> <span class="nav-text">小結</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#virtual-inheritance"><span class="nav-number">1.5.</span> <span class="nav-text">virtual inheritance.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#virtual-destructor"><span class="nav-number">1.6.</span> <span class="nav-text">virtual destructor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#結論"><span class="nav-number">1.6.1.</span> <span class="nav-text">結論</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Nelson</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/yc0" title="GitHub &rarr; https://github.com/yc0" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:nelson.lin.tw@gmail.com" title="E-Mail &rarr; mailto:nelson.lin.tw@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Nelson</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var id = element.id || '';
+    var src = element.src || '';
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (id !=='') {
+      script.id = element.id;
+    }
+    if (src !== '') {
+      script.src = src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'a5fc1ce139416ecb08cd',
+      clientSecret: '7c25b43f328e1e82fc5661a5d51f0f6b14ab1d0d',
+      repo: 'yc0.github.io',
+      owner: 'yc0',
+      admin: ['yc0'],
+      id: 'f5e192fe5cde6e1fc2cb28bdaa282e88',
+        language: window.navigator.language || window.navigator.userLanguage,
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+</html>
