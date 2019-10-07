@@ -49,7 +49,7 @@ Base myBase;
 2. 找到 vtable 中，符合該函式的指標。
 3. 執行前一步指標所指向的位置
 
-![](professional.PNG)
+![](professional.JPG)
 
 
 在這邊我們有 class Base 含有兩個 virtual 函式 func1(), func2() 與 non-virtual 函式 nonVirtualFunc()，class Derived 繼承 Base，含有 override 的 virtual 函式 func2() 與 non-virtual 函式 nonVirtualFunc()。假設我們有兩個物件：一個 Base 的 object myBase 與另一個 Derived 的 object myDerived。那麼我們可以這樣子想像他們的關係：
