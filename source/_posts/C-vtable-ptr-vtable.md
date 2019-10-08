@@ -209,7 +209,7 @@ Destructing base
 ```
 
 #### 結論
-總結
+
 virtual 的好處是避免冗余的程式碼，但需要多佔一些空間以及增加run-time，當然還有一些 virtual 的其他小細節
 - polymorphic bases class destructor 
 - 盡量要 virtual盡量避免讓 virtual 遇上 inline
