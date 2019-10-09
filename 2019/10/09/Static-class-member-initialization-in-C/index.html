@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-<meta name="keywords" content="AWS,Storage">
+  <meta name="description" content="class static member initialization in C++How we initialize the class static member and make a simliar concept of Java static scope is shown in below 如何初始化Static class member和達成類似Java Static Scope的功能，將">
+<meta name="keywords" content="c++,static,initialization,lambda">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWS Storage Type">
-<meta property="og:url" content="http://yoursite.com/2019/10/01/AWS-Storage-Type/index.html">
+<meta property="og:title" content="class static member initialization in C++">
+<meta property="og:url" content="http://yoursite.com/2019/10/09/Static-class-member-initialization-in-C/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
+<meta property="og:description" content="class static member initialization in C++How we initialize the class static member and make a simliar concept of Java static scope is shown in below 如何初始化Static class member和達成類似Java Static Scope的功能，將">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-03T05:12:34.378Z">
+<meta property="og:updated_time" content="2019-10-09T03:42:47.357Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWS Storage Type">
-<meta name="twitter:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-  <link rel="canonical" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
+<meta name="twitter:title" content="class static member initialization in C++">
+<meta name="twitter:description" content="class static member initialization in C++How we initialize the class static member and make a simliar concept of Java static scope is shown in below 如何初始化Static class member和達成類似Java Static Scope的功能，將">
+  <link rel="canonical" href="http://yoursite.com/2019/10/09/Static-class-member-initialization-in-C/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>AWS Storage Type | YC Note</title>
+  <title>class static member initialization in C++ | YC Note</title>
   
 
 
@@ -320,7 +320,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/09/Static-class-member-initialization-in-C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nelson">
@@ -332,7 +332,7 @@
       <meta itemprop="name" content="YC Note">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">AWS Storage Type
+        <h1 class="post-title" itemprop="name headline">class static member initialization in C++
 
           
         </h1>
@@ -348,19 +348,11 @@
                 
               
 
-              <time title="Created: 2019-10-01 11:59:16" itemprop="dateCreated datePublished" datetime="2019-10-01T11:59:16+08:00">2019-10-01</time>
+              <time title="Created: 2019-10-09 11:39:46 / Modified: 11:42:47" itemprop="dateCreated datePublished" datetime="2019-10-09T11:39:46+08:00">2019-10-09</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-03 13:12:34" itemprop="dateModified" datetime="2019-10-03T13:12:34+08:00">2019-10-03</time>
-              </span>
             
           
             <span class="post-meta-item">
@@ -369,7 +361,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AWS/" itemprop="url" rel="index"><span itemprop="name">AWS</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/language/" itemprop="url" rel="index"><span itemprop="name">language</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/language/c/" itemprop="url" rel="index"><span itemprop="name">c++</span></a></span>
 
                 
                 
@@ -388,25 +387,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="AWS儲存型式"><a href="#AWS儲存型式" class="headerlink" title="AWS儲存型式"></a>AWS儲存型式</h2><p>Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what are the difference and what are they suitable for ? As a solution architect, there’re no absoluate answer for an answer. It depends on what kind of applications you face. Today, I want to mention two types : block-based(BLK) and file-based storage(NFS) , and counterparts in AWS. The materials come from Business Professional Accrediated</p><a id="more"></a>
-<h3 id="AWS-EBS"><a href="#AWS-EBS" class="headerlink" title="AWS EBS"></a>AWS EBS</h3><ul>
-<li>useful fro file-based workloads</li>
-<li>enterprise application</li>
-<li>relational database</li>
-<li>NOSQL database</li>
-<li>application where consistency &amp; <strong>low-latency</strong> performance is required</li>
-</ul>
-<p>In sum, low-latency and log-file- based databases whatever for transaction solutions, such as WSREP, WAL or partitioned files in Kafka, are all suitable for EBS.</p>
-<h3 id="AWS-EFS"><a href="#AWS-EFS" class="headerlink" title="AWS EFS"></a>AWS EFS</h3><p>A managed-services of NFS in AWS.</p>
-<ul>
-<li>file storage server</li>
-<li>create and configure file systems</li>
-<li>capacity is elastic<ul>
-<li>grow and shrink automatically as files are added or removed</li>
-</ul>
-</li>
-</ul>
-<p>In sum, just like traditional file storage server with elasticity, but you might occur a little bit latency due to propagation for consistency. </p>
+        <h2 id="class-static-member-initialization-in-C"><a href="#class-static-member-initialization-in-C" class="headerlink" title="class static member initialization in C++"></a>class static member initialization in C++</h2><p>How we initialize the class static member and make a simliar concept of Java static scope is shown in below <code>如何初始化Static class member和達成類似Java Static Scope的功能，將是本文紀錄的項目</code>。</p><a id="more"></a>
+<h4 id="Class-Static-Member"><a href="#Class-Static-Member" class="headerlink" title="Class Static Member"></a>Class Static Member</h4><p>At first, class static member must be initialized, for example.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CFoo() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">GetData</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> s_data; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> s_data;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    CFoo foo;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; foo.GetData() &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>it will incur following errors:</p>
+<p><code>error LNK2001: unresolved external symbol “private: static int CFoo::s_data” (?s_data@CFoo@@0HA)</code></p>
+<p>Besides, you CANNOT DO THIS in your class for initialization static member with <em>non-const</em></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CFoo() : m_b(<span class="number">15</span>) &#123;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> m_a = <span class="number">15</span>;   <span class="comment">// not allow</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> m_b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Complier would tell you:</p>
+<p><code>error C2864: ‘CFoo::m_a’ : a static data member with an in-class initializer must have non-volatile const integral type
+error C2438: ‘m_b’ : cannot initialize static class data via constructor</code></p>
+<p>When mentioning non-const, I also imply that initializing static const variables initialized in class is allowed.</p>
+<p>In other word, if const static member is integral type in a class, it can be initialized in place.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> m_a = <span class="number">15</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Perfectly, for now, we can initial our static members if they are integral and const,non-volatile.<br>But,what if they are not integral type, how can we initialize them ?</p>
+<h4 id="Non-const-and-Non-integral-Type-Static-Member-Inialization"><a href="#Non-const-and-Non-integral-Type-Static-Member-Inialization" class="headerlink" title="Non-const and Non-integral Type Static Member Inialization"></a>Non-const and Non-integral Type Static Member Inialization</h4><p>If the member is non-itegral and non-const, it is not allowed either.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">string</span> m_str = <span class="string">"Bar"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Compiler would warn you:</p>
+<p><code>error C2864: ‘CFoo::m_str’ : a static data member with an in-class initializer must have non-volatile const integral type</code></p>
+<p>As a result, you have to declare static members in a class, and define them outside the class for non-const and non-integral type, for instance :</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CFoo</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> m_data;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">string</span> m_str;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> CFoo::m_data = <span class="number">15</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="built_in">string</span> CFoo::m_str = <span class="string">"Bar"</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Initialize-Static-Member-Using-Lambda"><a href="#Initialize-Static-Member-Using-Lambda" class="headerlink" title="Initialize Static Member Using Lambda"></a>Initialize Static Member Using Lambda</h4><p>C++11 also give us great tool-lambda. We can do this like following to fullfill the static block concept like JAVA</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ve;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; A::ve = []() -&gt; <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ref(<span class="number">30</span>);</span><br><span class="line">    <span class="keyword">return</span> ref;</span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -422,9 +430,13 @@
           
           <div class="post-tags">
             
-              <a href="/tags/AWS/" rel="tag"># AWS</a>
+              <a href="/tags/c/" rel="tag"># c++</a>
             
-              <a href="/tags/Storage/" rel="tag"># Storage</a>
+              <a href="/tags/static/" rel="tag"># static</a>
+            
+              <a href="/tags/initialization/" rel="tag"># initialization</a>
+            
+              <a href="/tags/lambda/" rel="tag"># lambda</a>
             
           </div>
         
@@ -434,15 +446,15 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
+                <a href="/2019/10/08/C-vtable-ptr-vtable/" rel="next" title="C++ vtable ptr & vtable">
+                  <i class="fa fa-chevron-left"></i> C++ vtable ptr & vtable
+                </a>
+              
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/10/05/C-Print-Pretty/" rel="prev" title="C++ Print Pretty">
-                  C++ Print Pretty <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -494,7 +506,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AWS儲存型式"><span class="nav-number">1.</span> <span class="nav-text">AWS儲存型式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EBS"><span class="nav-number">1.1.</span> <span class="nav-text">AWS EBS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EFS"><span class="nav-number">1.2.</span> <span class="nav-text">AWS EFS</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-static-member-initialization-in-C"><span class="nav-number">1.</span> <span class="nav-text">class static member initialization in C++</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Class-Static-Member"><span class="nav-number">1.0.1.</span> <span class="nav-text">Class Static Member</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Non-const-and-Non-integral-Type-Static-Member-Inialization"><span class="nav-number">1.0.2.</span> <span class="nav-text">Non-const and Non-integral Type Static Member Inialization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Initialize-Static-Member-Using-Lambda"><span class="nav-number">1.0.3.</span> <span class="nav-text">Initialize Static Member Using Lambda</span></a></li></ol></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -713,7 +725,7 @@ window.addEventListener('pjax:success', () => {
       repo: 'yc0.github.io',
       owner: 'yc0',
       admin: ['yc0'],
-      id: '10b25057cb2ea03edb63d3873bf79e62',
+      id: '126e6a94b3f9ad9bdbb7ad7a6e419e9b',
         language: window.navigator.language || window.navigator.userLanguage,
       
       distractionFreeMode: 'true'
