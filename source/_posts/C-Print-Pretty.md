@@ -26,7 +26,7 @@ _______+2006.01
 How can we do that ? Yes, use **manipulators**
 
 ### Source Code
-```
+```c++
 double A = 100.345; // 16 bytes for long long
 double B = 2006.008;
 double C = 2331.41592653498;
