@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="YC Note">
 <meta property="og:description" content="C++ Print PrettySo for anyone unfamiliar, C++ has a variety of things called manipulators that will change the format of the output printed with “cout”. These things are not printed themselves, they j">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-05T00:57:42.478Z">
+<meta property="og:updated_time" content="2019-10-17T07:14:59.316Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ Print Pretty">
 <meta name="twitter:description" content="C++ Print PrettySo for anyone unfamiliar, C++ has a variety of things called manipulators that will change the format of the output printed with “cout”. These things are not printed themselves, they j">
@@ -186,7 +186,7 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives<span class="badge">5</span></a>
 
   </li>
       
@@ -351,6 +351,18 @@
               <time title="Created: 2019-10-05 08:57:42" itemprop="dateCreated datePublished" datetime="2019-10-05T08:57:42+08:00">2019-10-05</time>
             </span>
           
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-17 15:14:59" itemprop="dateModified" datetime="2019-10-17T15:14:59+08:00">2019-10-17</time>
+              </span>
+            
+          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -392,7 +404,7 @@
 <figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x64</span>             </span><br><span class="line">_______+<span class="number">2006.01</span>  </span><br><span class="line"><span class="number">2.331415927E+03</span></span><br></pre></td></tr></table></figure>
 
 <p>How can we do that ? Yes, use <strong>manipulators</strong></p>
-<h3 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> A = <span class="number">100.345</span>; <span class="comment">// 16 bytes for long long</span></span><br><span class="line"><span class="keyword">double</span> B = <span class="number">2006.008</span>;</span><br><span class="line"><span class="keyword">double</span> C = <span class="number">2331.41592653498</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 1 </span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; hex &lt;&lt; left &lt;&lt; showbase &lt;&lt; nouppercase; <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">long</span> <span class="keyword">long</span>) A &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 2</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; dec &lt;&lt; right &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; setfill(<span class="string">'_'</span>) &lt;&lt; showpos &lt;&lt; fixed &lt;&lt; setprecision(<span class="number">2</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; B &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 3</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; scientific &lt;&lt; uppercase &lt;&lt; noshowpos &lt;&lt; setprecision(<span class="number">9</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; C &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br></pre></td></tr></table></figure>
+<h3 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> A = <span class="number">100.345</span>; <span class="comment">// 16 bytes for long long</span></span><br><span class="line"><span class="keyword">double</span> B = <span class="number">2006.008</span>;</span><br><span class="line"><span class="keyword">double</span> C = <span class="number">2331.41592653498</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 1 </span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; hex &lt;&lt; left &lt;&lt; showbase &lt;&lt; nouppercase; <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">long</span> <span class="keyword">long</span>) A &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 2</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; dec &lt;&lt; right &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; setfill(<span class="string">'_'</span>) &lt;&lt; showpos &lt;&lt; fixed &lt;&lt; setprecision(<span class="number">2</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; B &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 3</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; scientific &lt;&lt; uppercase &lt;&lt; noshowpos &lt;&lt; setprecision(<span class="number">9</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; C &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br></pre></td></tr></table></figure>
 
 <p>The explanation shows as follows</p>
 <h3 id="Print-Line-1"><a href="#Print-Line-1" class="headerlink" title="Print Line 1"></a>Print Line 1</h3><ul>
@@ -520,7 +532,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

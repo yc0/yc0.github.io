@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-<meta name="keywords" content="AWS,Storage">
+  <meta name="description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
+<meta name="keywords" content="c++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWS Storage Type">
-<meta property="og:url" content="http://yoursite.com/2019/10/01/AWS-Storage-Type/index.html">
+<meta property="og:title" content="Custom Class with Range-based Loop in C++">
+<meta property="og:url" content="http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
+<meta property="og:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-03T05:12:34.378Z">
+<meta property="og:updated_time" content="2019-10-17T07:18:54.199Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWS Storage Type">
-<meta name="twitter:description" content="AWS儲存型式Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what ar">
-  <link rel="canonical" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
+<meta name="twitter:title" content="Custom Class with Range-based Loop in C++">
+<meta name="twitter:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
+  <link rel="canonical" href="http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>AWS Storage Type | YC Note</title>
+  <title>Custom Class with Range-based Loop in C++ | YC Note</title>
   
 
 
@@ -320,7 +320,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/01/AWS-Storage-Type/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nelson">
@@ -332,7 +332,7 @@
       <meta itemprop="name" content="YC Note">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">AWS Storage Type
+        <h1 class="post-title" itemprop="name headline">Custom Class with Range-based Loop in C++
 
           
         </h1>
@@ -348,19 +348,11 @@
                 
               
 
-              <time title="Created: 2019-10-01 11:59:16" itemprop="dateCreated datePublished" datetime="2019-10-01T11:59:16+08:00">2019-10-01</time>
+              <time title="Created: 2019-10-17 15:06:13 / Modified: 15:18:54" itemprop="dateCreated datePublished" datetime="2019-10-17T15:06:13+08:00">2019-10-17</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-03 13:12:34" itemprop="dateModified" datetime="2019-10-03T13:12:34+08:00">2019-10-03</time>
-              </span>
             
           
             <span class="post-meta-item">
@@ -369,7 +361,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AWS/" itemprop="url" rel="index"><span itemprop="name">AWS</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/language/" itemprop="url" rel="index"><span itemprop="name">language</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/language/c/" itemprop="url" rel="index"><span itemprop="name">c++</span></a></span>
 
                 
                 
@@ -388,26 +387,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="AWS儲存型式"><a href="#AWS儲存型式" class="headerlink" title="AWS儲存型式"></a>AWS儲存型式</h2><p>Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There’re plenty of types shown on official website. Many peopel including my folks don’t realize what are the difference and what are they suitable for ? As a solution architect, there’re no absoluate answer for an answer. It depends on what kind of applications you face. Today, I want to mention two types : block-based(BLK) and file-based storage(NFS) , and counterparts in AWS. The materials come from Business Professional Accrediated</p><a id="more"></a>
-<h3 id="AWS-EBS"><a href="#AWS-EBS" class="headerlink" title="AWS EBS"></a>AWS EBS</h3><ul>
-<li>useful fro file-based workloads</li>
-<li>enterprise application</li>
-<li>relational database</li>
-<li>NOSQL database</li>
-<li>application where consistency &amp; <strong>low-latency</strong> performance is required</li>
-</ul>
-<p>In sum, low-latency and log-file- based databases whatever for transaction solutions, such as WSREP, WAL or partitioned files in Kafka, are all suitable for EBS.</p>
-<h3 id="AWS-EFS"><a href="#AWS-EFS" class="headerlink" title="AWS EFS"></a>AWS EFS</h3><p>A managed-services of NFS in AWS.</p>
-<ul>
-<li>file storage server</li>
-<li>create and configure file systems</li>
-<li>capacity is elastic<ul>
-<li>grow and shrink automatically as files are added or removed</li>
-</ul>
-</li>
-</ul>
-<p>In sum, just like traditional file storage server with elasticity, but you might occur a little bit latency due to propagation for consistency. </p>
+        <h2 id="Custom-Class-with-Range-based-Loop-in-C"><a href="#Custom-Class-with-Range-based-Loop-in-C" class="headerlink" title="Custom Class with Range-based Loop in C++"></a>Custom Class with Range-based Loop in C++</h2><p>Sometimes, you have to invent your own class/structure with iteration demands<br>In modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based loop.</p><a id="more"></a>
+<p><code>for(auto it=begin(arr); it!=end(arr); ++it) {}</code> is tradional method to iterate the container. range-based loop looks like <code>for(auto&amp; item : arr)</code>. See! It’s more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct</p>
+<h2 id="How-does-Range-base-loop-work"><a href="#How-does-Range-base-loop-work" class="headerlink" title="How does Range-base loop work"></a>How does Range-base loop work</h2><p>In the end, the objects returned do not have to actually be iterators. The for(:) loop, unlike most parts of the C++ standard, is <a href="http://en.cppreference.com/w/cpp/language/range-for" target="_blank" rel="noopener">specified to expand to something equivalent to</a>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>( range_declaration : range_expression )</span><br></pre></td></tr></table></figure>
 
+<p>becomes:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="keyword">auto</span> &amp;&amp; __range = range_expression ;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> __begin = begin_expr,</span><br><span class="line">            __end = end_expr;</span><br><span class="line">            __begin != __end; ++__begin) &#123;</span><br><span class="line">    range_declaration = *__begin;</span><br><span class="line">    loop_statement</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="how-can-must-we-do"><a href="#how-can-must-we-do" class="headerlink" title="how can/must we do"></a>how can/must we do</h3><p>According to previous section, we realize that we have to implement following functions</p>
+<ol>
+<li>inner class iterator</li>
+<li>operator!= for inner class iterator </li>
+<li>operator++ for inner class iterator</li>
+<li>dereference for inner class iterator</li>
+<li>begin()/end()</li>
+</ol>
+<p>Here is an example</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DataType&gt;</span><br><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">PodArray</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">   <span class="class"><span class="keyword">class</span> <span class="title">iterator</span> &#123;</span></span><br><span class="line">   <span class="keyword">public</span>:</span><br><span class="line">     iterator(DataType * ptr): ptr(ptr)&#123;&#125;</span><br><span class="line">     iterator <span class="keyword">operator</span>++() &#123; ++ptr; <span class="keyword">return</span> *<span class="keyword">this</span>; &#125;</span><br><span class="line">     <span class="keyword">bool</span> <span class="keyword">operator</span>!=(<span class="keyword">const</span> iterator &amp; other) <span class="keyword">const</span> &#123; <span class="keyword">return</span> ptr != other.ptr; &#125;</span><br><span class="line">     <span class="keyword">const</span> DataType&amp; <span class="keyword">operator</span>*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> *ptr; &#125;</span><br><span class="line">   <span class="keyword">private</span>:</span><br><span class="line">     DataType* ptr;</span><br><span class="line">   &#125;;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">   <span class="keyword">unsigned</span> len;</span><br><span class="line">   DataType *val;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">   <span class="function">iterator <span class="title">begin</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> iterator(val); &#125;</span><br><span class="line">   <span class="function">iterator <span class="title">end</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> iterator(val + len); &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// rest of the container definition not related to the question ...</span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -422,9 +419,7 @@
           
           <div class="post-tags">
             
-              <a href="/tags/AWS/" rel="tag"># AWS</a>
-            
-              <a href="/tags/Storage/" rel="tag"># Storage</a>
+              <a href="/tags/c/" rel="tag"># c++</a>
             
           </div>
         
@@ -434,15 +429,15 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
+                <a href="/2019/10/09/Static-class-member-initialization-in-C/" rel="next" title="class static member initialization in C++">
+                  <i class="fa fa-chevron-left"></i> class static member initialization in C++
+                </a>
+              
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/10/05/C-Print-Pretty/" rel="prev" title="C++ Print Pretty">
-                  C++ Print Pretty <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -494,7 +489,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AWS儲存型式"><span class="nav-number">1.</span> <span class="nav-text">AWS儲存型式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EBS"><span class="nav-number">1.1.</span> <span class="nav-text">AWS EBS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AWS-EFS"><span class="nav-number">1.2.</span> <span class="nav-text">AWS EFS</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Custom-Class-with-Range-based-Loop-in-C"><span class="nav-number">1.</span> <span class="nav-text">Custom Class with Range-based Loop in C++</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-does-Range-base-loop-work"><span class="nav-number">2.</span> <span class="nav-text">How does Range-base loop work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#how-can-must-we-do"><span class="nav-number">2.1.</span> <span class="nav-text">how can/must we do</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -713,7 +708,7 @@ window.addEventListener('pjax:success', () => {
       repo: 'yc0.github.io',
       owner: 'yc0',
       admin: ['yc0'],
-      id: '10b25057cb2ea03edb63d3873bf79e62',
+      id: 'dd4affd4a675e5cd27fb06e2e585c740',
         language: window.navigator.language || window.navigator.userLanguage,
       
       distractionFreeMode: 'true'
