@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
+  <meta name="description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. So what’s range-base">
 <meta name="keywords" content="c++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Custom Class with Range-based Loop in C++">
 <meta property="og:url" content="http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
+<meta property="og:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. So what’s range-base">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-18T03:06:26.053Z">
+<meta property="og:updated_time" content="2019-10-18T03:07:52.985Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Custom Class with Range-based Loop in C++">
-<meta name="twitter:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based l">
+<meta name="twitter:description" content="Custom Class with Range-based Loop in C++Sometimes, you have to invent your own class/structure with iteration demandsIn modern c++(c++11), it’ve alread supplied range-based loop. So what’s range-base">
   <link rel="canonical" href="http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/">
 
 
@@ -359,7 +359,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-18 11:06:26" itemprop="dateModified" datetime="2019-10-18T11:06:26+08:00">2019-10-18</time>
+                <time title="Modified: 2019-10-18 11:07:52" itemprop="dateModified" datetime="2019-10-18T11:07:52+08:00">2019-10-18</time>
               </span>
             
           
@@ -395,8 +395,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Custom-Class-with-Range-based-Loop-in-C"><a href="#Custom-Class-with-Range-based-Loop-in-C" class="headerlink" title="Custom Class with Range-based Loop in C++"></a>Custom Class with Range-based Loop in C++</h2><p>Sometimes, you have to invent your own class/structure with iteration demands<br>In modern c++(c++11), it’ve alread supplied range-based loop. What’s range-based loop.</p><a id="more"></a>
-<p><code>for(auto it=begin(arr); it!=end(arr); ++it) {}</code> is tradional method to iterate the container. range-based loop looks like <code>for(auto&amp; item : arr)</code>. See! It’s more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct</p>
+        <h2 id="Custom-Class-with-Range-based-Loop-in-C"><a href="#Custom-Class-with-Range-based-Loop-in-C" class="headerlink" title="Custom Class with Range-based Loop in C++"></a>Custom Class with Range-based Loop in C++</h2><p>Sometimes, you have to invent your own class/structure with iteration demands<br>In modern c++(c++11), it’ve alread supplied range-based loop. So what’s range-based loop?</p><a id="more"></a>
+<p><code>for(auto it=begin(arr); it!=end(arr); ++it) {}</code> is tradional method to iterate the container. range-based loop looks like <code>for(auto&amp; item : arr)</code>. It’s more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct ?</p>
 <h2 id="How-does-Range-base-loop-work"><a href="#How-does-Range-base-loop-work" class="headerlink" title="How does Range-base loop work"></a>How does Range-base loop work</h2><p>In the end, the objects returned do not have to actually be iterators. The for(:) loop, unlike most parts of the C++ standard, is <a href="http://en.cppreference.com/w/cpp/language/range-for" target="_blank" rel="noopener">specified to expand to something equivalent to</a>:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>( range_declaration : range_expression )</span><br></pre></td></tr></table></figure>
 
