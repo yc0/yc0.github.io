@@ -1,16 +1,19 @@
 ---
 title: Custom Class with Range-based Loop in C++
 date: 2019-10-17 15:06:13
-tags: ['c++']
-categories: ['language','c++']
+tags:
+  - c++
+categories:
+  - languague
+  - c++
 ---
 
 ## Custom Class with Range-based Loop in C++
 
 Sometimes, you have to invent your own class/structure with iteration demands
-In modern c++(c++11), it've alread supplied range-based loop. What's range-based loop.
+In modern c++(c++11), it've alread supplied range-based loop. So what's range-based loop?
 
-`for(auto it=begin(arr); it!=end(arr); ++it) {}` is tradional method to iterate the container. range-based loop looks like `for(auto& item : arr)`. See! It's more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct
+`for(auto it=begin(arr); it!=end(arr); ++it) {}` is tradional method to iterate the container. range-based loop looks like `for(auto& item : arr)`. It's more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct ?
 
 ## How does Range-base loop work
 
