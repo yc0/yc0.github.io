@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="C++ Print PrettySo for anyone unfamiliar, C++ has a variety of things called manipulators that will change the format of the output printed with “cout”. These things are not printed themselves, they j">
-<meta name="keywords" content="c++">
+  <meta name="description" content="Introduction System Design DAU: Daily active user Infrastructure Web development analyst duo dilgence work solution special case analysis tradeoff knowledge base   4s’ analysis scenario service storag">
+<meta name="keywords" content="system design">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++ Print Pretty">
-<meta property="og:url" content="http://yoursite.com/2019/10/05/C-Print-Pretty/index.html">
+<meta property="og:title" content="System Design Overview">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/System-Design-Overview/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="C++ Print PrettySo for anyone unfamiliar, C++ has a variety of things called manipulators that will change the format of the output printed with “cout”. These things are not printed themselves, they j">
+<meta property="og:description" content="Introduction System Design DAU: Daily active user Infrastructure Web development analyst duo dilgence work solution special case analysis tradeoff knowledge base   4s’ analysis scenario service storag">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-17T07:14:59.316Z">
+<meta property="og:updated_time" content="2019-10-19T04:19:11.923Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++ Print Pretty">
-<meta name="twitter:description" content="C++ Print PrettySo for anyone unfamiliar, C++ has a variety of things called manipulators that will change the format of the output printed with “cout”. These things are not printed themselves, they j">
-  <link rel="canonical" href="http://yoursite.com/2019/10/05/C-Print-Pretty/">
+<meta name="twitter:title" content="System Design Overview">
+<meta name="twitter:description" content="Introduction System Design DAU: Daily active user Infrastructure Web development analyst duo dilgence work solution special case analysis tradeoff knowledge base   4s’ analysis scenario service storag">
+  <link rel="canonical" href="http://yoursite.com/2019/10/18/System-Design-Overview/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>C++ Print Pretty | YC Note</title>
+  <title>System Design Overview | YC Note</title>
   
 
 
@@ -320,7 +320,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/05/C-Print-Pretty/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/System-Design-Overview/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Nelson">
@@ -332,7 +332,7 @@
       <meta itemprop="name" content="YC Note">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">C++ Print Pretty
+        <h1 class="post-title" itemprop="name headline">System Design Overview
 
           
         </h1>
@@ -348,7 +348,7 @@
                 
               
 
-              <time title="Created: 2019-10-05 08:57:42" itemprop="dateCreated datePublished" datetime="2019-10-05T08:57:42+08:00">2019-10-05</time>
+              <time title="Created: 2019-10-18 11:11:48" itemprop="dateCreated datePublished" datetime="2019-10-18T11:11:48+08:00">2019-10-18</time>
             </span>
           
             
@@ -359,7 +359,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-17 15:14:59" itemprop="dateModified" datetime="2019-10-17T15:14:59+08:00">2019-10-17</time>
+                <time title="Modified: 2019-10-19 12:19:11" itemprop="dateModified" datetime="2019-10-19T12:19:11+08:00">2019-10-19</time>
               </span>
             
           
@@ -369,14 +369,14 @@
               </span>
               <span class="post-meta-item-text">In</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/languague/" itemprop="url" rel="index"><span itemprop="name">languague</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/system-design/" itemprop="url" rel="index"><span itemprop="name">system design</span></a></span>
 
                 
                 
                   , 
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/languague/c/" itemprop="url" rel="index"><span itemprop="name">c++</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/system-design/interview/" itemprop="url" rel="index"><span itemprop="name">interview</span></a></span>
 
                 
                 
@@ -395,38 +395,111 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="C-Print-Pretty"><a href="#C-Print-Pretty" class="headerlink" title="C++ Print Pretty"></a>C++ Print Pretty</h2><p>So for anyone unfamiliar, C++ has a variety of things called <strong>manipulators</strong> that will change the format of the output printed with “cout”. These things are not printed themselves, they just affect the part you are actually printing. A list of these manipulators can be found on <a href="http://www.cplusplus.com/reference/library/manipulators/" target="_blank" rel="noopener">the reference</a></p><a id="more"></a>
-<p>Here is an example</p>
-<p><strong>input</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100<span class="selector-class">.345</span> 2006<span class="selector-class">.008</span> 2331<span class="selector-class">.41592653498</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>output</strong></p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x64</span>             </span><br><span class="line">_______+<span class="number">2006.01</span>  </span><br><span class="line"><span class="number">2.331415927E+03</span></span><br></pre></td></tr></table></figure>
-
-<p>How can we do that ? Yes, use <strong>manipulators</strong></p>
-<h3 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> A = <span class="number">100.345</span>; <span class="comment">// 16 bytes for long long</span></span><br><span class="line"><span class="keyword">double</span> B = <span class="number">2006.008</span>;</span><br><span class="line"><span class="keyword">double</span> C = <span class="number">2331.41592653498</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 1 </span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; hex &lt;&lt; left &lt;&lt; showbase &lt;&lt; nouppercase; <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">long</span> <span class="keyword">long</span>) A &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 2</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; dec &lt;&lt; right &lt;&lt; setw(<span class="number">15</span>) &lt;&lt; setfill(<span class="string">'_'</span>) &lt;&lt; showpos &lt;&lt; fixed &lt;&lt; setprecision(<span class="number">2</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; B &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LINE 3</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; scientific &lt;&lt; uppercase &lt;&lt; noshowpos &lt;&lt; setprecision(<span class="number">9</span>); <span class="comment">// formatting</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; C &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// actual printed part</span></span><br></pre></td></tr></table></figure>
-
-<p>The explanation shows as follows</p>
-<h3 id="Print-Line-1"><a href="#Print-Line-1" class="headerlink" title="Print Line 1"></a>Print Line 1</h3><ul>
-<li><strong>hex</strong>:<br>output the number in hexadecimal format</li>
-<li><strong>left</strong>: align the number to the left</li>
-<li><strong>showbase</strong>: make sure the hexadecimal number has a ‘0x’ at the beginning</li>
-<li><strong>nouppercase</strong>: converts all alphabetic hexadecimal values to lowercase.</li>
+        <h2 id="Introduction-System-Design"><a href="#Introduction-System-Design" class="headerlink" title="Introduction System Design"></a>Introduction System Design</h2><ul>
+<li>DAU: Daily active user</li>
+<li>Infrastructure</li>
+<li>Web development</li>
+<li>analyst duo dilgence<ul>
+<li>work solution</li>
+<li>special case</li>
+<li>analysis</li>
+<li>tradeoff</li>
+<li>knowledge base</li>
 </ul>
-<h3 id="Print-Line-2"><a href="#Print-Line-2" class="headerlink" title="Print Line 2"></a>Print Line 2</h3><ul>
-<li><strong>dec</strong>: switches numbers from hexadecimal back to decimal.</li>
-<li><strong>right</strong>: aligns values to the right instead of the left</li>
-<li><strong>setw(15)</strong>: sets a fixed width of 15, as the effect from the initial code only impacts the first printed line.</li>
-<li><strong>setfill(*)</strong>: by default, when you have a fixed width, if your printed value doesn’t fill up the entire length (for example, if you have a width of 15 and only print 7 characters), the extra characters used <strong>to pad are whitespaces</strong>. This function lets you change the padding to whatever character you want.</li>
-<li><strong>showpos</strong>: Makes sure there is a <strong>plus/negative sign</strong> before any positive numbers</li>
-<li><strong>fixed</strong>: ensures that number is printed out entirely and that scientific notation isn’t used for larger numbers</li>
-<li><strong>setprecision(*)</strong>: sets the number of decimal places to 2.</li>
+</li>
+<li>4s’ analysis<ul>
+<li>scenario</li>
+<li>service</li>
+<li>storage</li>
+<li>scale</li>
 </ul>
-<h3 id="Print-Line-3"><a href="#Print-Line-3" class="headerlink" title="Print Line 3"></a>Print Line 3</h3><ul>
-<li><strong>scientific</strong>: prints output in scientific notation format</li>
-<li><strong>uppercase</strong>: undoes previous nouppercase manipulator and ensures that the ‘E’ in the scientific notation is capitalised</li>
-<li><strong>noshowpos</strong>: undoes previous showpos manipulator and gets rid of the plus/negative sign at the start of positive values</li>
-<li><strong>setprecision</strong>: changes the number of digits after the decimal place from 2 to 9.</li>
+</li>
+<li>Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)</li>
+</ul><a id="more"></a>
+<h2 id="Breakdown-The"><a href="#Breakdown-The" class="headerlink" title="Breakdown The"></a>Breakdown The</h2><h3 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h3><ul>
+<li><p><strong>daily active users</strong></p>
+<ul>
+<li>login/register</li>
+</ul>
+</li>
+<li><p><strong>user profile</strong></p>
+<ul>
+<li>display/edit</li>
+</ul>
+</li>
+<li><p><strong>storage</strong></p>
+<ul>
+<li>database: sql database =&gt; user table</li>
+<li>nosql database =&gt; tweets/social graph</li>
+</ul>
+</li>
+<li><p><strong>file system</strong></p>
+<ul>
+<li>media files</li>
+</ul>
+</li>
+<li><p><strong>cache</strong></p>
+<ul>
+<li>nonpersistent</li>
+</ul>
+</li>
+</ul>
+<h3 id="algorithm-datastructure"><a href="#algorithm-datastructure" class="headerlink" title="algorithm/datastructure"></a>algorithm/datastructure</h3><ul>
+<li>merge k sorted arrays</li>
+<li>Design user system - database&amp; memcache</li>
+<li>design user system - memcached</li>
+<li>authentication</li>
+<li>sql vs nosql</li>
+<li>friendship (MST, kruskal, Prim)</li>
+<li>how to scale</li>
+<li>sharding/ consistent hashing/ replica</li>
+</ul>
+<p>user systems features</p>
+<ul>
+<li>heavy read, light write<ul>
+<li>cache</li>
+<li>a sort of key-val datastructure, like hashmap in Java</li>
+<li>memcached =&gt; non-persistence (high performance)</li>
+<li>redis =&gt; persistence (high cluster)</li>
+<li>it is not necessary to keep in memory<ul>
+<li>file system could be a cache</li>
+<li>cpu also has a cache</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cache.get(<span class="string">"this is a key"</span>, <span class="string">"this is a value"</span>)</span><br><span class="line">cache.get(<span class="string">"this is a key"</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>&gt;&gt; this is a value</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cache.set(<span class="string">"foo"</span>, <span class="number">1</span>, ttl = <span class="number">60</span>) // expired within <span class="number">60</span> sec</span><br><span class="line">cache.get(<span class="string">"foo"</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>&gt;&gt; 1</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#wait for 60 seconds</span></span><br><span class="line">cache.get(<span class="string">"foo"</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>&gt;&gt;null</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cache.get(<span class="string">"bar"</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>&gt;&gt;null</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># memcached optimize the query of DB</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserService</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getUser</span><span class="params">(self, user_id)</span>:</span></span><br><span class="line">        key = <span class="string">"user::%s"</span> % user_id</span><br></pre></td></tr></table></figure>
+
+<h3 id="How-to-keep-login"><a href="#How-to-keep-login" class="headerlink" title="How to keep login?"></a>How to keep login?</h3><h4 id="session-login"><a href="#session-login" class="headerlink" title="session / login"></a>session / login</h4><p>After users login, server will create a session instance, and response <code>session_key</code> as a <code>cookie</code> back to a browser.</p>
+<p>The browser will put the records in the cookie. Customers want to request the service every time. The browser will bring the cookie corresponding to the server, and the server will validate the session_key in cookie. If it is valid, the customer is allowed to access the services.</p>
+<h4 id="session-logout"><a href="#session-logout" class="headerlink" title="session logout"></a>session logout</h4><p>The server will erase/delete a record from a session table. But where is the session table.</p>
+<p>In general, session table is stored in cache. However, it could be better when stored in database. If customers access frequently, try to adopt cache instead.</p>
+<h3 id="SQL-v-s-NOSQL"><a href="#SQL-v-s-NOSQL" class="headerlink" title="SQL v.s. NOSQL"></a>SQL v.s. NOSQL</h3><ul>
+<li>transaction -&gt; cannot use nosql</li>
+<li>sql -&gt; serialization, secondary index and soon</li>
+<li>HDrive nosql run 10x+ fast than sql</li>
+<li>SQL<ul>
+<li>A column is defined by schema with predefinition, and cannot be abitrarily extended. Retrieve record by row</li>
+</ul>
+</li>
+<li>NOSQL, opposite to SQL<ul>
+<li>column is dynamic</li>
+<li>retrieve data by grid</li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -443,7 +516,7 @@
           
           <div class="post-tags">
             
-              <a href="/tags/c/" rel="tag"># c++</a>
+              <a href="/tags/system-design/" rel="tag"># system design</a>
             
           </div>
         
@@ -453,8 +526,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/01/AWS-Storage-Type/" rel="next" title="AWS Storage Type">
-                  <i class="fa fa-chevron-left"></i> AWS Storage Type
+                <a href="/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/" rel="next" title="Custom Class with Range-based Loop in C++">
+                  <i class="fa fa-chevron-left"></i> Custom Class with Range-based Loop in C++
                 </a>
               
             </div>
@@ -462,10 +535,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/10/08/C-vtable-ptr-vtable/" rel="prev" title="C++ vtable ptr & vtable">
-                  C++ vtable ptr & vtable <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -517,7 +586,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-Print-Pretty"><span class="nav-number">1.</span> <span class="nav-text">C++ Print Pretty</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Source-Code"><span class="nav-number">1.1.</span> <span class="nav-text">Source Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Print-Line-1"><span class="nav-number">1.2.</span> <span class="nav-text">Print Line 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Print-Line-2"><span class="nav-number">1.3.</span> <span class="nav-text">Print Line 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Print-Line-3"><span class="nav-number">1.4.</span> <span class="nav-text">Print Line 3</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-System-Design"><span class="nav-number">1.</span> <span class="nav-text">Introduction System Design</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Breakdown-The"><span class="nav-number">2.</span> <span class="nav-text">Breakdown The</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Requirements"><span class="nav-number">2.1.</span> <span class="nav-text">Requirements</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#algorithm-datastructure"><span class="nav-number">2.2.</span> <span class="nav-text">algorithm/datastructure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-keep-login"><span class="nav-number">2.3.</span> <span class="nav-text">How to keep login?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#session-login"><span class="nav-number">2.3.1.</span> <span class="nav-text">session / login</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#session-logout"><span class="nav-number">2.3.2.</span> <span class="nav-text">session logout</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-v-s-NOSQL"><span class="nav-number">2.4.</span> <span class="nav-text">SQL v.s. NOSQL</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -736,7 +805,7 @@ window.addEventListener('pjax:success', () => {
       repo: 'yc0.github.io',
       owner: 'yc0',
       admin: ['yc0'],
-      id: 'e478464a343b28e85bd102622b8680c7',
+      id: '6e5f46f2e2b698c1f4be56dd4b6c04d0',
         language: window.navigator.language || window.navigator.userLanguage,
       
       distractionFreeMode: 'true'
