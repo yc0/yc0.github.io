@@ -4,7 +4,7 @@ date: 2019-10-17 15:06:13
 tags:
   - c++
 categories:
-  - languague
+  - language
   - c++
 ---
 

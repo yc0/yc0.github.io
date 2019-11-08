@@ -3,7 +3,7 @@ title: C++ Print Pretty
 tags:
   - c++
 categories:
-  - languague
+  - language
   - c++
 date: 2019-10-05 08:57:42
 ---

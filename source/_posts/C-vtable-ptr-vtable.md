@@ -5,7 +5,7 @@ tags:
   - vtable
   - virtual
 categories:
-  - languague
+  - language
   - c++
 date: 2019-10-08 00:50:18
 ---
