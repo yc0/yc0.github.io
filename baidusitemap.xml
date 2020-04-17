@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://yoursite.com/2020/04/13/Istio-Overview/</loc>
-    <lastmod>2020-04-13</lastmod>
+    <loc>http://yoursite.com/2020/04/15/OpenShift-Administration/</loc>
+    <lastmod>2020-04-17</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2020/04/04/kubernetes-scratch/</loc>
-    <lastmod>2020-04-07</lastmod>
+    <lastmod>2020-04-15</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2020/04/13/Istio-Overview/</loc>
+    <lastmod>2020-04-13</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2019/11/13/Design-Amazon-comments-filtering-system/</loc>
     <lastmod>2020-04-04</lastmod>
@@ -16,22 +19,22 @@
     <loc>http://yoursite.com/2019/11/08/Use-exception-instead-of-error-code/</loc>
     <lastmod>2019-11-14</lastmod>
   </url>  <url>
-    <loc>http://yoursite.com/2019/10/23/Design-a-locker/</loc>
-    <lastmod>2019-11-14</lastmod>
-  </url>  <url>
-    <loc>http://yoursite.com/2019/10/22/Design-a-configuration-management-system/</loc>
-    <lastmod>2019-11-14</lastmod>
-  </url>  <url>
     <loc>http://yoursite.com/2019/10/17/Custom-Class-with-Range-based-Loop-in-C/</loc>
-    <lastmod>2019-11-14</lastmod>
-  </url>  <url>
-    <loc>http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/</loc>
     <lastmod>2019-11-14</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2019/10/23/Design-LSM-Database/</loc>
     <lastmod>2019-11-14</lastmod>
   </url>  <url>
+    <loc>http://yoursite.com/2019/10/08/C-vtable-ptr-vtable/</loc>
+    <lastmod>2019-11-14</lastmod>
+  </url>  <url>
     <loc>http://yoursite.com/2019/10/23/Design-a-Vending-Machine/</loc>
+    <lastmod>2019-11-14</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2019/10/22/Design-a-configuration-management-system/</loc>
+    <lastmod>2019-11-14</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2019/10/23/Design-a-locker/</loc>
     <lastmod>2019-11-14</lastmod>
   </url>  <url>
     <loc>http://yoursite.com/2019/10/05/C-Print-Pretty/</loc>
