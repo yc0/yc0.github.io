@@ -354,7 +354,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-17 21:54:39" itemprop="dateModified" datetime="2020-04-17T21:54:39+08:00">2020-04-17</time>
+                <time title="Modified: 2020-04-17 22:07:48" itemprop="dateModified" datetime="2020-04-17T22:07:48+08:00">2020-04-17</time>
               </span>
             
           
@@ -376,13 +376,9 @@
 <li>A repo. for discovering and installing operators : Operator Catelog</li>
 <li>Regular operators that are not managed by the OLM. They are managed by OpenShift Cluster Version Operator : Cluster Operators<ul>
 <li>OpenShift Cluster Version Operator : First-level operator</li>
-<li>Cluster Operators are called second-level operators<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2></li>
+<li>Cluster Operators are called second-level operators</li>
 </ul>
 </li>
-<li>Red Hat OpenShift Platform is based on Red Hat CoreOS, CRI-O and Kubernetes</li>
-<li>RHOCP 4 provides a number of services on top of Kubernetes, such as an internal container image registry, storage, networking providers, and centralized logging and monitoring.</li>
-<li>Operators package applications that manage Kubernetes resources, and the Operator Lifecycle Manager (OLM) handles installation and management of operators.</li>
-<li>OperatorHub.io is an online catalog for discovering operators.</li>
 </ul>
           <!--noindex-->
           
@@ -445,11 +441,19 @@
                 
               
 
-              <time title="Created: 2020-04-13 17:16:32 / Modified: 17:37:36" itemprop="dateCreated datePublished" datetime="2020-04-13T17:16:32+08:00">2020-04-13</time>
+              <time title="Created: 2020-04-13 17:16:32" itemprop="dateCreated datePublished" datetime="2020-04-13T17:16:32+08:00">2020-04-13</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-17 22:07:40" itemprop="dateModified" datetime="2020-04-17T22:07:40+08:00">2020-04-17</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -497,50 +501,16 @@
 </li>
 <li><p>Enables service <strong>discovery</strong>, <strong>dynamic updates</strong> for load balancing, routing tables</p>
 <h3 id="Envoy"><a href="#Envoy" class="headerlink" title="Envoy"></a>Envoy</h3></li>
-<li><p>Maintains configuration information from Pilot</p>
-<h2 id="Request-Routing"><a href="#Request-Routing" class="headerlink" title="Request Routing"></a>Request Routing</h2></li>
-<li><p>Fine-grained approach to identify services by versions</p>
-</li>
-<li><p>Service versions in OpenShift service mesh implemented with <strong>OpenShift labels</strong></p>
-<h3 id="Communication-Between-Services"><a href="#Communication-Between-Services" class="headerlink" title="Communication Between Services"></a>Communication Between Services</h3></li>
-<li><p>clients have <strong>agnostic</strong> of different service versions</p>
-</li>
-<li><p>Envoy <strong>intercepts</strong>, forwards requests/responses between client and service</p>
-</li>
-<li><p>Routing rules <strong>configured with Pilot</strong></p>
-<ul>
-<li>Header</li>
-<li>Tags associated with SRC/DEST</li>
-<li>Weight associated with Version<h2 id="Rule-Configuration"><a href="#Rule-Configuration" class="headerlink" title="Rule Configuration"></a>Rule Configuration</h2></li>
-</ul>
-</li>
-<li><p>VirtualService : Defines rules that control how requests for service are routed within service mesh</p>
-</li>
-<li><p>DestinationRule : correspond to one or more request destination hosts specified in VirtualService configuration</p>
-<ul>
-<li><p>May or may not be same as actual destination workload</p>
-</li>
-<li><p>May not correspond to actual routable service in mesh</p>
-</li>
-</ul>
-</li>
-<li><p>ServiceEntry: Enables requests to services outside service mesh</p>
-</li>
-<li><p>Gateway : Configures load balancer operating at edge of mesh for:</p>
-<ul>
-<li>HTTP/TCP ingress traffic to mesh application</li>
-<li>Egress traffic to external services</li>
-<li>Sidecar Configures sidecar proxies attached to application workloads running inside mesh<h2 id="Traffic-Splitting"><a href="#Traffic-Splitting" class="headerlink" title="Traffic Splitting"></a>Traffic Splitting</h2></li>
-</ul>
-</li>
-<li><p>Each route rule identifies one or more weighted</p>
-</li>
-<li><p>Versions expressed using labels</p>
-<h2 id="Conditional-Rules"><a href="#Conditional-Rules" class="headerlink" title="Conditional Rules"></a>Conditional Rules</h2></li>
-<li><p>Can qualify rules to apply only to requests that match specific condition</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">apiVersion</span>: networking.istio.io/v1alpha3</span><br><span class="line"><span class="attribute">kind</span>: VirtualService</span><br><span class="line"><span class="attribute">metadata</span>:</span><br><span class="line">  <span class="attribute">name</span>: ratings</span><br><span class="line"><span class="attribute">spec</span>:</span><br><span class="line">  <span class="attribute">hosts</span>:</span><br><span class="line">  - ratings</span><br><span class="line">  <span class="attribute">http</span>:</span><br><span class="line">  - <span class="attribute">match</span>:</span><br><span class="line">    - <span class="attribute">sourceLabels</span>:</span><br><span class="line">        <span class="attribute">app</span>: reviews</span><br><span class="line">        <span class="attribute">version</span>: v2</span><br><span class="line">  - <span class="attribute">match</span>:</span><br><span class="line">    - <span class="attribute">headers</span>:</span><br><span class="line">        <span class="attribute">From</span>: </span><br><span class="line">          <span class="attribute">exact</span>: webmaster<span class="variable">@example</span>.org</span><br></pre></td></tr></table></figure></li>
-</ul>
-
+<li><p>Maintains configuration information from Pilot</p></li></ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/04/13/Istio-Overview/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
