@@ -33,3 +33,12 @@ for example
     ```
     awk 'NR!=1{print $1}' file
     ```
+
+#### Execution Tips
+- Check Network Connection
+    - [Netcat](https://blog.gtwang.org/linux/linux-utility-netcat-examples/)
+    - example
+    ```bash
+    # kubectl exec -it {podname} -- sh
+    > nc -z -v -w1 {target} {port}
+    ```
