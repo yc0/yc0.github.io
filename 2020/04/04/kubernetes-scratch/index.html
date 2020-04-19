@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplerun --generator1234567#### alias- cheat sheet`https://kubernetes.io/docs/reference/kubectl/cheatshee">
+  <meta name="description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplekubectl run --generator=run-pod/v1 bee --image=nginx">
 <meta name="keywords" content="kubernetes,imperative">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kubernetes scratch">
 <meta property="og:url" content="http://yoursite.com/2020/04/04/kubernetes-scratch/index.html">
 <meta property="og:site_name" content="YC Note">
-<meta property="og:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplerun --generator1234567#### alias- cheat sheet`https://kubernetes.io/docs/reference/kubectl/cheatshee">
+<meta property="og:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplekubectl run --generator=run-pod/v1 bee --image=nginx">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-19T05:42:13.878Z">
+<meta property="og:updated_time" content="2020-04-19T05:44:00.024Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes scratch">
-<meta name="twitter:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplerun --generator1234567#### alias- cheat sheet`https://kubernetes.io/docs/reference/kubectl/cheatshee">
+<meta name="twitter:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplekubectl run --generator=run-pod/v1 bee --image=nginx">
   <link rel="canonical" href="http://yoursite.com/2020/04/04/kubernetes-scratch/">
 
 
@@ -359,7 +359,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-19 13:42:13" itemprop="dateModified" datetime="2020-04-19T13:42:13+08:00">2020-04-19</time>
+                <time title="Modified: 2020-04-19 13:44:00" itemprop="dateModified" datetime="2020-04-19T13:44:00+08:00">2020-04-19</time>
               </span>
             
           
@@ -397,17 +397,33 @@
       
         <h2 id="Quick-Overview"><a href="#Quick-Overview" class="headerlink" title="Quick Overview"></a>Quick Overview</h2><h4 id="kubernetes-io"><a href="#kubernetes-io" class="headerlink" title="kubernetes .io"></a>kubernetes .io</h4><ul>
 <li><a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-deployment-em-" target="_blank" rel="noopener">Getting started</a></li>
-</ul><h4 id="create-pod"><a href="#create-pod" class="headerlink" title="create pod"></a>create pod</h4><p><code>kubectl run --generator=run-pod/v1</code><br>for example</p><figure class="highlight plain"><figcaption><span>run --generator</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### alias</span><br><span class="line"></span><br><span class="line">- cheat sheet</span><br><span class="line">`https://kubernetes.io/docs/reference/kubectl/cheatsheet/`</span><br><span class="line"></span><br><span class="line">- other</span><br></pre></td></tr></table></figure><a id="more"></a>
+</ul><h4 id="create-pod"><a href="#create-pod" class="headerlink" title="create pod"></a>create pod</h4><p><code>kubectl run --generator=run-pod/v1</code></p><p>for example</p><p><code>kubectl run --generator=run-pod/v1 bee --image=nginx</code></p><a id="more"></a>
 
 
 
-<pre><code>alias k=&apos;kubectl -n $ns&apos;
-alias kdr=&apos;kubectl run -n $ns -o yaml   --dry-run&apos;
-alias kpr=&apos;kubectl run --generator=run-pod/ v1 -n $ns -o yaml --dry-run&apos;
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Shell</span><br><span class="line">- Get rid of the first line and recliam first column</span><br></pre></td></tr></table></figure>
+<h4 id="alias"><a href="#alias" class="headerlink" title="alias"></a>alias</h4><ul>
+<li><p>cheat sheet<br><code>https://kubernetes.io/docs/reference/kubectl/cheatsheet/</code></p>
+</li>
+<li><p>other</p>
+  <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias k='kubectl -<span class="keyword">n</span> <span class="variable">$ns</span>'</span><br><span class="line">alias kdr='kubectl <span class="keyword">run</span> -<span class="keyword">n</span> <span class="variable">$ns</span> -o yaml   --dry-<span class="keyword">run</span>'</span><br><span class="line">alias kpr='kubectl <span class="keyword">run</span> --generator=<span class="keyword">run</span>-pod/ v1 -<span class="keyword">n</span> <span class="variable">$ns</span> -o yaml --dry-<span class="keyword">run</span>'</span><br></pre></td></tr></table></figure>
 
-awk &apos;NR!=1{print $1}&apos; file
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">#### Execution Tips</span></span><br><span class="line"><span class="bullet">- </span>Check Network Connection</span><br><span class="line"><span class="bullet">    - </span>[<span class="string">Netcat</span>](<span class="link">https://blog.gtwang.org/linux/linux-utility-netcat-examples/</span>)</span><br><span class="line"><span class="bullet">    - </span>example</span><br><span class="line"><span class="code">    ```bash</span></span><br><span class="line"><span class="code">    # kubectl exec -it &#123;podname&#125; -- sh</span></span><br><span class="line"><span class="code">    &gt; nc -z -v -w1 &#123;target&#125; &#123;port&#125;</span></span><br></pre></td></tr></table></figure></code></pre><h4 id="VIM-Tips"><a href="#VIM-Tips" class="headerlink" title="VIM Tips"></a>VIM Tips</h4><ul>
+</li>
+</ul>
+<h4 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h4><ul>
+<li>Get rid of the first line and recliam first column  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">awk</span> <span class="string">'NR!=1&#123;print <span class="variable">$1</span>&#125;'</span> file</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="Execution-Tips"><a href="#Execution-Tips" class="headerlink" title="Execution Tips"></a>Execution Tips</h4><ul>
+<li>Check Network Connection<ul>
+<li><a href="https://blog.gtwang.org/linux/linux-utility-netcat-examples/" target="_blank" rel="noopener">Netcat</a></li>
+<li>example<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl exec -it &#123;podname&#125; -- sh</span></span><br><span class="line">&gt; nc -z -v -w1 &#123;target&#125; &#123;port&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="VIM-Tips"><a href="#VIM-Tips" class="headerlink" title="VIM Tips"></a>VIM Tips</h4><ul>
 <li>Auto indent and tab<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">se stst=2 sw=2 ai et</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -505,7 +521,7 @@ awk &apos;NR!=1{print $1}&apos; file
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Overview"><span class="nav-number">1.</span> <span class="nav-text">Quick Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubernetes-io"><span class="nav-number">1.0.1.</span> <span class="nav-text">kubernetes .io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#create-pod"><span class="nav-number">1.0.2.</span> <span class="nav-text">create pod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VIM-Tips"><span class="nav-number">1.0.3.</span> <span class="nav-text">VIM Tips</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Overview"><span class="nav-number">1.</span> <span class="nav-text">Quick Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubernetes-io"><span class="nav-number">1.0.1.</span> <span class="nav-text">kubernetes .io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#create-pod"><span class="nav-number">1.0.2.</span> <span class="nav-text">create pod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#alias"><span class="nav-number">1.0.3.</span> <span class="nav-text">alias</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Shell"><span class="nav-number">1.0.4.</span> <span class="nav-text">Shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Execution-Tips"><span class="nav-number">1.0.5.</span> <span class="nav-text">Execution Tips</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VIM-Tips"><span class="nav-number">1.0.6.</span> <span class="nav-text">VIM Tips</span></a></li></ol></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
