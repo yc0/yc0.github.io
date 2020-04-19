@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="YC Note">
 <meta property="og:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplerun --generator1234567#### alias- cheat sheet`https://kubernetes.io/docs/reference/kubectl/cheatshee">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-15T06:18:32.903Z">
+<meta property="og:updated_time" content="2020-04-19T05:42:13.878Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubernetes scratch">
 <meta name="twitter:description" content="Quick Overviewkubernetes .io Getting started create podkubectl run --generator=run-pod/v1for examplerun --generator1234567#### alias- cheat sheet`https://kubernetes.io/docs/reference/kubectl/cheatshee">
@@ -359,7 +359,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-15 14:18:32" itemprop="dateModified" datetime="2020-04-15T14:18:32+08:00">2020-04-15</time>
+                <time title="Modified: 2020-04-19 13:42:13" itemprop="dateModified" datetime="2020-04-19T13:42:13+08:00">2020-04-19</time>
               </span>
             
           
@@ -407,7 +407,14 @@ alias kpr=&apos;kubectl run --generator=run-pod/ v1 -n $ns -o yaml --dry-run&apo
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### Shell</span><br><span class="line">- Get rid of the first line and recliam first column</span><br></pre></td></tr></table></figure>
 
 awk &apos;NR!=1{print $1}&apos; file
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">#### Execution Tips</span></span><br><span class="line"><span class="bullet">- </span>Check Network Connection</span><br><span class="line"><span class="bullet">    - </span>[<span class="string">Netcat</span>](<span class="link">https://blog.gtwang.org/linux/linux-utility-netcat-examples/</span>)</span><br><span class="line"><span class="bullet">    - </span>example</span><br><span class="line"><span class="code">    ```bash</span></span><br><span class="line"><span class="code">    # kubectl exec -it &#123;podname&#125; -- sh</span></span><br><span class="line"><span class="code">    &gt; nc -z -v -w1 &#123;target&#125; &#123;port&#125;</span></span><br></pre></td></tr></table></figure></code></pre>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">#### Execution Tips</span></span><br><span class="line"><span class="bullet">- </span>Check Network Connection</span><br><span class="line"><span class="bullet">    - </span>[<span class="string">Netcat</span>](<span class="link">https://blog.gtwang.org/linux/linux-utility-netcat-examples/</span>)</span><br><span class="line"><span class="bullet">    - </span>example</span><br><span class="line"><span class="code">    ```bash</span></span><br><span class="line"><span class="code">    # kubectl exec -it &#123;podname&#125; -- sh</span></span><br><span class="line"><span class="code">    &gt; nc -z -v -w1 &#123;target&#125; &#123;port&#125;</span></span><br></pre></td></tr></table></figure></code></pre><h4 id="VIM-Tips"><a href="#VIM-Tips" class="headerlink" title="VIM Tips"></a>VIM Tips</h4><ul>
+<li>Auto indent and tab<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">se stst=2 sw=2 ai et</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>與自動縮進相關的變數表<br>|變數名|縮寫|含義|<br>|—-|:—|:——|<br>|(no)autoindent|ai|自動縮進，即為新行自動添加與當前行同等的縮進|<br>|(no)cindent|ci|類似C語言程序的縮進|<br>(no)smartindent|si|基於autoindent的一些改進</p>
+<p>與TAB相關的變數表<br>|變數名|縮寫|含義|<br>|—-|:—|:——|<br>|tabstop=X|ts|編輯時一個TAB字元佔多少個空格的位置|<br>|shiftwidth=X|sw|使用每層縮進的空格數|<br>|(no)expandtab|(no)et|是否將輸入的TAB自動展開成空格。開啟後要輸入TAB，需要Ctrl-V<tab>|<br>|softtabstop=X|sts|方便在開啟了et後使用退格（backspace）鍵，每次退格將刪除X個空格|<br>|(no)smarttab|(no)sta|開啟時，在行首按TAB將加入sw個空格，否則加入ts個空格|</tab></p>
+
     </div>
 
     
@@ -498,7 +505,7 @@ awk &apos;NR!=1{print $1}&apos; file
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Overview"><span class="nav-number">1.</span> <span class="nav-text">Quick Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubernetes-io"><span class="nav-number">1.0.1.</span> <span class="nav-text">kubernetes .io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#create-pod"><span class="nav-number">1.0.2.</span> <span class="nav-text">create pod</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Overview"><span class="nav-number">1.</span> <span class="nav-text">Quick Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubernetes-io"><span class="nav-number">1.0.1.</span> <span class="nav-text">kubernetes .io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#create-pod"><span class="nav-number">1.0.2.</span> <span class="nav-text">create pod</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#VIM-Tips"><span class="nav-number">1.0.3.</span> <span class="nav-text">VIM Tips</span></a></li></ol></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
