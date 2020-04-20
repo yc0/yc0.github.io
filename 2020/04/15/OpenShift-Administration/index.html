@@ -63,7 +63,7 @@
 <meta property="og:description" content="Describe OpenShift Container PlatformOverview An application manages Kubernetes resources: Operator An application manages Kubernetes operators : Operator Lifecycle Manager(OLM) A repo. for discoverin">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://user-images.githubusercontent.com/10542832/79710264-10496580-82f7-11ea-9b09-2d000623a33b.png">
-<meta property="og:updated_time" content="2020-04-20T03:23:43.902Z">
+<meta property="og:updated_time" content="2020-04-20T07:09:59.157Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenShift Administration">
 <meta name="twitter:description" content="Describe OpenShift Container PlatformOverview An application manages Kubernetes resources: Operator An application manages Kubernetes operators : Operator Lifecycle Manager(OLM) A repo. for discoverin">
@@ -360,7 +360,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-20 11:23:43" itemprop="dateModified" datetime="2020-04-20T11:23:43+08:00">2020-04-20</time>
+                <time title="Modified: 2020-04-20 15:09:59" itemprop="dateModified" datetime="2020-04-20T15:09:59+08:00">2020-04-20</time>
               </span>
             
           
@@ -438,14 +438,22 @@
 <li>An actor within the system</li>
 <li>Interact with the API server</li>
 <li>Assign permissions by adding roles</li>
-<li>The user is a member of the group<h4 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h4></li>
+<li>The user is a member of the group</li>
+</ul>
+<h4 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h4><ul>
 <li>A resource that keeps <strong>a record</strong> of <strong>successful authentication</strong> attempts from a specific user and identity provider</li>
-<li>A single user resource is associated with an identity resource.<h4 id="Service-Account"><a href="#Service-Account" class="headerlink" title="Service Account"></a>Service Account</h4></li>
+<li>A single user resource is associated with an identity resource.</li>
+</ul>
+<h4 id="Service-Account"><a href="#Service-Account" class="headerlink" title="Service Account"></a>Service Account</h4><ul>
 <li>Applications can communicate with the API independently </li>
-<li>Service accounts enable you to control API access with Service Account credentials.<h4 id="Group"><a href="#Group" class="headerlink" title="Group"></a>Group</h4></li>
+<li>Service accounts enable you to control API access with Service Account credentials.</li>
+</ul>
+<h4 id="Group"><a href="#Group" class="headerlink" title="Group"></a>Group</h4><ul>
 <li>Groups represent a specific set of users</li>
 <li>Users are assigned to one or to multiple groups.</li>
-<li>implementing authorization policies to assign permissions <strong>to multiple users at the same time.</strong> <h4 id="Role"><a href="#Role" class="headerlink" title="Role"></a>Role</h4></li>
+<li>implementing authorization policies to assign permissions <strong>to multiple users at the same time.</strong> </li>
+</ul>
+<h4 id="Role"><a href="#Role" class="headerlink" title="Role"></a>Role</h4><ul>
 <li>A set of permissions that enables a user to perform API operations over one or more resource types. <code>(Verb + Resources)</code></li>
 </ul>
 <h2 id="Summary-2"><a href="#Summary-2" class="headerlink" title="Summary"></a>Summary</h2><h4 id="Creating-Users"><a href="#Creating-Users" class="headerlink" title="Creating Users"></a>Creating Users</h4><p>Requires valid credentials managed by an identity provider, user and identity resources</p>
@@ -461,6 +469,11 @@
 </ul>
 </li>
 <li>Assign <code>cluster-admin</code> role to the user to grant a user cluser admin priviledge.</li>
+</ul>
+<h1 id="Role-based-Access-Control-RBAC"><a href="#Role-based-Access-Control-RBAC" class="headerlink" title="Role-based Access Control, RBAC"></a>Role-based Access Control, RBAC</h1><p> In OpenShift, RBAC determines if a user can perform certain actions within the cluster or project. There’re two types of roles:</p>
+<ul>
+<li>Cluster</li>
+<li>Local.</li>
 </ul>
 
     </div>
@@ -538,7 +551,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Describe-OpenShift-Container-Platform"><span class="nav-number">1.</span> <span class="nav-text">Describe OpenShift Container Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">1.2.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Installation"><span class="nav-number">2.</span> <span class="nav-text">Installation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPI"><span class="nav-number">2.1.</span> <span class="nav-text">IPI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UPI"><span class="nav-number">2.2.</span> <span class="nav-text">UPI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CoreOS-and-RHEL"><span class="nav-number">2.3.</span> <span class="nav-text">CoreOS and RHEL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Installation-config-yaml"><span class="nav-number">2.4.</span> <span class="nav-text">Installation-config.yaml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Initial-deployment-process"><span class="nav-number">2.5.</span> <span class="nav-text">Initial deployment process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-1"><span class="nav-number">2.6.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Identity-Providers"><span class="nav-number">3.</span> <span class="nav-text">Identity Providers</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Concept"><span class="nav-number">3.1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Describe"><span class="nav-number">3.2.</span> <span class="nav-text">Describe</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#User"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">User</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Identity"><span class="nav-number">3.2.0.2.</span> <span class="nav-text">Identity</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service-Account"><span class="nav-number">3.2.0.3.</span> <span class="nav-text">Service Account</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Group"><span class="nav-number">3.2.0.4.</span> <span class="nav-text">Group</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Role"><span class="nav-number">3.2.0.5.</span> <span class="nav-text">Role</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-2"><span class="nav-number">3.3.</span> <span class="nav-text">Summary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-Users"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">Creating Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deleting-Users"><span class="nav-number">3.3.0.2.</span> <span class="nav-text">Deleting Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Two-authentication-methods"><span class="nav-number">3.3.0.3.</span> <span class="nav-text">Two authentication methods</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OAuth-Custom-Resource"><span class="nav-number">3.3.0.4.</span> <span class="nav-text">OAuth Custom Resource</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Describe-OpenShift-Container-Platform"><span class="nav-number">1.</span> <span class="nav-text">Describe OpenShift Container Platform</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary"><span class="nav-number">1.2.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Installation"><span class="nav-number">2.</span> <span class="nav-text">Installation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPI"><span class="nav-number">2.1.</span> <span class="nav-text">IPI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UPI"><span class="nav-number">2.2.</span> <span class="nav-text">UPI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CoreOS-and-RHEL"><span class="nav-number">2.3.</span> <span class="nav-text">CoreOS and RHEL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Installation-config-yaml"><span class="nav-number">2.4.</span> <span class="nav-text">Installation-config.yaml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Initial-deployment-process"><span class="nav-number">2.5.</span> <span class="nav-text">Initial deployment process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-1"><span class="nav-number">2.6.</span> <span class="nav-text">Summary</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Identity-Providers"><span class="nav-number">3.</span> <span class="nav-text">Identity Providers</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Concept"><span class="nav-number">3.1.</span> <span class="nav-text">Concept</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Describe"><span class="nav-number">3.2.</span> <span class="nav-text">Describe</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#User"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">User</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Identity"><span class="nav-number">3.2.0.2.</span> <span class="nav-text">Identity</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service-Account"><span class="nav-number">3.2.0.3.</span> <span class="nav-text">Service Account</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Group"><span class="nav-number">3.2.0.4.</span> <span class="nav-text">Group</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Role"><span class="nav-number">3.2.0.5.</span> <span class="nav-text">Role</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-2"><span class="nav-number">3.3.</span> <span class="nav-text">Summary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-Users"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">Creating Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deleting-Users"><span class="nav-number">3.3.0.2.</span> <span class="nav-text">Deleting Users</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Two-authentication-methods"><span class="nav-number">3.3.0.3.</span> <span class="nav-text">Two authentication methods</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OAuth-Custom-Resource"><span class="nav-number">3.3.0.4.</span> <span class="nav-text">OAuth Custom Resource</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Role-based-Access-Control-RBAC"><span class="nav-number">4.</span> <span class="nav-text">Role-based Access Control, RBAC</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
