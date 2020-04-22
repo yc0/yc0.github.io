@@ -11,8 +11,10 @@ categories: ['cloud native', 'kubernetes']
 
 #### create pod
 `kubectl run --generator=run-pod/v1`
+
 for example
-```kubectl run --generator=run-pod/v1 bee --image=nginx```
+
+`kubectl run --generator=run-pod/v1 bee --image=nginx`
 
 #### alias
 
@@ -42,3 +44,26 @@ for example
     # kubectl exec -it {podname} -- sh
     > nc -z -v -w1 {target} {port}
     ```
+
+#### VIM Tips
+- Auto indent and tab
+```bash
+se stst=2 sw=2 ai et
+```
+
+
+##### 與自動縮進相關的變數表
+變數名|縮寫|含義
+:---|:---:|:---
+(no)autoindent |ai | 自動縮進，即為新行自動添加與當前行同等的縮進
+(no)cindent | ci | 類似C語言程序的縮進
+(no)smartindent |si | 基於autoindent的一些改進
+
+##### 與TAB相關的變數表
+變數名|縮寫|含義
+:---|:---:|:---|
+tabstop=X|ts|編輯時一個TAB字元佔多少個空格的位置|
+shiftwidth=X|sw|使用每層縮進的空格數
+(no)expandtab|(no)et|是否將輸入的TAB自動展開成空格。開啟後要輸入TAB，需要Ctrl-V<TAB>
+softtabstop=X|sts|方便在開啟了et後使用退格（backspace）鍵，每次退格將刪除X個空格
+(no)smarttab|(no)sta|開啟時，在行首按TAB將加入sw個空格，否則加入ts個空格

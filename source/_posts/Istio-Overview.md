@@ -4,21 +4,25 @@ date: 2020-04-13 17:16:32
 tags: ['OpenShift','Istio','Overview','Network']
 categories: ['OpenShift','Istio']
 ---
-
 # Service Connection
 ## Traffice management
 - service mesh traffic management decouples traffic flow and infrastructure scaling
 - Pilot to specify rules for traffic management
 - Pilot and Envoy manage which pods receive traffic
+
 ### Pilot
 - **Manages and configures** Envoy proxy 
 - specify **routing rules**
 - Enables service **discovery**, **dynamic updates** for load balancing, routing tables
+
 ### Envoy
 - Maintains configuration information from Pilot
+<!-- more -->
+
 ## Request Routing
 - Fine-grained approach to identify services by versions
 - Service versions in OpenShift service mesh implemented with **OpenShift labels**
+
 ### Communication Between Services
 - clients have **agnostic** of different service versions
 - Envoy **intercepts**, forwards requests/responses between client and service
@@ -26,6 +30,7 @@ categories: ['OpenShift','Istio']
     - Header
     - Tags associated with SRC/DEST
     - Weight associated with Version
+
 ## Rule Configuration
 - VirtualService : Defines rules that control how requests for service are routed within service mesh
 - DestinationRule : correspond to one or more request destination hosts specified in VirtualService configuration
@@ -39,9 +44,11 @@ categories: ['OpenShift','Istio']
     - HTTP/TCP ingress traffic to mesh application
     - Egress traffic to external services
     - Sidecar Configures sidecar proxies attached to application workloads running inside mesh
+
 ## Traffic Splitting
 - Each route rule identifies one or more weighted
 - Versions expressed using labels
+
 ## Conditional Rules
 - Can qualify rules to apply only to requests that match specific condition
 ```
