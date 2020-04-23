@@ -71,16 +71,19 @@ oc logs {podname} -c {}
 
 ## oc rsh
 ```bash
-> oc exec -it {podname} -- {command} {--options}
+$ oc exec -it {podname} -- {command} {--options}
 
-> oc exec -it {podname} -c {container} -- {command} {--options}
+$ oc exec -it {podname} -c {container} -- {command} {--options}
 ```
 
 shorter equivalent
 
 ```bash
-> oc rsh {podname}
+$ oc rsh {podname}
 ```
+### Note
+why we need -- ?
+- You must use two dashes (--) to separate your command's flags/arguments
 
 # Identity Providers 
 
@@ -88,45 +91,50 @@ shorter equivalent
 ![](https://user-images.githubusercontent.com/10542832/79710264-10496580-82f7-11ea-9b09-2d000623a33b.png)
 
 ## Describe
-#### User
+### User
 - Users are entities
 - An actor within the system
 - Interact with the API server
 - Assign permissions by adding roles
 - The user is a member of the group
 
-#### Identity
+### Identity
 - A resource that keeps **a record** of **successful authentication** attempts from a specific user and identity provider
 - A single user resource is associated with an identity resource.
 
-#### Service Account
+### Service Account
 - Applications can communicate with the API independently 
 - Service accounts enable you to control API access with Service Account credentials.
 
-#### Group
+### Group
 - Groups represent a specific set of users
 - Users are assigned to one or to multiple groups.
 - implementing authorization policies to assign permissions **to multiple users at the same time.** 
 
-#### Role
+### Role
 - A set of permissions that enables a user to perform API operations over one or more resource types. `(Verb + Resources)`
 
+
 ## Summary
-#### Creating Users 
+
+### Creating Users 
 Requires valid credentials managed by an identity provider, user and identity resources
 
-#### Deleting Users
+### Deleting Users
 Deleting their credentials from the identity provider, and also deleting their user and identity resources.
 
-#### Two authentication methods
+### Two authentication methods
 - kubeconfig : not recommand, super priviledge.
 - kubeadmin virtual user
 
-#### OAuth Custom Resource
+### OAuth Custom Resource
 - HTPasswd Identity Provider
     - htpasswd
     - extract data from secret/store in a secret
 - Assign `cluster-admin` role to the user to grant a user cluser admin priviledge.
+
+
+
 
 # Role-based Access Control, RBAC
  In OpenShift, RBAC determines if a user can perform certain actions within the cluster or project. There're two types of roles:
@@ -148,7 +156,7 @@ it's better to assign specific namespace to make sure we delegate the designate 
 for example
 
 ```bash
-oc policy add-role-to-user view developer -n test-namespace
+$ oc policy add-role-to-user view developer -n test-namespace
 ```
 - add-role-to-group
 - remove-role-from-user
@@ -160,28 +168,186 @@ oc policy add-role-to-user view developer -n test-namespace
 - remove-cluster-role-from-user
 - remove-cluster-role-from-group
 
-### Who can
+## Who can
 `oc adm policy who-can {verb} {resource}`
 
 for example
 ```bash
-oc adm policy who-can create projects
+$ oc adm policy who-can create projects
 ```
 However, in OpenShift, you cannot directly `create project` as prioi to mention.
 
 OpenShift adopts a mechanism `projectrequest` resource to automatically on the background for making sure **the project** is created according to certain of settings and 
 
-### Admin Role V.S. Edit Role
+## Admin Role V.S. Edit Role
 - no role related resources on Edit Role
 - no delete/patch/update permission for projects and namespaces on Edit Role
 
-### Service Account, SA
+## Service Account, SA
 - exist within **the scope of a project**
     - that is to say, if there're the SAs with the same name, they are totally different objects though.
 
-# Resource
+
+
+
+# Security Context Constraints, SCC
+
+## Concept 
+- it evaluates **at pod creation time**
+    - Pod is with the correct SCC, it has to be deleted and be recreated
+- it controls
+    - Running privileged containers
+    - Requesting extra capabilities to a container
+    - Using host directories as volumes
+    - Changing the SELinux context of a container
+    - Changing the user ID
+
+
+
+## Capabilities
+
+Also refer to **POSIX capabilities**, you can look up piece of information in Linux.
+The capabilities would be add or remove from the processes running inside the containers 
+```bash
+$ man 7 capabilities
+```
+
+
+## Prioitization
+
+1. highest priority first, nil is considered a 0 priority
+2. if priority is equal, most restrictive is with high priority
+
+## Add SCC
+
+```bash
+$ oc adm policy add-scc-to-user {scc} -z {sa_name} -n {namespace} 
+```
+or more straighward
+
+```bash
+$ oc adm policy add-scc-to-user {scc} system:serviceaccount:{namespace}:{sa_name}
+```
+
+for example
+```bash
+$ oc adm policy add-scc-to-user noroot system:serviceaccount:troube:privileged
+```
+
+
+## Service Account to DeploymentConfig
+
+```bash
+$ oc set serviceaccount deploymentconfig {deployconfig} {service acccount}
+```
+
+it can be expressed shorter
+
+```bash
+$ oc set sa dc {dc} {sa}
+```
+
+
+## Summary
+- ![](https://user-images.githubusercontent.com/10542832/79726062-c96e6680-831c-11ea-9129-9fc372ce6b13.png) 
+Main concept of Role-based access control, RBAC
+- Secret resources allow you to separate sensitive information from application pods
+    - project scope
+    - extract it for extension (configmap as well)
+
+- Security context constraints (SCCs) t allowed pod interactions with system resources.
+
+## Abbreviation
+- mcs : multiple category security
+
+# Components
 
 ## DeploymentConfig
 
 ### Concept
 ![](https://user-images.githubusercontent.com/10542832/79877134-711f8d80-841e-11ea-859c-cb514d4d7747.png)
+
+## Networking
+
+keypoints : **Troubleshoot it** and **ingress component**
+
+### Service
+- Kubernetes service IP == Virtual IP
+- Doesn't allocate any unit/instance 
+- A **collection** of network translation rules
+- 4 types
+    - cluster IP
+    - node port [older concept]
+    - load balancer [older concept] : alway along with cloud providers
+    - service name
+    ![](https://user-images.githubusercontent.com/10542832/80056079-ee015300-8555-11ea-886b-85f6d7e0ba0d.png)
+### CoreDNS creates two records
+    - A record : resolve FQDN to IP address
+    - SRV record: what port the service uses.
+        - if you use a service exposed TCP 443 through the `https` service in `frontend` namespace
+        - `_443._tcp.https.frontend.svc.cluster.local`
+        
+
+### Cluster Network Operator 
+can only be configured at installation time
+
+#### NetworkType
+- openshiftSDN : 3 types
+    - network policy (default)
+        - no policy == subnet mode
+    - multitenant mode: project-level isolation
+        - Pods from different projects cannot communicate with each other
+        - unless we create network bridge between them
+    - subnet mode (older default, ocp 3.*)
+        - flat network
+        - Pods can communicate with other Pods whereever their projects
+
+### Route
+- Ingress in Kubernetes
+- Reverse Proxy
+- When you create `route`
+    - name of service
+    - hostname of route
+
+### Summary
+- OpenShift implements a software-defined networking (SDN) to manage the network infrastructure
+- `Service` allow the logical grouping of pods
+- `Service` acts as load balancer as well
+- `Service` selects pods by labels
+- Two route : `secure` and `insecure`
+    - secure : TLS
+        - edge
+        - passthrough
+        - re-encryption
+
+
+# Tips
+## List Project
+```bash
+$ oc projects
+```
+
+## Check CRD
+```bash
+$ oc get clusteroperators
+
+# oc get clusteroperators/{operator}
+$ oc get clusteroperators/dns
+
+# oc get -o yaml {crd}.operator/{name}
+$ o get -o yaml dns.operator/default
+```
+
+## Copy Data
+```bash
+# oc cp {source} {pod}:{target}
+$ oc cp data.sql mysql-5cpd:/tmp/
+```
+
+## Check Pod/Deployment Mount
+```bash
+# oc set volumes deployment/{name}
+# oc set volumes pod/{name}
+
+$ oc set volumnes deployment/mysql
+```

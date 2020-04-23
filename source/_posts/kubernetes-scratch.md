@@ -6,35 +6,43 @@ categories: ['cloud native', 'kubernetes']
 ---
 
 ## Quick Overview
-#### kubernetes .io
+### kubernetes .io
 - [Getting started](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-deployment-em-)
 
-#### create pod
+### create pod
 `kubectl run --generator=run-pod/v1`
 
 for example
 
 `kubectl run --generator=run-pod/v1 bee --image=nginx`
 
-#### alias
+### alias
 
 - cheat sheet
 `https://kubernetes.io/docs/reference/kubectl/cheatsheet/`
 
-- other
-    ```
-    alias k='kubectl -n $ns'
-    alias kdr='kubectl run -n $ns -o yaml   --dry-run'
-    alias kpr='kubectl run --generator=run-pod/ v1 -n $ns -o yaml --dry-run'
-    ```
+### other
+```
+alias k='kubectl -n $ns'
+
+alias kdr='kubectl run -n $ns -o yaml 
+--dry-run'
+
+alias kpr='kubectl run --generator=run-pod/ v1 -n $ns -o yaml --dry-run'
+```
 
 
+### Shell
+#### Get rid of the first line and recliam first column
+```
+$ awk 'NR!=1{print $1}' file
+```
+#### Read follow line regarding to certain word
+```bash
+#grep -A{lines} {keyword}
+$ grep -A3 'Labels'
+```
 
-#### Shell
-- Get rid of the first line and recliam first column
-    ```
-    awk 'NR!=1{print $1}' file
-    ```
 
 #### Execution Tips
 - Check Network Connection
@@ -42,7 +50,7 @@ for example
     - example
     ```bash
     # kubectl exec -it {podname} -- sh
-    > nc -z -v -w1 {target} {port}
+    $ nc -z -v -w1 {target} {port}
     ```
 
 #### VIM Tips
