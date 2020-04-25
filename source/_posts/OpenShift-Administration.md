@@ -309,6 +309,16 @@ can only be configured at installation time
     - name of service
     - hostname of route
 
+#### Types
+There're four types:
+- service  
+- edge terminated route
+- re-encrypted route
+- passthrough
+
+![router type](https://user-images.githubusercontent.com/10542832/80170176-f8852080-8619-11ea-97b9-04a578176c84.png)
+
+
 ### Summary
 - OpenShift implements a software-defined networking (SDN) to manage the network infrastructure
 - `Service` allow the logical grouping of pods
@@ -319,6 +329,170 @@ can only be configured at installation time
         - edge
         - passthrough
         - re-encryption
+
+# Scheduling
+## OpenShift pod scheduler algorithm
+1. Filtering nodes.
+    - node condition : disk or memory pressure
+    - match labels
+    - pod resource demands : CPU, Memory and Storage
+    - Taint
+2. Prioritizing the filtered nodes
+    - Affinity
+3. Select a fit node
+
+can possible create customerized scheduling policies with  `policy.cfg` key 
+
+## Labeling on Node
+Apart from tranditional way of labelling,
+CLuster administrator can use `-L` to determine the single label
+
+```bash
+$ oc get node -L failure-domain.beta.kubernetes.io/region
+```
+
+## Labeling Machine Sets
+Although node labels are persistent, if your OpenShift cluster contains machine sets (created if your cluster was installed using the full stack automation method, IPI), you should add labels to the `MachineSets`
+
+This ensures that new machines will also contains the desired labels when generating new nodes.
+
+## Controlling Pod Placement
+### Infrastructure-related Pods
+- run on master nodes
+- DNS Operator
+- OAuth operator
+- API Server
+
+### Node Selector
+```bash
+$ oc edit deployment/myapp
+```
+```yaml
+spec:
+...output omitted...
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      nodeSelector:
+        nev: dev
+      containers:
+      - images: quay.io/redhattraining/scaling:v1.0
+...output omitted...
+```
+the following command accomplishes the same thing
+```bash
+$ oc patch deployment/myapp --patch \
+'{"spec":{"template":{"spec":{"nodeSelector":{"env":"dev"}}}}}'
+```
+
+Both commands triggers new deployemnt and new pods scheduled according to the node selector
+
+## Default Node Selector for a Project
+
+default node selector should be configured in the project resource, for example:
+
+### create a new project
+
+```bash
+$ oc admin new-project qa --node-selector "env=qa"
+```
+
+### configure on a existing project
+
+```bash
+$ oc annotate namespace qa \
+openshift.io/node-selector="env=qa" --overwrite
+```
+
+## Scaling
+```bash
+$ oc scale --replicas 3 deployment/myapp
+```
+
+# Limiting Resource Usage
+## Resource Requests
+- Used for scheduling, scheduler find a node with sufficient compute resources.
+- indicate that a pod cannot run with less than the specified amount of compute resources. 
+## Resource limits
+- how far Pod can consume the resources
+- prevent a pod from using up all compute resources from a node
+- Linux kernel cgroups feature to enforce the resource limits for the pod.
+
+## Observation
+
+the individual resource comsumption for a pod or the sum amount of the resource comsumption
+
+### By Describe
+```bash
+# oc describe node/{node}
+$ oc describe node ip-10.10.0.0.us-east-1.compute.internal 
+```
+
+### By Node type 
+```bash
+# oc adm top node
+# 
+$ oc adm top node -l node-role.kubernetes.io/worker
+```
+
+### By project
+```bash
+$ oc adm top node -n execute-troubleshoot
+```
+
+## Quality of Service
+1. BestEffort
+    - first eviction
+2. Burstable
+    - second evition
+3. Guaranteed
+    - never evition
+    - unless go node down for maintenence
+
+## Quota
+Quotas are limitations on the aggregate consumption of resources of any particular project
+
+### Two kinds
+- Object counts
+- Compute resources 
+
+### Improve stablility of the OpenShift
+- Avoiding unbounded growth of the Etcd database
+- Avoids exhausting other limited software resources, e.g. IP.
+
+## Some important Note of Quota
+### Best-Effort Node
+Any Node with resourcequota cannot accommodate any `best-effort` node
+### Multiple Resource Quota in a project
+Though we can create multiple `resourcequota`, we cannot overlap the quota items in the same project
+
+## Limit Ranges
+- give range min limits to max limits
+- give deault limits for containers w/o the requests and limits specified
+
+### Some Pods, System Pods
+- Deployer pod
+- Builder Pod
+
+## ClusterQuota
+- project-annotation-selector
+- project-label-selector
+
+## Lookup
+
+project scale
+```bash
+$ oc describe resorucequota
+```
+
+cluster span mulitple project
+```bash
+$ oc describe appliedclusterresourcequotas
+```
+
+due to `request quota`, there's not allowed `best effort` Pods. It brings the situation to setup default - `Limit Range`.
 
 
 # Tips
@@ -351,3 +525,30 @@ $ oc cp data.sql mysql-5cpd:/tmp/
 
 $ oc set volumnes deployment/mysql
 ```
+
+## Labelling on Node
+```bash
+# add new labels
+$ oc label node node1.us-east-1.compoute.internal env=dev  
+# modify existing labels
+$ oc label node node1.us-east-1.compute.internal env=dev --overwrite
+# remove labels
+$ oc label node node1.us-east-1.compute.internal env-
+```
+
+## Control Quota
+```bash
+$ oc create quota count -n test \
+ --hard=services=5,pods=25,replicationcontrollers=17....
+
+$ oc create quota compute -n test \
+ --hard=cpu=5,memory=4Gi,limits.cpu=7,limits.memory=8Gi
+
+```
+
+## Retry Schdule
+```bash
+$ oc rollout retry dc/{name}
+$ oc rollout latest dc/{name}
+```
+
