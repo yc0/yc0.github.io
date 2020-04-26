@@ -484,7 +484,7 @@ Though we can create multiple `resourcequota`, we cannot overlap the quota items
 
 project scale
 ```bash
-$ oc describe resorucequota
+$ oc describe resourcequota
 ```
 
 cluster span mulitple project
@@ -494,6 +494,69 @@ $ oc describe appliedclusterresourcequotas
 
 due to `request quota`, there's not allowed `best effort` Pods. It brings the situation to setup default - `Limit Range`.
 
+# Scale
+## Manual Scaling
+```bash
+$ oc scale deployment/psql --replicas=3
+#or
+$ oc scale dc/psql --replicas=3
+```
+the difference between dc and deployment is that dc adopts replicacontroller whereas deployement adopts replicsets. Basically they are with same mechanism
+
+## Autoscaling
+### Concept
+![autoscaling](https://user-images.githubusercontent.com/10542832/80303941-cfb18680-87e5-11ea-9c32-9caeacfb3336.png)
+
+### Matrix subsystem
+- OCP4 pre-installed
+- OCP3 it's a part of the platform
+    - take care of separately
+### Command
+
+```bash
+$ oc autoscale dc/mysql --min=1 --max=5 --cpu-percent=80
+```
+### Controller by HorizontalPodAutoscalar, HPA
+
+Remember that if you want to specify cpu-percent, you must request resources `burstable or guaruanteed`
+
+## Summary
+- Default pod scheduler spans regions and zones : performance and redundancy.
+
+- Pod placement use node selectors w/ labeling nodes.
+
+- Resource requests : the minimum amount of resources for scheduling.
+
+- Quotas : restrict the amount consumption of resources a project.
+
+- scales number of replicas of a pod
+    - `oc scale` for manual
+    - `oc autoscale` for dynamic 
+
+# Scaling an OpenShift Cluster
+## Machine API gives 2 custom resources
+### `machine-api` operator
+- handle machine-api
+- handle machine
+- two 2 CRD
+    - Machineset
+    - machine
+
+```bash
+$ oc get clusteroperators
+
+$ oc get clusteroperators/machine-api
+$ oc get -n openshift-machine-api machines
+$ oc get -n openshift-machine-api machinesets
+```
+
+- modify Machineset
+    - won't affect existing machines
+    - only new machine inherit the features
+    - analogous to how `ReplicaSet` treat pods
+### `machine-config` operator
+    - handle vm or instance
+    - help it become worker node
 
 # Tips
 ## List Project
