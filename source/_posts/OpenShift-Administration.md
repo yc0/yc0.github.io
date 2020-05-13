@@ -192,6 +192,8 @@ OpenShift adopts a mechanism `projectrequest` resource to automatically on the b
 
 # Security Context Constraints, SCC
 
+security context constraints, SCC, that control the actions that a pod can perform and what it has the ability to access.
+
 ## Concept 
 - it evaluates **at pod creation time**
     - Pod is with the correct SCC, it has to be deleted and be recreated
@@ -505,7 +507,10 @@ the difference between dc and deployment is that dc adopts replicacontroller whe
 
 ## Autoscaling
 ### Concept
-![autoscaling](https://user-images.githubusercontent.com/10542832/80303941-cfb18680-87e5-11ea-9c32-9caeacfb3336.png)
+![autoscaling](https://user-images.githubusercontent.com/10542832/80395043-45e8e280-88e5-11ea-9025-5fd6a97f24bd.png)
+
+### utilization
+![utilization](https://user-images.githubusercontent.com/10542832/80303941-cfb18680-87e5-11ea-9c32-9caeacfb3336.png)
 
 ### Matrix subsystem
 - OCP4 pre-installed
@@ -557,6 +562,22 @@ $ oc get -n openshift-machine-api machinesets
 ### `machine-config` operator
     - handle vm or instance
     - help it become worker node
+
+## AutoScaling for Cluster
+### concept
+![cluster-autoscaler](https://user-images.githubusercontent.com/10542832/80396081-b6dcca00-88e6-11ea-8d7e-9f3e3068ed28.png)
+### Cluster-AutoScaler
+aggregate all machine-autoscaler
+### Machine-AutoScaler
+Usually for the physical partition purpose, like zone
+
+# Performing Cluster Updates
+- OpenShift 4 architectural let you update your clusters **Over-the-Air** (OTA).
+- Red Hat provides a distribution system that ensures the best path for updating your cluster and the underlying operating system.
+- There are two distribution channels: fast and stable
+    - fast : delivers updates are soon as they are available
+    - stable : delivers delayed updates.
+- Red Hat does not support reverting and only supports upgrading
 
 # Tips
 ## List Project
@@ -613,5 +634,10 @@ $ oc create quota compute -n test \
 ```bash
 $ oc rollout retry dc/{name}
 $ oc rollout latest dc/{name}
+```
+
+## Security Context Constraints (SCCs)
+```bash
+oc adm policy add-scc-to-user SCC (USER| -z SERVICEACCOUNT) [USER....]
 ```
 

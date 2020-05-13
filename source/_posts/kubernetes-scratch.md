@@ -56,7 +56,8 @@ $ grep -A3 'Labels'
 #### VIM Tips
 - Auto indent and tab
 ```bash
-se stst=2 sw=2 ai et
+se sts=2 sw=2 ai et
+set nu rnu
 ```
 
 
