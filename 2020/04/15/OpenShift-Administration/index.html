@@ -71,7 +71,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/10542832/80395043-45e8e280-88e5-11ea-9025-5fd6a97f24bd.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/10542832/80303941-cfb18680-87e5-11ea-9c32-9caeacfb3336.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/10542832/80396081-b6dcca00-88e6-11ea-8d7e-9f3e3068ed28.png">
-<meta property="og:updated_time" content="2020-05-13T13:51:45.660Z">
+<meta property="og:updated_time" content="2020-05-13T13:54:35.078Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenShift Administration">
 <meta name="twitter:description" content="Describe OpenShift Container PlatformOverview An application manages Kubernetes resources: Operator An application manages Kubernetes operators : Operator Lifecycle Manager(OLM) A repo. for discoverin">
@@ -368,7 +368,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-13 21:51:45" itemprop="dateModified" datetime="2020-05-13T21:51:45+08:00">2020-05-13</time>
+                <time title="Modified: 2020-05-13 21:54:35" itemprop="dateModified" datetime="2020-05-13T21:54:35+08:00">2020-05-13</time>
               </span>
             
           
@@ -528,7 +528,9 @@
 <li>no role related resources on Edit Role</li>
 <li>no delete/patch/update permission for projects and namespaces on Edit Role</li>
 </ul>
-<h2 id="Service-Account-SA"><a href="#Service-Account-SA" class="headerlink" title="Service Account, SA"></a>Service Account, SA</h2><ul>
+<h2 id="Service-Account-SA"><a href="#Service-Account-SA" class="headerlink" title="Service Account, SA"></a>Service Account, SA</h2><p>When a person uses the command line or web console, their API token authenticates them to the OpenShift API. However, when a regular user’s credentials are not available, it is common for components to make API calls independently. For example:</p>
+<p>Replication controllers make API calls to create or delete pods<br>Applications inside containers could make API calls for discovery purposes<br>External applications could make API calls for monitoring or integration purposes<br>Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.</p>
+<ul>
 <li>exist within <strong>the scope of a project</strong><ul>
 <li>that is to say, if there’re the SAs with the same name, they are totally different objects though.</li>
 </ul>
