@@ -184,6 +184,14 @@ OpenShift adopts a mechanism `projectrequest` resource to automatically on the b
 - no delete/patch/update permission for projects and namespaces on Edit Role
 
 ## Service Account, SA
+
+When a person uses the command line or web console, their API token authenticates them to the OpenShift API. However, when a regular user’s credentials are not available, it is common for components to make API calls independently. For example:
+
+Replication controllers make API calls to create or delete pods
+Applications inside containers could make API calls for discovery purposes
+External applications could make API calls for monitoring or integration purposes
+Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.
+
 - exist within **the scope of a project**
     - that is to say, if there're the SAs with the same name, they are totally different objects though.
 
