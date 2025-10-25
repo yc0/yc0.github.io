@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Lambda on My journey</title><link>https://yc0.github.io/tags/lambda/</link><description>Recent content in Lambda on My journey</description><generator>Hugo -- 0.152.2</generator><language>zh-tw</language><lastBuildDate>Sat, 25 Oct 2025 10:47:02 +0800</lastBuildDate><atom:link href="https://yc0.github.io/tags/lambda/index.xml" rel="self" type="application/rss+xml"/><item><title>class static member initialization in C++</title><link>https://yc0.github.io/posts/static-class-member-initialization-in-c/</link><pubDate>Wed, 09 Oct 2019 11:39:46 +0000</pubDate><guid>https://yc0.github.io/posts/static-class-member-initialization-in-c/</guid><description>&lt;h2 id="class-static-member-initialization-in-c"&gt;class static member initialization in C++&lt;/h2&gt;
+&lt;p&gt;How we initialize the class static member and make a simliar concept of Java static scope is shown in below &lt;code&gt;如何初始化Static class member和達成類似Java Static Scope的功能，將是本文紀錄的項目&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="class-static-member"&gt;Class Static Member&lt;/h4&gt;
+&lt;p&gt;At first, class static member must be initialized, for example.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;class CFoo {
+public:
+CFoo() {}
+int GetData() { return s_data; }
+private:
+static int s_data;
+};
+void main() {
+CFoo foo;
+cout &amp;lt;&amp;lt; foo.GetData() &amp;lt;&amp;lt; endl;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;it will incur following errors:&lt;/p&gt;</description></item></channel></rss>

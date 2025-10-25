@@ -1,0 +1,147 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>System Design Overview | My journey</title><meta name=keywords content="system design"><meta name=description content="Introduction System Design
+from jiuzhang, talk to you how to prepare your system
+
+
+
+DAU: Daily active user
+
+
+Infrastructure
+
+
+Web development
+
+
+analyst duo dilgence
+
+work solution
+special case
+analysis
+tradeoff
+knowledge base
+
+
+
+4s&rsquo; analysis
+
+scenario
+service
+storage
+scale
+
+
+
+Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)
+
+
+Breakdown The
+Requirements
+
+
+daily active users
+
+login/register
+
+
+
+user profile
+
+display/edit
+
+
+
+storage
+
+database: sql database => user table
+nosql database => tweets/social graph
+
+
+
+file system"><meta name=author content="Nelson"><link rel=canonical href=https://yc0.github.io/posts/system-design-overview/><link crossorigin=anonymous href=/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn+yY=" rel="preload stylesheet" as=style><link rel=icon href=https://yc0.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yc0.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yc0.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://yc0.github.io/apple-touch-icon.png><link rel=mask-icon href=https://yc0.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://yc0.github.io/posts/system-design-overview/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://yc0.github.io/posts/system-design-overview/"><meta property="og:site_name" content="My journey"><meta property="og:title" content="System Design Overview"><meta property="og:description" content="Introduction System Design from jiuzhang, talk to you how to prepare your system
+DAU: Daily active user
+Infrastructure
+Web development
+analyst duo dilgence
+work solution special case analysis tradeoff knowledge base 4s’ analysis
+scenario service storage scale Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)
+Breakdown The Requirements daily active users
+login/register user profile
+display/edit storage
+database: sql database => user table nosql database => tweets/social graph file system"><meta property="og:locale" content="zh-tw"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-10-18T11:11:48+00:00"><meta property="article:modified_time" content="2025-10-25T10:47:02+08:00"><meta property="article:tag" content="System Design"><meta name=twitter:card content="summary"><meta name=twitter:title content="System Design Overview"><meta name=twitter:description content="Introduction System Design
+from jiuzhang, talk to you how to prepare your system
+
+
+
+DAU: Daily active user
+
+
+Infrastructure
+
+
+Web development
+
+
+analyst duo dilgence
+
+work solution
+special case
+analysis
+tradeoff
+knowledge base
+
+
+
+4s&rsquo; analysis
+
+scenario
+service
+storage
+scale
+
+
+
+Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)
+
+
+Breakdown The
+Requirements
+
+
+daily active users
+
+login/register
+
+
+
+user profile
+
+display/edit
+
+
+
+storage
+
+database: sql database => user table
+nosql database => tweets/social graph
+
+
+
+file system"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://yc0.github.io/posts/"},{"@type":"ListItem","position":2,"name":"System Design Overview","item":"https://yc0.github.io/posts/system-design-overview/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"System Design Overview","name":"System Design Overview","description":"Introduction System Design from jiuzhang, talk to you how to prepare your system\nDAU: Daily active user\nInfrastructure\nWeb development\nanalyst duo dilgence\nwork solution special case analysis tradeoff knowledge base 4s\u0026rsquo; analysis\nscenario service storage scale Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)\nBreakdown The Requirements daily active users\nlogin/register user profile\ndisplay/edit storage\ndatabase: sql database =\u0026gt; user table nosql database =\u0026gt; tweets/social graph file system\n","keywords":["system design"],"articleBody":"Introduction System Design from jiuzhang, talk to you how to prepare your system\nDAU: Daily active user\nInfrastructure\nWeb development\nanalyst duo dilgence\nwork solution special case analysis tradeoff knowledge base 4s’ analysis\nscenario service storage scale Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)\nBreakdown The Requirements daily active users\nlogin/register user profile\ndisplay/edit storage\ndatabase: sql database =\u003e user table nosql database =\u003e tweets/social graph file system\nmedia files cache\nnonpersistent algorithm/datastructure merge k sorted arrays Design user system - database\u0026 memcache design user system - memcached authentication sql vs nosql friendship (MST, kruskal, Prim) how to scale sharding/ consistent hashing/ replica user systems features\nheavy read, light write cache a sort of key-val datastructure, like hashmap in Java memcached =\u003e non-persistence (high performance) redis =\u003e persistence (high cluster) it is not necessary to keep in memory file system could be a cache cpu also has a cache cache.get(\"this is a key\", \"this is a value\") cache.get(\"this is a key\") \u003e\u003e this is a value\ncache.set(\"foo\", 1, ttl = 60) // expired within 60 sec cache.get(\"foo\") \u003e\u003e 1\n#wait for 60 seconds cache.get(\"foo\") \u003e\u003enull\ncache.get(\"bar\") \u003e\u003enull\n# memcached optimize the query of DB class UserService: def getUser(self, user_id): key = \"user::%s\" % user_id How to keep login? session / login After users login, server will create a session instance, and response session_key as a cookie back to a browser.\nThe browser will put the records in the cookie. Customers want to request the service every time. The browser will bring the cookie corresponding to the server, and the server will validate the session_key in cookie. If it is valid, the customer is allowed to access the services.\nsession logout The server will erase/delete a record from a session table. But where is the session table.\nIn general, session table is stored in cache. However, it could be better when stored in database. If customers access frequently, try to adopt cache instead.\nSQL v.s. NOSQL transaction -\u003e cannot use nosql sql -\u003e serialization, secondary index and soon HDrive nosql run 10x+ fast than sql SQL A column is defined by schema with predefinition, and cannot be abitrarily extended. Retrieve record by row NOSQL, opposite to SQL column is dynamic retrieve data by grid ","wordCount":"379","inLanguage":"en","datePublished":"2019-10-18T11:11:48Z","dateModified":"2025-10-25T10:47:02+08:00","author":{"@type":"Person","name":"Nelson"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yc0.github.io/posts/system-design-overview/"},"publisher":{"@type":"Organization","name":"My journey","logo":{"@type":"ImageObject","url":"https://yc0.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yc0.github.io/ accesskey=h title="My journey (Alt + H)">My journey</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://yc0.github.io/posts/ title="All Posts"><span>All Posts</span></a></li><li><a href=https://yc0.github.io/categories/ title=Categories><span>Categories</span></a></li><li><a href=https://yc0.github.io/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://yc0.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://yc0.github.io/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">System Design Overview</h1><div class=post-meta><span title='2019-10-18 11:11:48 +0000 UTC'>October 18, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Nelson</span></div></header><div class=post-content><h2 id=introduction-system-design>Introduction System Design<a hidden class=anchor aria-hidden=true href=#introduction-system-design>#</a></h2><p>from jiuzhang, talk to you how to prepare your system</p><ul><li><p>DAU: Daily active user</p></li><li><p>Infrastructure</p></li><li><p>Web development</p></li><li><p>analyst duo dilgence</p><ul><li>work solution</li><li>special case</li><li>analysis</li><li>tradeoff</li><li>knowledge base</li></ul></li><li><p>4s&rsquo; analysis</p><ul><li>scenario</li><li>service</li><li>storage</li><li>scale</li></ul></li><li><p>Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)</p></li></ul><h2 id=breakdown-the>Breakdown The<a hidden class=anchor aria-hidden=true href=#breakdown-the>#</a></h2><h3 id=requirements>Requirements<a hidden class=anchor aria-hidden=true href=#requirements>#</a></h3><ul><li><p><strong>daily active users</strong></p><ul><li>login/register</li></ul></li><li><p><strong>user profile</strong></p><ul><li>display/edit</li></ul></li><li><p><strong>storage</strong></p><ul><li>database: sql database => user table</li><li>nosql database => tweets/social graph</li></ul></li><li><p><strong>file system</strong></p><ul><li>media files</li></ul></li><li><p><strong>cache</strong></p><ul><li>nonpersistent</li></ul></li></ul><h3 id=algorithmdatastructure>algorithm/datastructure<a hidden class=anchor aria-hidden=true href=#algorithmdatastructure>#</a></h3><ul><li>merge k sorted arrays</li><li>Design user system - database& memcache</li><li>design user system - memcached</li><li>authentication</li><li>sql vs nosql</li><li>friendship (MST, kruskal, Prim)</li><li>how to scale</li><li>sharding/ consistent hashing/ replica</li></ul><p>user systems features</p><ul><li>heavy read, light write<ul><li>cache</li><li>a sort of key-val datastructure, like hashmap in Java</li><li>memcached => non-persistence (high performance)</li><li>redis => persistence (high cluster)</li><li>it is not necessary to keep in memory<ul><li>file system could be a cache</li><li>cpu also has a cache</li></ul></li></ul></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>cache<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;this is a key&#34;</span>, <span style=color:#e6db74>&#34;this is a value&#34;</span>)
+</span></span><span style=display:flex><span>cache<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;this is a key&#34;</span>)
+</span></span></code></pre></div><p><code>>> this is a value</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>cache<span style=color:#f92672>.</span>set(<span style=color:#e6db74>&#34;foo&#34;</span>, <span style=color:#ae81ff>1</span>, ttl <span style=color:#f92672>=</span> <span style=color:#ae81ff>60</span>) <span style=color:#f92672>//</span> expired within <span style=color:#ae81ff>60</span> sec
+</span></span><span style=display:flex><span>cache<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;foo&#34;</span>)
+</span></span></code></pre></div><p><code>>> 1</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e>#wait for 60 seconds</span>
+</span></span><span style=display:flex><span>cache<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;foo&#34;</span>)
+</span></span></code></pre></div><p><code>>>null</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>cache<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;bar&#34;</span>)
+</span></span></code></pre></div><p><code>>>null</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># memcached optimize the query of DB</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>UserService</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>getUser</span>(self, user_id):
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;user::</span><span style=color:#e6db74>%s</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>%</span> user_id
+</span></span></code></pre></div><h3 id=how-to-keep-login>How to keep login?<a hidden class=anchor aria-hidden=true href=#how-to-keep-login>#</a></h3><h4 id=session--login>session / login<a hidden class=anchor aria-hidden=true href=#session--login>#</a></h4><p>After users login, server will create a session instance, and response <code>session_key</code> as a <code>cookie</code> back to a browser.</p><p>The browser will put the records in the cookie. Customers want to request the service every time. The browser will bring the cookie corresponding to the server, and the server will validate the session_key in cookie. If it is valid, the customer is allowed to access the services.</p><h4 id=session-logout>session logout<a hidden class=anchor aria-hidden=true href=#session-logout>#</a></h4><p>The server will erase/delete a record from a session table. But where is the session table.</p><p>In general, session table is stored in cache. However, it could be better when stored in database. If customers access frequently, try to adopt cache instead.</p><h3 id=sql-vs-nosql>SQL v.s. NOSQL<a hidden class=anchor aria-hidden=true href=#sql-vs-nosql>#</a></h3><ul><li>transaction -> cannot use nosql</li><li>sql -> serialization, secondary index and soon</li><li>HDrive nosql run 10x+ fast than sql</li><li>SQL<ul><li>A column is defined by schema with predefinition, and cannot be abitrarily extended. Retrieve record by row</li></ul></li><li>NOSQL, opposite to SQL<ul><li>column is dynamic</li><li>retrieve data by grid</li></ul></li></ul></div><footer class=post-footer><ul class=post-tags><li><a href=https://yc0.github.io/tags/system-design/>System Design</a></li></ul><nav class=paginav><a class=prev href=https://yc0.github.io/posts/design-a-configuration-management-system/><span class=title>« Prev</span><br><span>Design a configuration management system</span>
+</a><a class=next href=https://yc0.github.io/posts/custom-class-with-range-based-loop-in-c/><span class=title>Next »</span><br><span>Custom Class with Range-based Loop in C++</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://yc0.github.io/>My journey</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

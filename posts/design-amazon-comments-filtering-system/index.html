@@ -1,0 +1,160 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Design Amazon comments filtering system | My journey</title><meta name=keywords content="system design,amazon,onsite"><meta name=description content="Comments Filtering System
+Design Amazon comments filtering system. Use UML to design the classes.
+
+At First Glance
+Class encapsulating a &lsquo;comment&rsquo;
+Main Filter abstract class
+Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc.
+A top &lsquo;Filters&rsquo; class containing a method &lsquo;applyFilters&rsquo; where filters can be passed as an array of &lsquo;Filter&rsquo; objects.
+On application of these filters the comment would be cleaned and a return object of type &lsquo;ResultComment&rsquo; with boolean attributes like isCommentOk"><meta name=author content="Nelson"><link rel=canonical href=https://yc0.github.io/posts/design-amazon-comments-filtering-system/><link crossorigin=anonymous href=/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn+yY=" rel="preload stylesheet" as=style><link rel=icon href=https://yc0.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yc0.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yc0.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://yc0.github.io/apple-touch-icon.png><link rel=mask-icon href=https://yc0.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://yc0.github.io/posts/design-amazon-comments-filtering-system/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://yc0.github.io/posts/design-amazon-comments-filtering-system/"><meta property="og:site_name" content="My journey"><meta property="og:title" content="Design Amazon comments filtering system"><meta property="og:description" content="Comments Filtering System Design Amazon comments filtering system. Use UML to design the classes.
+At First Glance Class encapsulating a ‘comment’ Main Filter abstract class Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc. A top ‘Filters’ class containing a method ‘applyFilters’ where filters can be passed as an array of ‘Filter’ objects. On application of these filters the comment would be cleaned and a return object of type ‘ResultComment’ with boolean attributes like isCommentOk"><meta property="og:locale" content="zh-tw"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-11-13T16:27:46+00:00"><meta property="article:modified_time" content="2025-10-25T10:47:02+08:00"><meta property="article:tag" content="System Design"><meta property="article:tag" content="Amazon"><meta property="article:tag" content="Onsite"><meta name=twitter:card content="summary"><meta name=twitter:title content="Design Amazon comments filtering system"><meta name=twitter:description content="Comments Filtering System
+Design Amazon comments filtering system. Use UML to design the classes.
+
+At First Glance
+Class encapsulating a &lsquo;comment&rsquo;
+Main Filter abstract class
+Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc.
+A top &lsquo;Filters&rsquo; class containing a method &lsquo;applyFilters&rsquo; where filters can be passed as an array of &lsquo;Filter&rsquo; objects.
+On application of these filters the comment would be cleaned and a return object of type &lsquo;ResultComment&rsquo; with boolean attributes like isCommentOk"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://yc0.github.io/posts/"},{"@type":"ListItem","position":2,"name":"Design Amazon comments filtering system","item":"https://yc0.github.io/posts/design-amazon-comments-filtering-system/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Design Amazon comments filtering system","name":"Design Amazon comments filtering system","description":"Comments Filtering System Design Amazon comments filtering system. Use UML to design the classes.\nAt First Glance Class encapsulating a \u0026lsquo;comment\u0026rsquo; Main Filter abstract class Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc. A top \u0026lsquo;Filters\u0026rsquo; class containing a method \u0026lsquo;applyFilters\u0026rsquo; where filters can be passed as an array of \u0026lsquo;Filter\u0026rsquo; objects. On application of these filters the comment would be cleaned and a return object of type \u0026lsquo;ResultComment\u0026rsquo; with boolean attributes like isCommentOk\n","keywords":["system design","amazon","onsite"],"articleBody":"Comments Filtering System Design Amazon comments filtering system. Use UML to design the classes.\nAt First Glance Class encapsulating a ‘comment’ Main Filter abstract class Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc. A top ‘Filters’ class containing a method ‘applyFilters’ where filters can be passed as an array of ‘Filter’ objects. On application of these filters the comment would be cleaned and a return object of type ‘ResultComment’ with boolean attributes like isCommentOk\nImplmentation #include #include using namespace std; class Rule { private: unordered_set\u003cstring\u003e words; public: virtual string valid(string s) = 0; unordered_set\u003cstring\u003e getWords() { return words; } void addWord(string word) { words.insert(word); } bool match(string c) { return words.count(c) == 1; } vector\u003cstring\u003e split(string str, string pattern) { string::size_type pos; vector\u003cstd::string\u003e result; str += pattern; int size = str.size(); for (int i = 0; i \u003c size; i++) { pos = str.find(pattern, i); if (pos \u003c size) { std::string s = str.substr(i, pos - i); result.push_back(s); i = pos + pattern.size() - 1; } } return result; } }; class AdRule : public Rule { public: string valid(string s) { string r = \"\"; auto words = split(s, \" \"); for (auto word : words) { if (!match(word)) { r = r + \" \" + word; } else { r += \" *\"; } } return r; } }; class PornRule : public Rule { public: string valid(string s) { string r = \"\"; auto words = split(s, \" \"); for (auto word : words) { if (match(word)) { return \"\"; } else { r = r + \" \" + word; } } return r; } }; class Filter { private: vector\u003cRule *\u003e rules; public: void addRule(Rule *rule) { rules.push_back(rule); } string valid(string s) { for (Rule *rule : rules) { s = rule-\u003evalid(s); } return s; } }; class Comment { private: string content; Filter *filter; public: Comment(string s, Filter *f) : content(s), filter(f) { } string valid() { return filter-\u003evalid(content); } }; int main() { AdRule *adRule = new AdRule(); adRule-\u003eaddWord(\"ad\"); adRule-\u003eaddWord(\"buy\"); PornRule *pornRule = new PornRule(); pornRule-\u003eaddWord(\"porn\"); pornRule-\u003eaddWord(\"sex\"); Filter *filter = new Filter(); filter-\u003eaddRule(adRule); filter-\u003eaddRule(pornRule); Comment *c1 = new Comment(\"this is a ad\", filter); assert(c1-\u003evalid() == \" this is a *\"); Comment *c2 = new Comment(\"this is a porn\", filter); assert(c2-\u003evalid() == \"\"); return 0; } ","wordCount":"391","inLanguage":"en","datePublished":"2019-11-13T16:27:46Z","dateModified":"2025-10-25T10:47:02+08:00","author":{"@type":"Person","name":"Nelson"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yc0.github.io/posts/design-amazon-comments-filtering-system/"},"publisher":{"@type":"Organization","name":"My journey","logo":{"@type":"ImageObject","url":"https://yc0.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yc0.github.io/ accesskey=h title="My journey (Alt + H)">My journey</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://yc0.github.io/posts/ title="All Posts"><span>All Posts</span></a></li><li><a href=https://yc0.github.io/categories/ title=Categories><span>Categories</span></a></li><li><a href=https://yc0.github.io/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://yc0.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://yc0.github.io/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">Design Amazon comments filtering system</h1><div class=post-meta><span title='2019-11-13 16:27:46 +0000 UTC'>November 13, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Nelson</span></div></header><div class=post-content><h1 id=comments-filtering-system>Comments Filtering System<a hidden class=anchor aria-hidden=true href=#comments-filtering-system>#</a></h1><p>Design Amazon comments filtering system. Use UML to design the classes.</p><h2 id=at-first-glance>At First Glance<a hidden class=anchor aria-hidden=true href=#at-first-glance>#</a></h2><p>Class encapsulating a &lsquo;comment&rsquo;
+Main Filter abstract class
+Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc.
+A top &lsquo;Filters&rsquo; class containing a method &lsquo;applyFilters&rsquo; where filters can be passed as an array of &lsquo;Filter&rsquo; objects.
+On application of these filters the comment would be cleaned and a return object of type &lsquo;ResultComment&rsquo; with boolean attributes like isCommentOk</p><h2 id=implmentation>Implmentation<a hidden class=anchor aria-hidden=true href=#implmentation>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unordered_set&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;assert.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Rule</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    unordered_set<span style=color:#f92672>&lt;</span>string<span style=color:#f92672>&gt;</span> words;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>virtual</span> string valid(string s) <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    unordered_set<span style=color:#f92672>&lt;</span>string<span style=color:#f92672>&gt;</span> getWords() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> words;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>addWord</span>(string word) {
+</span></span><span style=display:flex><span>        words.insert(word);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>bool</span> <span style=color:#a6e22e>match</span>(string c) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> words.count(c) <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    vector<span style=color:#f92672>&lt;</span>string<span style=color:#f92672>&gt;</span> split(string str, string pattern) {
+</span></span><span style=display:flex><span>        string<span style=color:#f92672>::</span>size_type pos;
+</span></span><span style=display:flex><span>        vector<span style=color:#f92672>&lt;</span>std<span style=color:#f92672>::</span>string<span style=color:#f92672>&gt;</span> result;
+</span></span><span style=display:flex><span>        str <span style=color:#f92672>+=</span> pattern;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> size <span style=color:#f92672>=</span> str.size();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> size; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>            pos <span style=color:#f92672>=</span> str.find(pattern, i);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (pos <span style=color:#f92672>&lt;</span> size) {
+</span></span><span style=display:flex><span>                std<span style=color:#f92672>::</span>string s <span style=color:#f92672>=</span> str.substr(i, pos <span style=color:#f92672>-</span> i);
+</span></span><span style=display:flex><span>                result.push_back(s);
+</span></span><span style=display:flex><span>                i <span style=color:#f92672>=</span> pos <span style=color:#f92672>+</span> pattern.size() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> result;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AdRule</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Rule {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    string valid(string s) {
+</span></span><span style=display:flex><span>        string r <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>auto</span> words <span style=color:#f92672>=</span> split(s, <span style=color:#e6db74>&#34; &#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>auto</span> word : words) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>match(word)) {
+</span></span><span style=display:flex><span>                r <span style=color:#f92672>=</span> r <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; &#34;</span> <span style=color:#f92672>+</span> word;
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                r <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#34; *&#34;</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> r;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PornRule</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Rule {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    string valid(string s) {
+</span></span><span style=display:flex><span>        string r <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>auto</span> words <span style=color:#f92672>=</span> split(s, <span style=color:#e6db74>&#34; &#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>auto</span> word : words) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (match(word)) {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                r <span style=color:#f92672>=</span> r <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34; &#34;</span> <span style=color:#f92672>+</span> word;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> r;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Filter</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    vector<span style=color:#f92672>&lt;</span>Rule <span style=color:#f92672>*&gt;</span> rules;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> addRule(Rule <span style=color:#f92672>*</span>rule) {
+</span></span><span style=display:flex><span>        rules.push_back(rule);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    string <span style=color:#a6e22e>valid</span>(string s) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (Rule <span style=color:#f92672>*</span>rule : rules)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            s <span style=color:#f92672>=</span> rule<span style=color:#f92672>-&gt;</span>valid(s);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> s;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Comment</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    string content;
+</span></span><span style=display:flex><span>    Filter <span style=color:#f92672>*</span>filter;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    Comment(string s, Filter <span style=color:#f92672>*</span>f) <span style=color:#f92672>:</span> content(s), filter(f) {
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    string <span style=color:#a6e22e>valid</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> filter<span style=color:#f92672>-&gt;</span>valid(content);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    AdRule <span style=color:#f92672>*</span>adRule <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> AdRule();
+</span></span><span style=display:flex><span>    adRule<span style=color:#f92672>-&gt;</span>addWord(<span style=color:#e6db74>&#34;ad&#34;</span>);
+</span></span><span style=display:flex><span>    adRule<span style=color:#f92672>-&gt;</span>addWord(<span style=color:#e6db74>&#34;buy&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    PornRule <span style=color:#f92672>*</span>pornRule <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> PornRule();
+</span></span><span style=display:flex><span>    pornRule<span style=color:#f92672>-&gt;</span>addWord(<span style=color:#e6db74>&#34;porn&#34;</span>);
+</span></span><span style=display:flex><span>    pornRule<span style=color:#f92672>-&gt;</span>addWord(<span style=color:#e6db74>&#34;sex&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Filter <span style=color:#f92672>*</span>filter <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Filter();
+</span></span><span style=display:flex><span>    filter<span style=color:#f92672>-&gt;</span>addRule(adRule);
+</span></span><span style=display:flex><span>    filter<span style=color:#f92672>-&gt;</span>addRule(pornRule);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Comment <span style=color:#f92672>*</span>c1 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Comment(<span style=color:#e6db74>&#34;this is a ad&#34;</span>, filter);
+</span></span><span style=display:flex><span>    assert(c1<span style=color:#f92672>-&gt;</span>valid() <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;  this is a *&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Comment <span style=color:#f92672>*</span>c2 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Comment(<span style=color:#e6db74>&#34;this is a porn&#34;</span>, filter);
+</span></span><span style=display:flex><span>    assert(c2<span style=color:#f92672>-&gt;</span>valid() <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://yc0.github.io/tags/system-design/>System Design</a></li><li><a href=https://yc0.github.io/tags/amazon/>Amazon</a></li><li><a href=https://yc0.github.io/tags/onsite/>Onsite</a></li></ul><nav class=paginav><a class=prev href=https://yc0.github.io/posts/c-task-scheduler/><span class=title>« Prev</span><br><span>C++ Task Scheduler</span>
+</a><a class=next href=https://yc0.github.io/posts/use-exception-instead-of-error-code/><span class=title>Next »</span><br><span>Use exception instead of error code</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://yc0.github.io/>My journey</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

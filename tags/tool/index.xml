@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Tool on My journey</title><link>https://yc0.github.io/tags/tool/</link><description>Recent content in Tool on My journey</description><generator>Hugo -- 0.152.2</generator><language>zh-tw</language><lastBuildDate>Sat, 25 Oct 2025 10:47:02 +0800</lastBuildDate><atom:link href="https://yc0.github.io/tags/tool/index.xml" rel="self" type="application/rss+xml"/><item><title>SAR Linux Tools</title><link>https://yc0.github.io/posts/sar-linux-tools/</link><pubDate>Mon, 27 Apr 2020 20:10:35 +0000</pubDate><guid>https://yc0.github.io/posts/sar-linux-tools/</guid><description>&lt;h1 id="system-activity-reporter-tool-summary"&gt;System Activity Reporter Tool Summary&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;sar&lt;/code&gt; is an abbreviation for &lt;strong&gt;System Activity Reporter&lt;/strong&gt; and is described as a powerful tool for diagnosing system bottlenecks. It works by continuously sampling the current system state and calculating data and ratios to provide a comprehensive report on the system&amp;rsquo;s operational status.&lt;/p&gt;
+&lt;h2 id="key-characteristics"&gt;Key Characteristics&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Comprehensive:&lt;/strong&gt; Considered one of the most comprehensive performance analysis tools on Linux, reporting on up to 14 major aspects of system activity.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Low Overhead:&lt;/strong&gt; The process of collecting data and storing results in a file requires very little system load.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Wide Scope:&lt;/strong&gt; Can report on file I/O, system calls, CPU efficiency, memory usage, process activity, inter-process communication (IPC), and more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="usage-modes"&gt;Usage Modes&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;sar&lt;/code&gt; primarily supports two ways of viewing system data:&lt;/p&gt;</description></item></channel></rss>

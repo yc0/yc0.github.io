@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>LSM on My journey</title><link>https://yc0.github.io/tags/lsm/</link><description>Recent content in LSM on My journey</description><generator>Hugo -- 0.152.2</generator><language>zh-tw</language><lastBuildDate>Sat, 25 Oct 2025 10:47:02 +0800</lastBuildDate><atom:link href="https://yc0.github.io/tags/lsm/index.xml" rel="self" type="application/rss+xml"/><item><title>Design LSM Database</title><link>https://yc0.github.io/posts/design-lsm-database/</link><pubDate>Wed, 23 Oct 2019 11:41:20 +0000</pubDate><guid>https://yc0.github.io/posts/design-lsm-database/</guid><description>&lt;h2 id="lsm-design-overview"&gt;LSM Design Overview&lt;/h2&gt;
+&lt;p&gt;The LSM stores data in three distinct data structures:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;shared-memory region&lt;/code&gt;. This may actually be allocated in either shared or heap memory&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The log file. A circular log file that provides a persistent backup of the contents of the in-memory tree and any other data that has &lt;code&gt;not yet been synced to disk&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The database file. A database file consists of an 8KB &lt;code&gt;header and a body&lt;/code&gt;. The body contains &lt;code&gt;zero or more &amp;quot;sorted runs&amp;quot;&lt;/code&gt; - arrays of key-value pairs sorted by key.&lt;/p&gt;</description></item></channel></rss>

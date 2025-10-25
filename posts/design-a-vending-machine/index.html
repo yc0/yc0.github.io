@@ -1,0 +1,183 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Design a Vending Machine | My journey</title><meta name=keywords content="system design,amazon,onsite"><meta name=description content="Design a Vending Machine
+
+Add items to the vending machine in fixed number of slots
+Payment using card or cash
+Select items to dispense
+
+Think of all objects in reality
+Think of all the Real objects :
+
+Customer
+Product/Item (Product/Item Type (softdrink, cold coffee, cold tea))
+Payment (transaction)
+Cash or Card (Credit/Debit Card)
+Buttom,
+Item Code
+
+Work Flow
+Think about work flow :
+
+Customer select an item (by entering the code A5)
+Customer is presented by item price
+Customer chooses to pay or cancels
+Customer can add Card and do payment
+Payment goes through (Item is despense) else add Card info again
+Alernatively, Customer adds bills cal and return the change and despense the item
+
+Design patttern
+take those pattern into accout"><meta name=author content="Nelson"><link rel=canonical href=https://yc0.github.io/posts/design-a-vending-machine/><link crossorigin=anonymous href=/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn+yY=" rel="preload stylesheet" as=style><link rel=icon href=https://yc0.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yc0.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yc0.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://yc0.github.io/apple-touch-icon.png><link rel=mask-icon href=https://yc0.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://yc0.github.io/posts/design-a-vending-machine/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://yc0.github.io/posts/design-a-vending-machine/"><meta property="og:site_name" content="My journey"><meta property="og:title" content="Design a Vending Machine"><meta property="og:description" content="Design a Vending Machine Add items to the vending machine in fixed number of slots Payment using card or cash Select items to dispense Think of all objects in reality Think of all the Real objects :
+Customer Product/Item (Product/Item Type (softdrink, cold coffee, cold tea)) Payment (transaction) Cash or Card (Credit/Debit Card) Buttom, Item Code Work Flow Think about work flow :
+Customer select an item (by entering the code A5) Customer is presented by item price Customer chooses to pay or cancels Customer can add Card and do payment Payment goes through (Item is despense) else add Card info again Alernatively, Customer adds bills cal and return the change and despense the item Design patttern take those pattern into accout"><meta property="og:locale" content="zh-tw"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-10-23T11:13:32+00:00"><meta property="article:modified_time" content="2025-10-25T10:47:02+08:00"><meta property="article:tag" content="System Design"><meta property="article:tag" content="Amazon"><meta property="article:tag" content="Onsite"><meta name=twitter:card content="summary"><meta name=twitter:title content="Design a Vending Machine"><meta name=twitter:description content="Design a Vending Machine
+
+Add items to the vending machine in fixed number of slots
+Payment using card or cash
+Select items to dispense
+
+Think of all objects in reality
+Think of all the Real objects :
+
+Customer
+Product/Item (Product/Item Type (softdrink, cold coffee, cold tea))
+Payment (transaction)
+Cash or Card (Credit/Debit Card)
+Buttom,
+Item Code
+
+Work Flow
+Think about work flow :
+
+Customer select an item (by entering the code A5)
+Customer is presented by item price
+Customer chooses to pay or cancels
+Customer can add Card and do payment
+Payment goes through (Item is despense) else add Card info again
+Alernatively, Customer adds bills cal and return the change and despense the item
+
+Design patttern
+take those pattern into accout"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://yc0.github.io/posts/"},{"@type":"ListItem","position":2,"name":"Design a Vending Machine","item":"https://yc0.github.io/posts/design-a-vending-machine/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Design a Vending Machine","name":"Design a Vending Machine","description":"Design a Vending Machine Add items to the vending machine in fixed number of slots Payment using card or cash Select items to dispense Think of all objects in reality Think of all the Real objects :\nCustomer Product/Item (Product/Item Type (softdrink, cold coffee, cold tea)) Payment (transaction) Cash or Card (Credit/Debit Card) Buttom, Item Code Work Flow Think about work flow :\nCustomer select an item (by entering the code A5) Customer is presented by item price Customer chooses to pay or cancels Customer can add Card and do payment Payment goes through (Item is despense) else add Card info again Alernatively, Customer adds bills cal and return the change and despense the item Design patttern take those pattern into accout\n","keywords":["system design","amazon","onsite"],"articleBody":"Design a Vending Machine Add items to the vending machine in fixed number of slots Payment using card or cash Select items to dispense Think of all objects in reality Think of all the Real objects :\nCustomer Product/Item (Product/Item Type (softdrink, cold coffee, cold tea)) Payment (transaction) Cash or Card (Credit/Debit Card) Buttom, Item Code Work Flow Think about work flow :\nCustomer select an item (by entering the code A5) Customer is presented by item price Customer chooses to pay or cancels Customer can add Card and do payment Payment goes through (Item is despense) else add Card info again Alernatively, Customer adds bills cal and return the change and despense the item Design patttern take those pattern into accout\nCommand/Stragegy pattern Singleton for Vending machine instance Fascade pattern for charing for multiple item Reference Design Actually, I do not like this implementation. But I put here just for reference now.\nstruct Product { virtual float getPrice() = 0; }; struct Water : Product { float getPrice() override {return 1.0;} }; struct Coke : Product { float getPrice() override {return 2.0;} }; struct Payment { virtual float checkout(Product *p) = 0; }; struct CardPayment : Payment { float checkout(Product *p) override { return p-\u003egetPrice() * 0.8; } }; struct CashPayment : Payment { float checkout(Product *p) override { return p-\u003egetPrice() * 1; } }; class VendingMachine { private: unordered_map\u003cstring, Product *\u003e slots; int capacity; int pay; public: VendingMachine(int cap) : capacity(cap){}; bool addProduct(string idx, Product *p) { if (slots.size() \u003e= capacity) { return false; } slots.insert({idx, p}); return true; } Product *order(string idx) { auto result = slots[idx]; if (result) slots.erase(idx); return result; } float checkout(vector\u003cProduct *\u003e\u0026 prod, Payment *pay) { float total = 0; for (auto p : prod) total += pay-\u003echeckout(p); return total; } }; class Customer { private: VendingMachine *vm; vector\u003cProduct *\u003e cart; public: Customer(VendingMachine *v) : vm(v) {} bool select(string idx) { Product *p = vm-\u003eorder(idx); if (p) { cart.push_back(p); return true; } return false; } float checkout(Payment *payment) { return vm-\u003echeckout(cart, payment); } }; int main() { auto w1 = new Water(); auto w2 = new Water(); auto c1 = new Coke(); auto c2 = new Coke(); auto vm = new VendingMachine(5); vm-\u003eaddProduct(\"A1\", w1); vm-\u003eaddProduct(\"A2\", w2); vm-\u003eaddProduct(\"A3\", c1); vm-\u003eaddProduct(\"A4\", c2); Customer *customer = new Customer(vm); customer-\u003eselect(\"A1\"); customer-\u003eselect(\"A2\"); auto card = new CardPayment(); assert(abs(customer-\u003echeckout(card) - 1.6) \u003c 1e-6); return 0; } ","wordCount":"397","inLanguage":"en","datePublished":"2019-10-23T11:13:32Z","dateModified":"2025-10-25T10:47:02+08:00","author":{"@type":"Person","name":"Nelson"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yc0.github.io/posts/design-a-vending-machine/"},"publisher":{"@type":"Organization","name":"My journey","logo":{"@type":"ImageObject","url":"https://yc0.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yc0.github.io/ accesskey=h title="My journey (Alt + H)">My journey</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://yc0.github.io/posts/ title="All Posts"><span>All Posts</span></a></li><li><a href=https://yc0.github.io/categories/ title=Categories><span>Categories</span></a></li><li><a href=https://yc0.github.io/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://yc0.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://yc0.github.io/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">Design a Vending Machine</h1><div class=post-meta><span title='2019-10-23 11:13:32 +0000 UTC'>October 23, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Nelson</span></div></header><div class=post-content><h2 id=design-a-vending-machine>Design a Vending Machine<a hidden class=anchor aria-hidden=true href=#design-a-vending-machine>#</a></h2><ul><li>Add items to the vending machine in fixed number of slots</li><li>Payment using card or cash</li><li>Select items to dispense</li></ul><h3 id=think-of-all-objects-in-reality>Think of all objects in reality<a hidden class=anchor aria-hidden=true href=#think-of-all-objects-in-reality>#</a></h3><p>Think of all the Real objects :</p><ul><li>Customer</li><li>Product/Item (Product/Item Type (softdrink, cold coffee, cold tea))</li><li>Payment (transaction)</li><li>Cash or Card (Credit/Debit Card)</li><li>Buttom,</li><li>Item Code</li></ul><h3 id=work-flow>Work Flow<a hidden class=anchor aria-hidden=true href=#work-flow>#</a></h3><p>Think about work flow :</p><ol><li>Customer <code>select an item</code> (by entering the code A5)</li><li>Customer is <code>presented by item price</code></li><li>Customer <code>chooses to pay or cancels</code></li><li>Customer can add Card and do payment</li><li>Payment goes through (Item is despense) else add Card info again</li><li>Alernatively, Customer <code>adds bills cal</code> and <code>return the change</code> and <code>despense the item</code></li></ol><h3 id=design-patttern>Design patttern<a hidden class=anchor aria-hidden=true href=#design-patttern>#</a></h3><p>take those pattern into accout</p><ul><li>Command/Stragegy pattern</li><li>Singleton for Vending machine instance</li><li>Fascade pattern for charing for multiple item</li></ul><h3 id=reference-design>Reference Design<a hidden class=anchor aria-hidden=true href=#reference-design>#</a></h3><p>Actually, I do not like this implementation. But I put here just for reference now.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Product</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>getPrice</span>() <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Water</span> <span style=color:#f92672>:</span> Product
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>getPrice</span>() <span style=color:#66d9ef>override</span> {<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1.0</span>;}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Coke</span> <span style=color:#f92672>:</span>  Product
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>getPrice</span>() <span style=color:#66d9ef>override</span> {<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>2.0</span>;}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Payment</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>checkout</span>(Product <span style=color:#f92672>*</span>p) <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>CardPayment</span> <span style=color:#f92672>:</span> Payment
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>checkout</span>(Product <span style=color:#f92672>*</span>p) <span style=color:#66d9ef>override</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> p<span style=color:#f92672>-&gt;</span>getPrice() <span style=color:#f92672>*</span> <span style=color:#ae81ff>0.8</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>CashPayment</span> <span style=color:#f92672>:</span> Payment
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>checkout</span>(Product <span style=color:#f92672>*</span>p) <span style=color:#66d9ef>override</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> p<span style=color:#f92672>-&gt;</span>getPrice() <span style=color:#f92672>*</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>VendingMachine</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    unordered_map<span style=color:#f92672>&lt;</span>string, Product <span style=color:#f92672>*&gt;</span> slots;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> capacity;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> pay;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    VendingMachine(<span style=color:#66d9ef>int</span> cap) <span style=color:#f92672>:</span> capacity(cap){};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>bool</span> <span style=color:#a6e22e>addProduct</span>(string idx, Product <span style=color:#f92672>*</span>p) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (slots.size() <span style=color:#f92672>&gt;=</span> capacity) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> false;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        slots.insert({idx, p});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> true;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Product <span style=color:#f92672>*</span><span style=color:#a6e22e>order</span>(string idx) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>auto</span> result <span style=color:#f92672>=</span> slots[idx];
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (result) 
+</span></span><span style=display:flex><span>            slots.erase(idx);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> result;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>checkout</span>(vector<span style=color:#f92672>&lt;</span>Product <span style=color:#f92672>*&gt;&amp;</span> prod, Payment <span style=color:#f92672>*</span>pay) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> total <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>auto</span> p : prod)
+</span></span><span style=display:flex><span>            total <span style=color:#f92672>+=</span> pay<span style=color:#f92672>-&gt;</span>checkout(p);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> total;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Customer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    VendingMachine <span style=color:#f92672>*</span>vm;
+</span></span><span style=display:flex><span>    vector<span style=color:#f92672>&lt;</span>Product <span style=color:#f92672>*&gt;</span> cart;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    Customer(VendingMachine <span style=color:#f92672>*</span>v) <span style=color:#f92672>:</span> vm(v) {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>bool</span> <span style=color:#a6e22e>select</span>(string idx) {
+</span></span><span style=display:flex><span>        Product <span style=color:#f92672>*</span>p <span style=color:#f92672>=</span> vm<span style=color:#f92672>-&gt;</span>order(idx);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (p) {
+</span></span><span style=display:flex><span>            cart.push_back(p);
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> true;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> false;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>float</span> <span style=color:#a6e22e>checkout</span>(Payment <span style=color:#f92672>*</span>payment) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> vm<span style=color:#f92672>-&gt;</span>checkout(cart, payment);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> w1 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Water();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> w2 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Water();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> c1 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Coke();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> c2 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Coke();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> vm <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> VendingMachine(<span style=color:#ae81ff>5</span>);
+</span></span><span style=display:flex><span>    vm<span style=color:#f92672>-&gt;</span>addProduct(<span style=color:#e6db74>&#34;A1&#34;</span>, w1);
+</span></span><span style=display:flex><span>    vm<span style=color:#f92672>-&gt;</span>addProduct(<span style=color:#e6db74>&#34;A2&#34;</span>, w2);
+</span></span><span style=display:flex><span>    vm<span style=color:#f92672>-&gt;</span>addProduct(<span style=color:#e6db74>&#34;A3&#34;</span>, c1);
+</span></span><span style=display:flex><span>    vm<span style=color:#f92672>-&gt;</span>addProduct(<span style=color:#e6db74>&#34;A4&#34;</span>, c2);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Customer <span style=color:#f92672>*</span>customer <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Customer(vm);
+</span></span><span style=display:flex><span>    customer<span style=color:#f92672>-&gt;</span>select(<span style=color:#e6db74>&#34;A1&#34;</span>);
+</span></span><span style=display:flex><span>    customer<span style=color:#f92672>-&gt;</span>select(<span style=color:#e6db74>&#34;A2&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>auto</span> card <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> CardPayment();
+</span></span><span style=display:flex><span>    assert(abs(customer<span style=color:#f92672>-&gt;</span>checkout(card) <span style=color:#f92672>-</span> <span style=color:#ae81ff>1.6</span>) <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>1e-6</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://yc0.github.io/tags/system-design/>System Design</a></li><li><a href=https://yc0.github.io/tags/amazon/>Amazon</a></li><li><a href=https://yc0.github.io/tags/onsite/>Onsite</a></li></ul><nav class=paginav><a class=prev href=https://yc0.github.io/posts/design-a-locker/><span class=title>« Prev</span><br><span>Design a locker</span>
+</a><a class=next href=https://yc0.github.io/posts/design-a-configuration-management-system/><span class=title>Next »</span><br><span>Design a configuration management system</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://yc0.github.io/>My journey</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

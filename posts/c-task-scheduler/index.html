@@ -1,0 +1,294 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>C++ Task Scheduler | My journey</title><meta name=keywords content="c++"><meta name=description content="C++ Task Scheduler
+The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running.
+DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.
+Although there&rsquo;re Boost or POCO, we try to be interested in writing it myself.
+Implmentation
+#include <functional>
+#include <chrono>
+#include <future>
+#include <queue>
+#include <thread>
+#include <memory>
+
+struct function_timer
+{
+    std::function<void()> func;
+    std::chrono::system_clock::time_point time;
+
+    function_timer()
+    { }
+
+    function_timer(std::function<void()>&& f, std::chrono::system_clock::time_point& t)
+        : func(f), 
+          time(t)
+    { }
+
+    //Note: we want our priority_queue to be ordered in terms of
+    //smallest time to largest, hence the > in operator<. This isn't good
+    //practice - it should be a separate struct -  but I've done this for brevity.
+    bool operator<(const function_timer& rhs) const
+    {
+        return time > rhs.time;
+    }
+
+    void get()
+    {
+        func();
+    }
+};
+
+class Scheduler
+{
+private:
+    std::priority_queue<function_timer> tasks;
+    std::unique_ptr<std::thread> thread;
+    bool go_on;
+
+    Scheduler& operator=(const Scheduler& rhs) = delete;
+    Scheduler(const Scheduler& rhs) = delete;
+
+public:
+
+    Scheduler()
+        :go_on(true),
+        thread(new std::thread([this]() { ThreadLoop(); }))
+    { }
+
+    ~Scheduler()
+    {
+        go_on = false;
+        thread->join();
+    }
+
+    void ThreadLoop()
+    {
+        while(go_on)
+        {
+            auto now = std::chrono::system_clock::now();
+            while(!tasks.empty() && tasks.top().time <= now) {
+                function_timer& f = tasks.top();
+                f.get();
+                tasks.pop();
+            }
+
+            if(tasks.empty()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            } else {
+                std::this_thread::sleep_for(tasks.top().time - std::chrono::system_clock::now());
+            }
+        }
+    }
+
+    void ScheduleAt(std::chrono::system_clock::time_point& time, std::function<void()>&& func)
+    {
+        tasks.push(function_timer(std::move(func), time));
+    }
+
+    void ScheduleEvery(std::chrono::system_clock::duration interval, std::function<void()> func)
+    {
+        std::function<void()> waitFunc = [this,interval,func]()
+            { 
+                func();
+                this->ScheduleEvery(interval, func);
+            };
+        ScheduleAt(std::chrono::system_clock::now() + interval, std::move(waitFunc));
+    }
+};
+"><meta name=author content="Nelson"><link rel=canonical href=https://yc0.github.io/posts/c-task-scheduler/><link crossorigin=anonymous href=/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn+yY=" rel="preload stylesheet" as=style><link rel=icon href=https://yc0.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yc0.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yc0.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://yc0.github.io/apple-touch-icon.png><link rel=mask-icon href=https://yc0.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://yc0.github.io/posts/c-task-scheduler/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://yc0.github.io/posts/c-task-scheduler/"><meta property="og:site_name" content="My journey"><meta property="og:title" content="C++ Task Scheduler"><meta property="og:description" content="C++ Task Scheduler The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running. DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.
+Although there’re Boost or POCO, we try to be interested in writing it myself.
+Implmentation #include <functional> #include <chrono> #include <future> #include <queue> #include <thread> #include <memory> struct function_timer { std::function<void()> func; std::chrono::system_clock::time_point time; function_timer() { } function_timer(std::function<void()>&& f, std::chrono::system_clock::time_point& t) : func(f), time(t) { } //Note: we want our priority_queue to be ordered in terms of //smallest time to largest, hence the > in operator<. This isn't good //practice - it should be a separate struct - but I've done this for brevity. bool operator<(const function_timer& rhs) const { return time > rhs.time; } void get() { func(); } }; class Scheduler { private: std::priority_queue<function_timer> tasks; std::unique_ptr<std::thread> thread; bool go_on; Scheduler& operator=(const Scheduler& rhs) = delete; Scheduler(const Scheduler& rhs) = delete; public: Scheduler() :go_on(true), thread(new std::thread([this]() { ThreadLoop(); })) { } ~Scheduler() { go_on = false; thread->join(); } void ThreadLoop() { while(go_on) { auto now = std::chrono::system_clock::now(); while(!tasks.empty() && tasks.top().time <= now) { function_timer& f = tasks.top(); f.get(); tasks.pop(); } if(tasks.empty()) { std::this_thread::sleep_for(std::chrono::milliseconds(100)); } else { std::this_thread::sleep_for(tasks.top().time - std::chrono::system_clock::now()); } } } void ScheduleAt(std::chrono::system_clock::time_point& time, std::function<void()>&& func) { tasks.push(function_timer(std::move(func), time)); } void ScheduleEvery(std::chrono::system_clock::duration interval, std::function<void()> func) { std::function<void()> waitFunc = [this,interval,func]() { func(); this->ScheduleEvery(interval, func); }; ScheduleAt(std::chrono::system_clock::now() + interval, std::move(waitFunc)); } }; "><meta property="og:locale" content="zh-tw"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-11-13T16:37:33+00:00"><meta property="article:modified_time" content="2025-10-25T10:47:02+08:00"><meta property="article:tag" content="C++"><meta name=twitter:card content="summary"><meta name=twitter:title content="C++ Task Scheduler"><meta name=twitter:description content="C++ Task Scheduler
+The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running.
+DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.
+Although there&rsquo;re Boost or POCO, we try to be interested in writing it myself.
+Implmentation
+#include <functional>
+#include <chrono>
+#include <future>
+#include <queue>
+#include <thread>
+#include <memory>
+
+struct function_timer
+{
+    std::function<void()> func;
+    std::chrono::system_clock::time_point time;
+
+    function_timer()
+    { }
+
+    function_timer(std::function<void()>&& f, std::chrono::system_clock::time_point& t)
+        : func(f), 
+          time(t)
+    { }
+
+    //Note: we want our priority_queue to be ordered in terms of
+    //smallest time to largest, hence the > in operator<. This isn't good
+    //practice - it should be a separate struct -  but I've done this for brevity.
+    bool operator<(const function_timer& rhs) const
+    {
+        return time > rhs.time;
+    }
+
+    void get()
+    {
+        func();
+    }
+};
+
+class Scheduler
+{
+private:
+    std::priority_queue<function_timer> tasks;
+    std::unique_ptr<std::thread> thread;
+    bool go_on;
+
+    Scheduler& operator=(const Scheduler& rhs) = delete;
+    Scheduler(const Scheduler& rhs) = delete;
+
+public:
+
+    Scheduler()
+        :go_on(true),
+        thread(new std::thread([this]() { ThreadLoop(); }))
+    { }
+
+    ~Scheduler()
+    {
+        go_on = false;
+        thread->join();
+    }
+
+    void ThreadLoop()
+    {
+        while(go_on)
+        {
+            auto now = std::chrono::system_clock::now();
+            while(!tasks.empty() && tasks.top().time <= now) {
+                function_timer& f = tasks.top();
+                f.get();
+                tasks.pop();
+            }
+
+            if(tasks.empty()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            } else {
+                std::this_thread::sleep_for(tasks.top().time - std::chrono::system_clock::now());
+            }
+        }
+    }
+
+    void ScheduleAt(std::chrono::system_clock::time_point& time, std::function<void()>&& func)
+    {
+        tasks.push(function_timer(std::move(func), time));
+    }
+
+    void ScheduleEvery(std::chrono::system_clock::duration interval, std::function<void()> func)
+    {
+        std::function<void()> waitFunc = [this,interval,func]()
+            { 
+                func();
+                this->ScheduleEvery(interval, func);
+            };
+        ScheduleAt(std::chrono::system_clock::now() + interval, std::move(waitFunc));
+    }
+};
+"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://yc0.github.io/posts/"},{"@type":"ListItem","position":2,"name":"C++ Task Scheduler","item":"https://yc0.github.io/posts/c-task-scheduler/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"C++ Task Scheduler","name":"C\u002b\u002b Task Scheduler","description":"C++ Task Scheduler The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running. DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.\nAlthough there\u0026rsquo;re Boost or POCO, we try to be interested in writing it myself.\nImplmentation #include \u0026lt;functional\u0026gt; #include \u0026lt;chrono\u0026gt; #include \u0026lt;future\u0026gt; #include \u0026lt;queue\u0026gt; #include \u0026lt;thread\u0026gt; #include \u0026lt;memory\u0026gt; struct function_timer { std::function\u0026lt;void()\u0026gt; func; std::chrono::system_clock::time_point time; function_timer() { } function_timer(std::function\u0026lt;void()\u0026gt;\u0026amp;\u0026amp; f, std::chrono::system_clock::time_point\u0026amp; t) : func(f), time(t) { } //Note: we want our priority_queue to be ordered in terms of //smallest time to largest, hence the \u0026gt; in operator\u0026lt;. This isn\u0026#39;t good //practice - it should be a separate struct - but I\u0026#39;ve done this for brevity. bool operator\u0026lt;(const function_timer\u0026amp; rhs) const { return time \u0026gt; rhs.time; } void get() { func(); } }; class Scheduler { private: std::priority_queue\u0026lt;function_timer\u0026gt; tasks; std::unique_ptr\u0026lt;std::thread\u0026gt; thread; bool go_on; Scheduler\u0026amp; operator=(const Scheduler\u0026amp; rhs) = delete; Scheduler(const Scheduler\u0026amp; rhs) = delete; public: Scheduler() :go_on(true), thread(new std::thread([this]() { ThreadLoop(); })) { } ~Scheduler() { go_on = false; thread-\u0026gt;join(); } void ThreadLoop() { while(go_on) { auto now = std::chrono::system_clock::now(); while(!tasks.empty() \u0026amp;\u0026amp; tasks.top().time \u0026lt;= now) { function_timer\u0026amp; f = tasks.top(); f.get(); tasks.pop(); } if(tasks.empty()) { std::this_thread::sleep_for(std::chrono::milliseconds(100)); } else { std::this_thread::sleep_for(tasks.top().time - std::chrono::system_clock::now()); } } } void ScheduleAt(std::chrono::system_clock::time_point\u0026amp; time, std::function\u0026lt;void()\u0026gt;\u0026amp;\u0026amp; func) { tasks.push(function_timer(std::move(func), time)); } void ScheduleEvery(std::chrono::system_clock::duration interval, std::function\u0026lt;void()\u0026gt; func) { std::function\u0026lt;void()\u0026gt; waitFunc = [this,interval,func]() { func(); this-\u0026gt;ScheduleEvery(interval, func); }; ScheduleAt(std::chrono::system_clock::now() + interval, std::move(waitFunc)); } }; ","keywords":["c++"],"articleBody":"C++ Task Scheduler The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running. DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.\nAlthough there’re Boost or POCO, we try to be interested in writing it myself.\nImplmentation #include #include #include #include #include #include struct function_timer { std::function\u003cvoid()\u003e func; std::chrono::system_clock::time_point time; function_timer() { } function_timer(std::function\u003cvoid()\u003e\u0026\u0026 f, std::chrono::system_clock::time_point\u0026 t) : func(f), time(t) { } //Note: we want our priority_queue to be ordered in terms of //smallest time to largest, hence the \u003e in operator\u003c. This isn't good //practice - it should be a separate struct - but I've done this for brevity. bool operator\u003c(const function_timer\u0026 rhs) const { return time \u003e rhs.time; } void get() { func(); } }; class Scheduler { private: std::priority_queue\u003cfunction_timer\u003e tasks; std::unique_ptr\u003cstd::thread\u003e thread; bool go_on; Scheduler\u0026 operator=(const Scheduler\u0026 rhs) = delete; Scheduler(const Scheduler\u0026 rhs) = delete; public: Scheduler() :go_on(true), thread(new std::thread([this]() { ThreadLoop(); })) { } ~Scheduler() { go_on = false; thread-\u003ejoin(); } void ThreadLoop() { while(go_on) { auto now = std::chrono::system_clock::now(); while(!tasks.empty() \u0026\u0026 tasks.top().time \u003c= now) { function_timer\u0026 f = tasks.top(); f.get(); tasks.pop(); } if(tasks.empty()) { std::this_thread::sleep_for(std::chrono::milliseconds(100)); } else { std::this_thread::sleep_for(tasks.top().time - std::chrono::system_clock::now()); } } } void ScheduleAt(std::chrono::system_clock::time_point\u0026 time, std::function\u003cvoid()\u003e\u0026\u0026 func) { tasks.push(function_timer(std::move(func), time)); } void ScheduleEvery(std::chrono::system_clock::duration interval, std::function\u003cvoid()\u003e func) { std::function\u003cvoid()\u003e waitFunc = [this,interval,func]() { func(); this-\u003eScheduleEvery(interval, func); }; ScheduleAt(std::chrono::system_clock::now() + interval, std::move(waitFunc)); } }; ","wordCount":"252","inLanguage":"en","datePublished":"2019-11-13T16:37:33Z","dateModified":"2025-10-25T10:47:02+08:00","author":{"@type":"Person","name":"Nelson"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yc0.github.io/posts/c-task-scheduler/"},"publisher":{"@type":"Organization","name":"My journey","logo":{"@type":"ImageObject","url":"https://yc0.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yc0.github.io/ accesskey=h title="My journey (Alt + H)">My journey</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://yc0.github.io/posts/ title="All Posts"><span>All Posts</span></a></li><li><a href=https://yc0.github.io/categories/ title=Categories><span>Categories</span></a></li><li><a href=https://yc0.github.io/tags/ title=Tags><span>Tags</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://yc0.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://yc0.github.io/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">C++ Task Scheduler</h1><div class=post-meta><span title='2019-11-13 16:37:33 +0000 UTC'>November 13, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Nelson</span></div></header><div class=post-content><h1 id=c-task-scheduler>C++ Task Scheduler<a hidden class=anchor aria-hidden=true href=#c-task-scheduler>#</a></h1><p>The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running.
+DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.</p><p>Although there&rsquo;re Boost or POCO, we try to be interested in writing it myself.</p><h2 id=implmentation>Implmentation<a hidden class=anchor aria-hidden=true href=#implmentation>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;functional&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;chrono&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;future&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;queue&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;thread&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;memory&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>function_timer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>function<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span>()<span style=color:#f92672>&gt;</span> func;
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>time_point time;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    function_timer()
+</span></span><span style=display:flex><span>    { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    function_timer(std<span style=color:#f92672>::</span>function<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span>()<span style=color:#f92672>&gt;&amp;&amp;</span> f, std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>time_point<span style=color:#f92672>&amp;</span> t)
+</span></span><span style=display:flex><span>        <span style=color:#f92672>:</span> func(f), 
+</span></span><span style=display:flex><span>          time(t)
+</span></span><span style=display:flex><span>    { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//Note: we want our priority_queue to be ordered in terms of
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>//smallest time to largest, hence the &gt; in operator&lt;. This isn&#39;t good
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>//practice - it should be a separate struct -  but I&#39;ve done this for brevity.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>bool</span> <span style=color:#66d9ef>operator</span><span style=color:#f92672>&lt;</span>(<span style=color:#66d9ef>const</span> function_timer<span style=color:#f92672>&amp;</span> rhs) <span style=color:#66d9ef>const</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> time <span style=color:#f92672>&gt;</span> rhs.time;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>get</span>()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        func();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Scheduler</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>priority_queue<span style=color:#f92672>&lt;</span>function_timer<span style=color:#f92672>&gt;</span> tasks;
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>unique_ptr<span style=color:#f92672>&lt;</span>std<span style=color:#f92672>::</span><span style=color:#66d9ef>thread</span><span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>thread</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>bool</span> go_on;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Scheduler<span style=color:#f92672>&amp;</span> <span style=color:#66d9ef>operator</span><span style=color:#f92672>=</span>(<span style=color:#66d9ef>const</span> Scheduler<span style=color:#f92672>&amp;</span> rhs) <span style=color:#f92672>=</span> <span style=color:#66d9ef>delete</span>;
+</span></span><span style=display:flex><span>    Scheduler(<span style=color:#66d9ef>const</span> Scheduler<span style=color:#f92672>&amp;</span> rhs) <span style=color:#f92672>=</span> <span style=color:#66d9ef>delete</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Scheduler()
+</span></span><span style=display:flex><span>        <span style=color:#f92672>:</span>go_on(true),
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>thread</span>(<span style=color:#66d9ef>new</span> std<span style=color:#f92672>::</span><span style=color:#66d9ef>thread</span>([<span style=color:#66d9ef>this</span>]() { ThreadLoop(); }))
+</span></span><span style=display:flex><span>    { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>~</span>Scheduler()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        go_on <span style=color:#f92672>=</span> false;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>thread</span><span style=color:#f92672>-&gt;</span>join();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ThreadLoop</span>()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>while</span>(go_on)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>auto</span> now <span style=color:#f92672>=</span> std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>now();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>while</span>(<span style=color:#f92672>!</span>tasks.empty() <span style=color:#f92672>&amp;&amp;</span> tasks.top().time <span style=color:#f92672>&lt;=</span> now) {
+</span></span><span style=display:flex><span>                function_timer<span style=color:#f92672>&amp;</span> f <span style=color:#f92672>=</span> tasks.top();
+</span></span><span style=display:flex><span>                f.get();
+</span></span><span style=display:flex><span>                tasks.pop();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span>(tasks.empty()) {
+</span></span><span style=display:flex><span>                std<span style=color:#f92672>::</span>this_thread<span style=color:#f92672>::</span>sleep_for(std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>milliseconds(<span style=color:#ae81ff>100</span>));
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                std<span style=color:#f92672>::</span>this_thread<span style=color:#f92672>::</span>sleep_for(tasks.top().time <span style=color:#f92672>-</span> std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>now());
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ScheduleAt</span>(std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>time_point<span style=color:#f92672>&amp;</span> time, std<span style=color:#f92672>::</span>function<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span>()<span style=color:#f92672>&gt;&amp;&amp;</span> func)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        tasks.push(function_timer(std<span style=color:#f92672>::</span>move(func), time));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>ScheduleEvery</span>(std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>duration interval, std<span style=color:#f92672>::</span>function<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span>()<span style=color:#f92672>&gt;</span> func)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        std<span style=color:#f92672>::</span>function<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span>()<span style=color:#f92672>&gt;</span> waitFunc <span style=color:#f92672>=</span> [<span style=color:#66d9ef>this</span>,interval,func]()
+</span></span><span style=display:flex><span>            { 
+</span></span><span style=display:flex><span>                func();
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>this</span><span style=color:#f92672>-&gt;</span>ScheduleEvery(interval, func);
+</span></span><span style=display:flex><span>            };
+</span></span><span style=display:flex><span>        ScheduleAt(std<span style=color:#f92672>::</span>chrono<span style=color:#f92672>::</span>system_clock<span style=color:#f92672>::</span>now() <span style=color:#f92672>+</span> interval, std<span style=color:#f92672>::</span>move(waitFunc));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags><li><a href=https://yc0.github.io/tags/c++/>C++</a></li></ul><nav class=paginav><a class=prev href=https://yc0.github.io/posts/kubernetes-scratch/><span class=title>« Prev</span><br><span>kubernetes scratch</span>
+</a><a class=next href=https://yc0.github.io/posts/design-amazon-comments-filtering-system/><span class=title>Next »</span><br><span>Design Amazon comments filtering system</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://yc0.github.io/>My journey</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

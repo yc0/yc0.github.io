@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on My journey</title><link>https://yc0.github.io/posts/</link><description>Recent content in Posts on My journey</description><generator>Hugo -- 0.152.2</generator><language>zh-tw</language><lastBuildDate>Sat, 25 Oct 2025 10:47:02 +0800</lastBuildDate><atom:link href="https://yc0.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>SAR Linux Tools</title><link>https://yc0.github.io/posts/sar-linux-tools/</link><pubDate>Mon, 27 Apr 2020 20:10:35 +0000</pubDate><guid>https://yc0.github.io/posts/sar-linux-tools/</guid><description>&lt;h1 id="system-activity-reporter-tool-summary"&gt;System Activity Reporter Tool Summary&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;sar&lt;/code&gt; is an abbreviation for &lt;strong&gt;System Activity Reporter&lt;/strong&gt; and is described as a powerful tool for diagnosing system bottlenecks. It works by continuously sampling the current system state and calculating data and ratios to provide a comprehensive report on the system&amp;rsquo;s operational status.&lt;/p&gt;
+&lt;h2 id="key-characteristics"&gt;Key Characteristics&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Comprehensive:&lt;/strong&gt; Considered one of the most comprehensive performance analysis tools on Linux, reporting on up to 14 major aspects of system activity.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Low Overhead:&lt;/strong&gt; The process of collecting data and storing results in a file requires very little system load.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Wide Scope:&lt;/strong&gt; Can report on file I/O, system calls, CPU efficiency, memory usage, process activity, inter-process communication (IPC), and more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="usage-modes"&gt;Usage Modes&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;sar&lt;/code&gt; primarily supports two ways of viewing system data:&lt;/p&gt;</description></item><item><title>OpenShift Administration</title><link>https://yc0.github.io/posts/openshift-administration/</link><pubDate>Wed, 15 Apr 2020 23:00:38 +0000</pubDate><guid>https://yc0.github.io/posts/openshift-administration/</guid><description>&lt;h1 id="describe-openshift-container-platform"&gt;Describe OpenShift Container Platform&lt;/h1&gt;
+&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;An application manages Kubernetes resources: Operator&lt;/li&gt;
+&lt;li&gt;An application manages Kubernetes operators : Operator Lifecycle Manager(OLM)&lt;/li&gt;
+&lt;li&gt;A repo. for discovering and installing operators : Operator Catelog&lt;/li&gt;
+&lt;li&gt;Regular operators that are not managed by the OLM. They are managed by OpenShift Cluster Version Operator : Cluster Operators
+&lt;ul&gt;
+&lt;li&gt;OpenShift Cluster Version Operator : First-level operator&lt;/li&gt;
+&lt;li&gt;Cluster Operators are called second-level operators&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Red Hat OpenShift Platform is based on Red Hat CoreOS, CRI-O and Kubernetes&lt;/li&gt;
+&lt;li&gt;RHOCP 4 provides a number of services on top of Kubernetes, such as an internal container image registry, storage, networking providers, and centralized logging and monitoring.&lt;/li&gt;
+&lt;li&gt;Operators package applications that manage Kubernetes resources, and the Operator Lifecycle Manager (OLM) handles installation and management of operators.&lt;/li&gt;
+&lt;li&gt;OperatorHub.io is an online catalog for discovering operators.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="installation"&gt;Installation&lt;/h1&gt;
+&lt;h2 id="ipi"&gt;IPI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Full-Stack Installation&lt;/li&gt;
+&lt;li&gt;Only this way can fulfil cluster scaling&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://try.openshift.org"&gt;http://try.openshift.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;It does&amp;rsquo;t have to &lt;strong&gt;be part of cluster&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="upi"&gt;UPI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;User provisioned Infrastructure for pre-existing environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="coreos-and-rhel"&gt;CoreOS and RHEL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Control Panel must run on CoreOS&lt;/li&gt;
+&lt;li&gt;Workers can run either CoreOS or RHEL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="installation-configyaml"&gt;Installation-config.yaml&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;the rest of resource domain name following
+&lt;code&gt;{metadata.name} + {baseDomain}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;network configuration cannot reconfigure easily after cluster is up and running.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="initial-deployment-process"&gt;Initial deployment process&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;there&amp;rsquo;s no much customization&lt;/li&gt;
+&lt;li&gt;UPI mode has to do node certficate when dial to master node (control plane) &lt;strong&gt;by manual&lt;/strong&gt; whereas IPI has no requirment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary-1"&gt;Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;two main installation methods
+&lt;ul&gt;
+&lt;li&gt;full-stack automation&lt;/li&gt;
+&lt;li&gt;pre-existing infrastructures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;OpenShift node based on Red Hat Enterprise Linux CoreOS runs very few local services&lt;/li&gt;
+&lt;li&gt;Most of the system run as containers
+&lt;ul&gt;
+&lt;li&gt;CRI-O and kubelet&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Troubleshooting
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;oc get node&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm top&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm node-logs&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm debug&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="trouble-shooting"&gt;Trouble Shooting&lt;/h1&gt;
+&lt;h2 id="oc-adm-node-log"&gt;oc adm node-log&lt;/h2&gt;
+&lt;h2 id="oc-log"&gt;oc log&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oc logs &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; --all-containers
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oc logs &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -c &lt;span style="color:#f92672"&gt;{}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="oc-debug"&gt;oc debug&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;what went wrong during POD startup&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc debug {pod|deployment} --as-root&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="oc-rsh"&gt;oc rsh&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ oc exec -it &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -- &lt;span style="color:#f92672"&gt;{&lt;/span&gt;command&lt;span style="color:#f92672"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;--options&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ oc exec -it &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -c &lt;span style="color:#f92672"&gt;{&lt;/span&gt;container&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -- &lt;span style="color:#f92672"&gt;{&lt;/span&gt;command&lt;span style="color:#f92672"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;--options&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;shorter equivalent&lt;/p&gt;</description></item><item><title>Istio Overview</title><link>https://yc0.github.io/posts/istio-overview/</link><pubDate>Mon, 13 Apr 2020 17:16:32 +0000</pubDate><guid>https://yc0.github.io/posts/istio-overview/</guid><description>&lt;h1 id="service-connection"&gt;Service Connection&lt;/h1&gt;
+&lt;h2 id="traffice-management"&gt;Traffice management&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;service mesh traffic management decouples traffic flow and infrastructure scaling&lt;/li&gt;
+&lt;li&gt;Pilot to specify rules for traffic management&lt;/li&gt;
+&lt;li&gt;Pilot and Envoy manage which pods receive traffic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="pilot"&gt;Pilot&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Manages and configures&lt;/strong&gt; Envoy proxy&lt;/li&gt;
+&lt;li&gt;specify &lt;strong&gt;routing rules&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Enables service &lt;strong&gt;discovery&lt;/strong&gt;, &lt;strong&gt;dynamic updates&lt;/strong&gt; for load balancing, routing tables&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="envoy"&gt;Envoy&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Maintains configuration information from Pilot&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="request-routing"&gt;Request Routing&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Fine-grained approach to identify services by versions&lt;/li&gt;
+&lt;li&gt;Service versions in OpenShift service mesh implemented with &lt;strong&gt;OpenShift labels&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="communication-between-services"&gt;Communication Between Services&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;clients have &lt;strong&gt;agnostic&lt;/strong&gt; of different service versions&lt;/li&gt;
+&lt;li&gt;Envoy &lt;strong&gt;intercepts&lt;/strong&gt;, forwards requests/responses between client and service&lt;/li&gt;
+&lt;li&gt;Routing rules &lt;strong&gt;configured with Pilot&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Header&lt;/li&gt;
+&lt;li&gt;Tags associated with SRC/DEST&lt;/li&gt;
+&lt;li&gt;Weight associated with Version&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="rule-configuration"&gt;Rule Configuration&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;VirtualService : Defines rules that control how requests for service are routed within service mesh&lt;/p&gt;</description></item><item><title>kubernetes scratch</title><link>https://yc0.github.io/posts/kubernetes-scratch/</link><pubDate>Sat, 04 Apr 2020 16:29:07 +0000</pubDate><guid>https://yc0.github.io/posts/kubernetes-scratch/</guid><description>&lt;h2 id="quick-overview"&gt;Quick Overview&lt;/h2&gt;
+&lt;h3 id="kubernetes-io"&gt;kubernetes .io&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-deployment-em-"&gt;Getting started&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="create-pod"&gt;create pod&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;kubectl run --generator=run-pod/v1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;for example&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;kubectl run --generator=run-pod/v1 bee --image=nginx&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="alias"&gt;alias&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;cheat sheet
+&lt;code&gt;https://kubernetes.io/docs/reference/kubectl/cheatsheet/&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="other"&gt;other&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;alias k=&amp;#39;kubectl -n $ns&amp;#39;
+alias kdr=&amp;#39;kubectl run -n $ns -o yaml
+--dry-run&amp;#39;
+alias kpr=&amp;#39;kubectl run --generator=run-pod/ v1 -n $ns -o yaml --dry-run&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="shell"&gt;Shell&lt;/h3&gt;
+&lt;h4 id="get-rid-of-the-first-line-and-recliam-first-column"&gt;Get rid of the first line and recliam first column&lt;/h4&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;$ awk &amp;#39;NR!=1{print $1}&amp;#39; file
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id="read-follow-line-regarding-to-certain-word"&gt;Read follow line regarding to certain word&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#grep -A{lines} {keyword}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ grep -A3 &lt;span style="color:#e6db74"&gt;&amp;#39;Labels&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="execution-tips"&gt;Execution Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Check Network Connection
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://blog.gtwang.org/linux/linux-utility-netcat-examples/"&gt;Netcat&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;example&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# kubectl exec -it {podname} -- sh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ nc -z -v -w1 &lt;span style="color:#f92672"&gt;{&lt;/span&gt;target&lt;span style="color:#f92672"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;port&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="vim-tips"&gt;VIM Tips&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Auto indent and tab&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;se sts&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; sw&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; ai et
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;set nu rnu
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id="與自動縮進相關的變數表"&gt;與自動縮進相關的變數表&lt;/h5&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;變數名&lt;/th&gt;
+&lt;th style="text-align: center"&gt;縮寫&lt;/th&gt;
+&lt;th style="text-align: left"&gt;含義&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;(no)autoindent&lt;/td&gt;
+&lt;td style="text-align: center"&gt;ai&lt;/td&gt;
+&lt;td style="text-align: left"&gt;自動縮進，即為新行自動添加與當前行同等的縮進&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;(no)cindent&lt;/td&gt;
+&lt;td style="text-align: center"&gt;ci&lt;/td&gt;
+&lt;td style="text-align: left"&gt;類似C語言程序的縮進&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;(no)smartindent&lt;/td&gt;
+&lt;td style="text-align: center"&gt;si&lt;/td&gt;
+&lt;td style="text-align: left"&gt;基於autoindent的一些改進&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h5 id="與tab相關的變數表"&gt;與TAB相關的變數表&lt;/h5&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;變數名&lt;/th&gt;
+&lt;th style="text-align: center"&gt;縮寫&lt;/th&gt;
+&lt;th style="text-align: left"&gt;含義&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;tabstop=X&lt;/td&gt;
+&lt;td style="text-align: center"&gt;ts&lt;/td&gt;
+&lt;td style="text-align: left"&gt;編輯時一個TAB字元佔多少個空格的位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;shiftwidth=X&lt;/td&gt;
+&lt;td style="text-align: center"&gt;sw&lt;/td&gt;
+&lt;td style="text-align: left"&gt;使用每層縮進的空格數&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;(no)expandtab&lt;/td&gt;
+&lt;td style="text-align: center"&gt;(no)et&lt;/td&gt;
+&lt;td style="text-align: left"&gt;是否將輸入的TAB自動展開成空格。開啟後要輸入TAB，需要Ctrl-V&lt;TAB&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;softtabstop=X&lt;/td&gt;
+&lt;td style="text-align: center"&gt;sts&lt;/td&gt;
+&lt;td style="text-align: left"&gt;方便在開啟了et後使用退格（backspace）鍵，每次退格將刪除X個空格&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;(no)smarttab&lt;/td&gt;
+&lt;td style="text-align: center"&gt;(no)sta&lt;/td&gt;
+&lt;td style="text-align: left"&gt;開啟時，在行首按TAB將加入sw個空格，否則加入ts個空格&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>C++ Task Scheduler</title><link>https://yc0.github.io/posts/c-task-scheduler/</link><pubDate>Wed, 13 Nov 2019 16:37:33 +0000</pubDate><guid>https://yc0.github.io/posts/c-task-scheduler/</guid><description>&lt;h1 id="c-task-scheduler"&gt;C++ Task Scheduler&lt;/h1&gt;
+&lt;p&gt;The requirment needs for tasks scheduled once and repetitive tasks, and should stop and clean itself up gracefully on destruction even while running.
+DO NOT care for parallelism: tasks that should run in their own threads should manage it. It had to accept lambdas for simplicity.&lt;/p&gt;
+&lt;p&gt;Although there&amp;rsquo;re Boost or POCO, we try to be interested in writing it myself.&lt;/p&gt;
+&lt;h2 id="implmentation"&gt;Implmentation&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;functional&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;chrono&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;future&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;queue&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;thread&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#include&lt;/span&gt; &lt;span style="color:#75715e"&gt;&amp;lt;memory&amp;gt;&lt;/span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;function_timer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;function&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;()&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; func;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;time_point time;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; function_timer()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; function_timer(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;function&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;()&lt;span style="color:#f92672"&gt;&amp;gt;&amp;amp;&amp;amp;&lt;/span&gt; f, std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;time_point&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;:&lt;/span&gt; func(f),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time(t)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;//Note: we want our priority_queue to be ordered in terms of
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#75715e"&gt;//smallest time to largest, hence the &amp;gt; in operator&amp;lt;. This isn&amp;#39;t good
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#75715e"&gt;//practice - it should be a separate struct - but I&amp;#39;ve done this for brevity.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;operator&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; function_timer&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; rhs) &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; time &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; rhs.time;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; func();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Scheduler&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;private&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;priority_queue&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;function_timer&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; tasks;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;unique_ptr&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;thread&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;thread&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt; go_on;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Scheduler&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;operator&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; Scheduler&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; rhs) &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;delete&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Scheduler(&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; Scheduler&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; rhs) &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;delete&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Scheduler()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;:&lt;/span&gt;go_on(true),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;thread&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;new&lt;/span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;thread&lt;/span&gt;([&lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;]() { ThreadLoop(); }))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;~&lt;/span&gt;Scheduler()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; go_on &lt;span style="color:#f92672"&gt;=&lt;/span&gt; false;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;thread&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt;join();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ThreadLoop&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt;(go_on)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;auto&lt;/span&gt; now &lt;span style="color:#f92672"&gt;=&lt;/span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;now();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt;(&lt;span style="color:#f92672"&gt;!&lt;/span&gt;tasks.empty() &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; tasks.top().time &lt;span style="color:#f92672"&gt;&amp;lt;=&lt;/span&gt; now) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; function_timer&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; f &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tasks.top();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; f.get();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tasks.pop();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt;(tasks.empty()) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;this_thread&lt;span style="color:#f92672"&gt;::&lt;/span&gt;sleep_for(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;milliseconds(&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;this_thread&lt;span style="color:#f92672"&gt;::&lt;/span&gt;sleep_for(tasks.top().time &lt;span style="color:#f92672"&gt;-&lt;/span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;now());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ScheduleAt&lt;/span&gt;(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;time_point&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt; time, std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;function&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;()&lt;span style="color:#f92672"&gt;&amp;gt;&amp;amp;&amp;amp;&lt;/span&gt; func)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tasks.push(function_timer(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;move(func), time));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ScheduleEvery&lt;/span&gt;(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;duration interval, std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;function&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;()&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; func)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;function&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;void&lt;/span&gt;()&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; waitFunc &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;,interval,func]()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; func();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;&lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt;ScheduleEvery(interval, func);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ScheduleAt(std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;chrono&lt;span style="color:#f92672"&gt;::&lt;/span&gt;system_clock&lt;span style="color:#f92672"&gt;::&lt;/span&gt;now() &lt;span style="color:#f92672"&gt;+&lt;/span&gt; interval, std&lt;span style="color:#f92672"&gt;::&lt;/span&gt;move(waitFunc));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description></item><item><title>Design Amazon comments filtering system</title><link>https://yc0.github.io/posts/design-amazon-comments-filtering-system/</link><pubDate>Wed, 13 Nov 2019 16:27:46 +0000</pubDate><guid>https://yc0.github.io/posts/design-amazon-comments-filtering-system/</guid><description>&lt;h1 id="comments-filtering-system"&gt;Comments Filtering System&lt;/h1&gt;
+&lt;p&gt;Design Amazon comments filtering system. Use UML to design the classes.&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="at-first-glance"&gt;At First Glance&lt;/h2&gt;
+&lt;p&gt;Class encapsulating a &amp;lsquo;comment&amp;rsquo;
+Main Filter abstract class
+Different types of Filter class like AbusiveContentFilter, Special Characters Filter, Duplicate Content Filter etc.
+A top &amp;lsquo;Filters&amp;rsquo; class containing a method &amp;lsquo;applyFilters&amp;rsquo; where filters can be passed as an array of &amp;lsquo;Filter&amp;rsquo; objects.
+On application of these filters the comment would be cleaned and a return object of type &amp;lsquo;ResultComment&amp;rsquo; with boolean attributes like isCommentOk&lt;/p&gt;</description></item><item><title>Use exception instead of error code</title><link>https://yc0.github.io/posts/use-exception-instead-of-error-code/</link><pubDate>Fri, 08 Nov 2019 17:15:30 +0000</pubDate><guid>https://yc0.github.io/posts/use-exception-instead-of-error-code/</guid><description>&lt;h2 id="use-exception-instead-of-error-code"&gt;Use Exception Instead of Error Code&lt;/h2&gt;
+&lt;p&gt;try/catch 會混淆結構，最好的做法，是將內容從try/catch中抽離出來到一個functions如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-java" data-lang="java"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;public&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;delete&lt;/span&gt;(Page page) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; deletePageAndAllReference(pages);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (Exception e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logError(e);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;deletePageAndAllReference&lt;/span&gt;(Page page) &lt;span style="color:#66d9ef"&gt;throws&lt;/span&gt; Exception {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; deletePage(page);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; registry.&lt;span style="color:#a6e22e"&gt;deleteReference&lt;/span&gt;(page.&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; configKeys.&lt;span style="color:#a6e22e"&gt;deleteKey&lt;/span&gt;(page.&lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;makeKey&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;logError&lt;/span&gt;(Exception e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logger.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(e.&lt;span style="color:#a6e22e"&gt;getMessage&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the above, the delete function is all about error processing. It is easy to understand and then ignore. The deletePageAndAllReferences function is all about the processes of fully deleting a page. Error handling can be ignored. This provides a nice separation that makes the code easier to understand and modify.&lt;/p&gt;</description></item><item><title>Design LSM Database</title><link>https://yc0.github.io/posts/design-lsm-database/</link><pubDate>Wed, 23 Oct 2019 11:41:20 +0000</pubDate><guid>https://yc0.github.io/posts/design-lsm-database/</guid><description>&lt;h2 id="lsm-design-overview"&gt;LSM Design Overview&lt;/h2&gt;
+&lt;p&gt;The LSM stores data in three distinct data structures:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;code&gt;shared-memory region&lt;/code&gt;. This may actually be allocated in either shared or heap memory&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The log file. A circular log file that provides a persistent backup of the contents of the in-memory tree and any other data that has &lt;code&gt;not yet been synced to disk&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The database file. A database file consists of an 8KB &lt;code&gt;header and a body&lt;/code&gt;. The body contains &lt;code&gt;zero or more &amp;quot;sorted runs&amp;quot;&lt;/code&gt; - arrays of key-value pairs sorted by key.&lt;/p&gt;</description></item><item><title>Design a locker</title><link>https://yc0.github.io/posts/design-a-locker/</link><pubDate>Wed, 23 Oct 2019 11:25:51 +0000</pubDate><guid>https://yc0.github.io/posts/design-a-locker/</guid><description>&lt;h2 id="design-a-locker"&gt;Design a locker&lt;/h2&gt;
+&lt;p&gt;To monitor the process of how to put the package into a right locker. and one locker for one package. your package and locker have different size, you need to make sure the locker size &amp;gt; package.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;it is just parking lot alike. We can directly manipulate the same concept, or just use the same pattern from Parking Lot
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="objects"&gt;Objects&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Locker&lt;/li&gt;
+&lt;li&gt;Location&lt;/li&gt;
+&lt;li&gt;Package&lt;/li&gt;
+&lt;li&gt;User&lt;/li&gt;
+&lt;li&gt;Order&lt;/li&gt;
+&lt;li&gt;Shipment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="work-flows"&gt;Work flows&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Amazon warehouse packages Orders into a Shipment with one or more Packages.&lt;/li&gt;
+&lt;li&gt;Insert created Package(s) into a database and associate them with a Shipment.&lt;/li&gt;
+&lt;li&gt;Associate Shipment with Order, Associate Order with User.&lt;/li&gt;
+&lt;li&gt;Guarantee that the length, width, and height of each Package cannot exceed the largest Locker&amp;rsquo;s length, width, and height.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(Closest Locker Problem)&lt;/code&gt; Find closest Location of lockers to the Package&amp;rsquo;s destination Location.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Check the valid volumns&lt;/code&gt;; check that the Location has a volume of Locker spaces greater than or equal to the Package volume (we only need to check volume because step 3 constrains the dimensions). If not, find second closest Locker Location, and so on and so forth.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(Fitting Problem)&lt;/code&gt; Lockers have a set number of sizes (say small, medium, and large). Now, design an algorithm to fit Packages volume into Locker volume, so that minimum amount of Lockers are used. This is easily imagined as a recursive algorithm where you continuously solve for the remaining Packages until the Packages are all fit into Lockers. Each time you fit a package, you return a list of available boxes (remaining spaces in the locker in terms of boxes for that single Locker). If there are no boxes that fit the remaining packages, look for another Locker for the rest of the packages. This method will return the list of Lockers used for the Shipment.&lt;/li&gt;
+&lt;li&gt;Once we know the Packages can be stored at a Locker Location, return the used Locker&amp;rsquo;s Locker IDs and Password to the user (delivery person, recipient, etc).&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Design a Vending Machine</title><link>https://yc0.github.io/posts/design-a-vending-machine/</link><pubDate>Wed, 23 Oct 2019 11:13:32 +0000</pubDate><guid>https://yc0.github.io/posts/design-a-vending-machine/</guid><description>&lt;h2 id="design-a-vending-machine"&gt;Design a Vending Machine&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add items to the vending machine in fixed number of slots&lt;/li&gt;
+&lt;li&gt;Payment using card or cash&lt;/li&gt;
+&lt;li&gt;Select items to dispense&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="think-of-all-objects-in-reality"&gt;Think of all objects in reality&lt;/h3&gt;
+&lt;p&gt;Think of all the Real objects :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Customer&lt;/li&gt;
+&lt;li&gt;Product/Item (Product/Item Type (softdrink, cold coffee, cold tea))&lt;/li&gt;
+&lt;li&gt;Payment (transaction)&lt;/li&gt;
+&lt;li&gt;Cash or Card (Credit/Debit Card)&lt;/li&gt;
+&lt;li&gt;Buttom,&lt;/li&gt;
+&lt;li&gt;Item Code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="work-flow"&gt;Work Flow&lt;/h3&gt;
+&lt;p&gt;Think about work flow :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Customer &lt;code&gt;select an item&lt;/code&gt; (by entering the code A5)&lt;/li&gt;
+&lt;li&gt;Customer is &lt;code&gt;presented by item price&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Customer &lt;code&gt;chooses to pay or cancels&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Customer can add Card and do payment&lt;/li&gt;
+&lt;li&gt;Payment goes through (Item is despense) else add Card info again&lt;/li&gt;
+&lt;li&gt;Alernatively, Customer &lt;code&gt;adds bills cal&lt;/code&gt; and &lt;code&gt;return the change&lt;/code&gt; and &lt;code&gt;despense the item&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="design-patttern"&gt;Design patttern&lt;/h3&gt;
+&lt;p&gt;take those pattern into accout&lt;/p&gt;</description></item><item><title>Design a configuration management system</title><link>https://yc0.github.io/posts/design-a-configuration-management-system/</link><pubDate>Tue, 22 Oct 2019 16:40:02 +0000</pubDate><guid>https://yc0.github.io/posts/design-a-configuration-management-system/</guid><description>&lt;h2 id="configuration-management-system"&gt;Configuration management system&lt;/h2&gt;
+&lt;p&gt;Design a configuration management system&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User should be able to add configuration&lt;/li&gt;
+&lt;li&gt;User should be able to delete configuration&lt;/li&gt;
+&lt;li&gt;User should be able to search for configuration&lt;/li&gt;
+&lt;li&gt;User should be able to subscribe to Configuration So that any updates in configuration will gets notfied to user&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="clarify"&gt;Clarify&lt;/h3&gt;
+&lt;p&gt;We want to design a system to persist configurations that can be used by other systems. Configurations will be managed through an internal portal and will be editable only by the user who created them but can be read by any system through a RESTful API. In addition to CRUD (creation, read, updates and deletions) an user can search for configurations and can subscribe to them to receive notifications every time there&amp;rsquo;s a change.&lt;/p&gt;</description></item><item><title>System Design Overview</title><link>https://yc0.github.io/posts/system-design-overview/</link><pubDate>Fri, 18 Oct 2019 11:11:48 +0000</pubDate><guid>https://yc0.github.io/posts/system-design-overview/</guid><description>&lt;h2 id="introduction-system-design"&gt;Introduction System Design&lt;/h2&gt;
+&lt;p&gt;from jiuzhang, talk to you how to prepare your system&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;DAU: Daily active user&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Infrastructure&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Web development&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;analyst duo dilgence&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;work solution&lt;/li&gt;
+&lt;li&gt;special case&lt;/li&gt;
+&lt;li&gt;analysis&lt;/li&gt;
+&lt;li&gt;tradeoff&lt;/li&gt;
+&lt;li&gt;knowledge base&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;4s&amp;rsquo; analysis&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;scenario&lt;/li&gt;
+&lt;li&gt;service&lt;/li&gt;
+&lt;li&gt;storage&lt;/li&gt;
+&lt;li&gt;scale&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Design systems v.s. Design portion of systems (limit rate of access rate/statistical history)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="breakdown-the"&gt;Breakdown The&lt;/h2&gt;
+&lt;h3 id="requirements"&gt;Requirements&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;daily active users&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;login/register&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;user profile&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;display/edit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;storage&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;database: sql database =&amp;gt; user table&lt;/li&gt;
+&lt;li&gt;nosql database =&amp;gt; tweets/social graph&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;file system&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Custom Class with Range-based Loop in C++</title><link>https://yc0.github.io/posts/custom-class-with-range-based-loop-in-c/</link><pubDate>Thu, 17 Oct 2019 15:06:13 +0000</pubDate><guid>https://yc0.github.io/posts/custom-class-with-range-based-loop-in-c/</guid><description>&lt;h2 id="custom-class-with-range-based-loop-in-c"&gt;Custom Class with Range-based Loop in C++&lt;/h2&gt;
+&lt;p&gt;Sometimes, you have to invent your own class/structure with iteration demands
+In modern c++(c++11), it&amp;rsquo;ve alread supplied range-based loop. So what&amp;rsquo;s range-based loop?&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;for(auto it=begin(arr); it!=end(arr); ++it) {}&lt;/code&gt; is tradional method to iterate the container. range-based loop looks like &lt;code&gt;for(auto&amp;amp; item : arr)&lt;/code&gt;. It&amp;rsquo;s more comfortable and readable to do iterate. However, how do we implement the same function on your own class/struct ?&lt;/p&gt;</description></item><item><title>class static member initialization in C++</title><link>https://yc0.github.io/posts/static-class-member-initialization-in-c/</link><pubDate>Wed, 09 Oct 2019 11:39:46 +0000</pubDate><guid>https://yc0.github.io/posts/static-class-member-initialization-in-c/</guid><description>&lt;h2 id="class-static-member-initialization-in-c"&gt;class static member initialization in C++&lt;/h2&gt;
+&lt;p&gt;How we initialize the class static member and make a simliar concept of Java static scope is shown in below &lt;code&gt;如何初始化Static class member和達成類似Java Static Scope的功能，將是本文紀錄的項目&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="class-static-member"&gt;Class Static Member&lt;/h4&gt;
+&lt;p&gt;At first, class static member must be initialized, for example.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;class CFoo {
+public:
+CFoo() {}
+int GetData() { return s_data; }
+private:
+static int s_data;
+};
+void main() {
+CFoo foo;
+cout &amp;lt;&amp;lt; foo.GetData() &amp;lt;&amp;lt; endl;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;it will incur following errors:&lt;/p&gt;</description></item><item><title>C++ vtable ptr &amp; vtable</title><link>https://yc0.github.io/posts/c-vtable-ptr-vtable/</link><pubDate>Tue, 08 Oct 2019 00:50:18 +0000</pubDate><guid>https://yc0.github.io/posts/c-vtable-ptr-vtable/</guid><description>&lt;h2 id="c-vtablevtable-ptr-c中的virtual"&gt;C++ vtable/vtable ptr C++中的virtual&lt;/h2&gt;
+&lt;p&gt;本文參考&lt;a href="https://medium.com/theskyisblue/c-%E4%B8%AD%E9%97%9C%E6%96%BC-virtual-%E7%9A%84%E5%85%A9%E4%B8%89%E4%BA%8B-1b4e2a2dc373"&gt;C++中關於 virtual 的兩三事&lt;/a&gt;,並且加上自己的經驗而紀錄。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h3 id="static-binding-vs-dynamic-binding"&gt;static binding vs. dynamic binding&lt;/h3&gt;
+&lt;p&gt;在 virtual 之前得先提到 binding。binding 一般指的是把一個東西對應到另一個東西上，在 C++ 中，binding 指的是函式呼叫與函式定義的連接，這個時機可能發生於 compile-time 或是 run-time，依據情況而定。
+在 static binding 中，compiler 會在 compile-time 時就把函式定義與函式呼叫連結起來，因為比較早連接起來，所以又叫做 early binding。而在 dynamic binding 的情形中，這樣的連接會一直延遲至 run-time 才會發生，因此也可稱為 late binding。在 C++ 中，dynamic binding 主要可以透過 virtual 來達成。
+在 static binding 中，由於呼叫函式的所有資訊都已經提前先知道了，所以在程式真正執行起來會比較快一些；反之，dynamic binding 的好處在於在 run-time 才決定，因此可以更彈性地呼叫函式。&lt;/p&gt;
+&lt;h3 id="vtable-vtable-ptr"&gt;vtable/ vtable ptr&lt;/h3&gt;
+&lt;p&gt;當我們宣告某個 class 的函式為 virtual 時，代表若有 derived class 的話，該函式可以被 redefined。virtual function 的 implementation 是透過 virtual table, or vtable 與 virtual table pointer, or vtable ptr。
+只要一個 class 中有一個以上的 virtual 函式，那麼該instance(每一個由該 class 產生的 object)都會包含一個vtable與一個指向這個vtable的指標,vtable ptr。我們可以將 virtual table 想像成陣列，而陣列中的每個元素都是個指向 virtual 函式的 implementation 的指標。&lt;/p&gt;</description></item><item><title>C++ Print Pretty</title><link>https://yc0.github.io/posts/c-print-pretty/</link><pubDate>Sat, 05 Oct 2019 08:57:42 +0000</pubDate><guid>https://yc0.github.io/posts/c-print-pretty/</guid><description>&lt;h2 id="c-print-pretty"&gt;C++ Print Pretty&lt;/h2&gt;
+&lt;p&gt;So for anyone unfamiliar, C++ has a variety of things called &lt;strong&gt;manipulators&lt;/strong&gt; that will change the format of the output printed with &amp;ldquo;cout&amp;rdquo;. These things are not printed themselves, they just affect the part you are actually printing. A list of these manipulators can be found on &lt;a href="http://www.cplusplus.com/reference/library/manipulators/"&gt;the reference&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Here is an example&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;input&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;100.345 2006.008 2331.41592653498
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;output&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;0x64
+_______+2006.01
+2.331415927E+03
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How can we do that ? Yes, use &lt;strong&gt;manipulators&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>AWS Storage Type</title><link>https://yc0.github.io/posts/aws-storage-type/</link><pubDate>Tue, 01 Oct 2019 11:59:16 +0000</pubDate><guid>https://yc0.github.io/posts/aws-storage-type/</guid><description>&lt;h2 id="aws儲存型式"&gt;AWS儲存型式&lt;/h2&gt;
+&lt;p&gt;Recently, we dicussed that how to supply storages for persistent volumes of Kuberenetes. There&amp;rsquo;re plenty of types shown on official website. Many peopel including my folks don&amp;rsquo;t realize what are the difference and what are they suitable for ? As a solution architect, there&amp;rsquo;re no absoluate answer for an answer. It depends on what kind of applications you face. Today, I want to mention two types : block-based(BLK) and file-based storage(NFS) , and counterparts in AWS. The materials come from Business Professional Accrediated&lt;/p&gt;</description></item></channel></rss>

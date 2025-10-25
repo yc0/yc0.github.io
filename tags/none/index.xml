@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>None on My journey</title><link>https://yc0.github.io/tags/none/</link><description>Recent content in None on My journey</description><generator>Hugo -- 0.152.2</generator><language>zh-tw</language><lastBuildDate>Sat, 25 Oct 2025 10:47:02 +0800</lastBuildDate><atom:link href="https://yc0.github.io/tags/none/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenShift Administration</title><link>https://yc0.github.io/posts/openshift-administration/</link><pubDate>Wed, 15 Apr 2020 23:00:38 +0000</pubDate><guid>https://yc0.github.io/posts/openshift-administration/</guid><description>&lt;h1 id="describe-openshift-container-platform"&gt;Describe OpenShift Container Platform&lt;/h1&gt;
+&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;An application manages Kubernetes resources: Operator&lt;/li&gt;
+&lt;li&gt;An application manages Kubernetes operators : Operator Lifecycle Manager(OLM)&lt;/li&gt;
+&lt;li&gt;A repo. for discovering and installing operators : Operator Catelog&lt;/li&gt;
+&lt;li&gt;Regular operators that are not managed by the OLM. They are managed by OpenShift Cluster Version Operator : Cluster Operators
+&lt;ul&gt;
+&lt;li&gt;OpenShift Cluster Version Operator : First-level operator&lt;/li&gt;
+&lt;li&gt;Cluster Operators are called second-level operators&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Red Hat OpenShift Platform is based on Red Hat CoreOS, CRI-O and Kubernetes&lt;/li&gt;
+&lt;li&gt;RHOCP 4 provides a number of services on top of Kubernetes, such as an internal container image registry, storage, networking providers, and centralized logging and monitoring.&lt;/li&gt;
+&lt;li&gt;Operators package applications that manage Kubernetes resources, and the Operator Lifecycle Manager (OLM) handles installation and management of operators.&lt;/li&gt;
+&lt;li&gt;OperatorHub.io is an online catalog for discovering operators.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="installation"&gt;Installation&lt;/h1&gt;
+&lt;h2 id="ipi"&gt;IPI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Full-Stack Installation&lt;/li&gt;
+&lt;li&gt;Only this way can fulfil cluster scaling&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://try.openshift.org"&gt;http://try.openshift.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;It does&amp;rsquo;t have to &lt;strong&gt;be part of cluster&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="upi"&gt;UPI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;User provisioned Infrastructure for pre-existing environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="coreos-and-rhel"&gt;CoreOS and RHEL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Control Panel must run on CoreOS&lt;/li&gt;
+&lt;li&gt;Workers can run either CoreOS or RHEL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="installation-configyaml"&gt;Installation-config.yaml&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;the rest of resource domain name following
+&lt;code&gt;{metadata.name} + {baseDomain}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;network configuration cannot reconfigure easily after cluster is up and running.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="initial-deployment-process"&gt;Initial deployment process&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;there&amp;rsquo;s no much customization&lt;/li&gt;
+&lt;li&gt;UPI mode has to do node certficate when dial to master node (control plane) &lt;strong&gt;by manual&lt;/strong&gt; whereas IPI has no requirment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary-1"&gt;Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;two main installation methods
+&lt;ul&gt;
+&lt;li&gt;full-stack automation&lt;/li&gt;
+&lt;li&gt;pre-existing infrastructures.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;OpenShift node based on Red Hat Enterprise Linux CoreOS runs very few local services&lt;/li&gt;
+&lt;li&gt;Most of the system run as containers
+&lt;ul&gt;
+&lt;li&gt;CRI-O and kubelet&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Troubleshooting
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;oc get node&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm top&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm node-logs&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc adm debug&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="trouble-shooting"&gt;Trouble Shooting&lt;/h1&gt;
+&lt;h2 id="oc-adm-node-log"&gt;oc adm node-log&lt;/h2&gt;
+&lt;h2 id="oc-log"&gt;oc log&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oc logs &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; --all-containers
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;oc logs &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -c &lt;span style="color:#f92672"&gt;{}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="oc-debug"&gt;oc debug&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;what went wrong during POD startup&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oc debug {pod|deployment} --as-root&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="oc-rsh"&gt;oc rsh&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ oc exec -it &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -- &lt;span style="color:#f92672"&gt;{&lt;/span&gt;command&lt;span style="color:#f92672"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;--options&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ oc exec -it &lt;span style="color:#f92672"&gt;{&lt;/span&gt;podname&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -c &lt;span style="color:#f92672"&gt;{&lt;/span&gt;container&lt;span style="color:#f92672"&gt;}&lt;/span&gt; -- &lt;span style="color:#f92672"&gt;{&lt;/span&gt;command&lt;span style="color:#f92672"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;--options&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;shorter equivalent&lt;/p&gt;</description></item></channel></rss>
