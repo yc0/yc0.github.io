@@ -1,8 +1,11 @@
 ---
-title: kubernetes scratch
 date: 2020-04-04 16:29:07
-tags: ['kubernetes','imperative']
-categories: ['cloud native', 'kubernetes']
+draft: false
+slug: kubernetes-scratch
+tags:
+- kubernetes
+- imperative
+title: kubernetes scratch
 ---
 
 ## Quick Overview

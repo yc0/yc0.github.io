@@ -1,8 +1,12 @@
 ---
-title: Design a locker
 date: 2019-10-23 11:25:51
-tags: ['system design','amazon','onsite']
-categories: ['system design']
+draft: false
+slug: Design-a-locker
+tags:
+- system design
+- amazon
+- onsite
+title: Design a locker
 ---
 
 ## Design a locker

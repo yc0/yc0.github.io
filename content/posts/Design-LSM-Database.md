@@ -1,8 +1,13 @@
 ---
-title: Design LSM Database
 date: 2019-10-23 11:41:20
-tags: ['system design','amazon','LSM','onsite']
-categories: ['system design', 'database']
+draft: false
+slug: Design-LSM-Database
+tags:
+- system design
+- amazon
+- LSM
+- onsite
+title: Design LSM Database
 ---
 
 ## LSM Design Overview

@@ -1,8 +1,12 @@
 ---
-title: Design a configuration management system
 date: 2019-10-22 16:40:02
-tags: ['system design','amazon','onsite']
-categories: ['system design']
+draft: false
+slug: Design-a-configuration-management-system
+tags:
+- system design
+- amazon
+- onsite
+title: Design a configuration management system
 ---
 
 ## Configuration management system

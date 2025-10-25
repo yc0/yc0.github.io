@@ -1,7 +1,10 @@
 ---
-title: OpenShift Administration
 date: 2020-04-15 23:00:38
+draft: false
+slug: OpenShift-Administration
 tags:
+- None
+title: OpenShift Administration
 ---
 
 # Describe OpenShift Container Platform

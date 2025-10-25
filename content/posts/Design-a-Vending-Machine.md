@@ -1,8 +1,12 @@
 ---
-title: Design a Vending Machine
 date: 2019-10-23 11:13:32
-tags: ['system design','amazon','onsite']
-categories: ['system design']
+draft: false
+slug: Design-a-Vending-Machine
+tags:
+- system design
+- amazon
+- onsite
+title: Design a Vending Machine
 ---
 
 ## Design a Vending Machine

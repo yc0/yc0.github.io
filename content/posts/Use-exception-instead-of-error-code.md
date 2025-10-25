@@ -1,9 +1,13 @@
 ---
-title: Use exception instead of error code
 date: 2019-11-08 17:15:30
-tags: ["java","clean code"]
-categories: ["java", "OOD"]
+draft: false
+slug: Use-exception-instead-of-error-code
+tags:
+- java
+- clean code
+title: Use exception instead of error code
 ---
+
 ## Use Exception Instead of Error Code
 
 try/catch 會混淆結構，最好的做法，是將內容從try/catch中抽離出來到一個functions如下：

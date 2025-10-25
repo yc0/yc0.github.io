@@ -1,11 +1,10 @@
 ---
-title: Custom Class with Range-based Loop in C++
 date: 2019-10-17 15:06:13
+draft: false
+slug: Custom-Class-with-Range-based-Loop-in-C
 tags:
-  - c++
-categories:
-  - language
-  - c++
+- c++
+title: Custom Class with Range-based Loop in C++
 ---
 
 ## Custom Class with Range-based Loop in C++

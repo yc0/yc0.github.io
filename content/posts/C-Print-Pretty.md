@@ -1,11 +1,10 @@
 ---
-title: C++ Print Pretty
-tags:
-  - c++
-categories:
-  - language
-  - c++
 date: 2019-10-05 08:57:42
+draft: false
+slug: C-Print-Pretty
+tags:
+- c++
+title: C++ Print Pretty
 ---
 
 ## C++ Print Pretty

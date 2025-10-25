@@ -1,9 +1,15 @@
 ---
-title: Istio Overview
 date: 2020-04-13 17:16:32
-tags: ['OpenShift','Istio','Overview','Network']
-categories: ['OpenShift','Istio']
+draft: false
+slug: Istio-Overview
+tags:
+- OpenShift
+- Istio
+- Overview
+- Network
+title: Istio Overview
 ---
+
 # Service Connection
 ## Traffice management
 - service mesh traffic management decouples traffic flow and infrastructure scaling

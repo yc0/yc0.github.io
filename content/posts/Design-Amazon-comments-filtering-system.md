@@ -1,9 +1,14 @@
 ---
-title: Design Amazon comments filtering system
 date: 2019-11-13 16:27:46
-tags: ['system design','amazon','onsite']
-categories: ['system design']
+draft: false
+slug: Design-Amazon-comments-filtering-system
+tags:
+- system design
+- amazon
+- onsite
+title: Design Amazon comments filtering system
 ---
+
 # Comments Filtering System
 Design Amazon comments filtering system. Use UML to design the classes.
 <!-- more -->

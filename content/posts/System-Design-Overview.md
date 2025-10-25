@@ -1,8 +1,10 @@
 ---
-title: System Design Overview
 date: 2019-10-18 11:11:48
-tags: ["system design"]
-categories: ["system design","interview"]
+draft: false
+slug: System-Design-Overview
+tags:
+- system design
+title: System Design Overview
 ---
 
 ## Introduction System Design

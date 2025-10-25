@@ -1,14 +1,13 @@
 ---
-title: class static member initialization in C++
-tags:
-  - c++
-  - static
-  - initialization
-  - lambda
-categories:
-  - language
-  - c++
 date: 2019-10-09 11:39:46
+draft: false
+slug: Static-class-member-initialization-in-C
+tags:
+- c++
+- static
+- initialization
+- lambda
+title: class static member initialization in C++
 ---
 
 ## class static member initialization in C++

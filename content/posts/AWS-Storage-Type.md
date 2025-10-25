@@ -1,10 +1,12 @@
 ---
-title: AWS Storage Type
-tags: ['AWS', 'Storage']
 date: 2019-10-01 11:59:16
-categories: ['AWS']
+draft: false
+slug: AWS-Storage-Type
+tags:
+- AWS
+- Storage
+title: AWS Storage Type
 ---
-
 
 ## AWS儲存型式
 

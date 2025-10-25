@@ -1,0 +1,85 @@
+baseURL: "https://yc0.github.io/"
+languageCode: "zh-tw"
+title: "My journey"
+enableGitInfo: true
+
+module:
+  imports:
+    - path: PaperMod
+      url: github.com/adityatelange/hugo-PaperMod
+
+ignoreLogs:
+  - "warning-goldmark-raw-html"
+
+taxonomies:
+  category: categories
+  tag: tags
+
+# CORRECTED: Proper YAML outputs
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+  section:
+    - HTML
+    - RSS
+  taxonomy:
+    - HTML
+    - RSS
+  term:
+    - HTML
+    - RSS
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    parser:
+      autoHeadingID: true
+      autoHeadingIDType: github
+      wrapStandAloneImageWithinParagraph: false
+
+params:
+  # Disable profile to show posts directly
+  ProfileMode:
+    enabled: false
+  
+  # Post listing settings
+  ShowAllPagesInLists: true
+  ShowReadingTime: true
+  ShowDate: "published"
+  ShowLastMod: true
+  ShowTags: true
+  ShowBreadCrumbs: true
+  ShowPostNavLinks: true
+  ShowShareButtons: false
+  ShowCodeCopyButtons: true
+  
+  author: "Nelson"
+  email: "nelson.lin.tw@gmail.com"
+  description: "Personal learning notes"
+  defaultTheme: auto
+  disableThemeToggle: false
+
+menu:
+  main:
+    - identifier: "posts"
+      name: "All Posts"
+      url: "/posts/"
+      weight: 10
+    - identifier: "categories"
+      name: "Categories"
+      url: "/categories/"
+      weight: 20
+    - identifier: "tags"
+      name: "Tags"
+      url: "/tags/"
+      weight: 30
+
+# Pagination for homepage
+pagination:
+  pagers:
+    main:
+      perPage: 10
+      first: "index.html"

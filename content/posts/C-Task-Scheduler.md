@@ -1,8 +1,10 @@
 ---
-title: C++ Task Scheduler
 date: 2019-11-13 16:37:33
-tags: ["c++"]
-categories: ["language","c++"]
+draft: false
+slug: C-Task-Scheduler
+tags:
+- c++
+title: C++ Task Scheduler
 ---
 
 # C++ Task Scheduler

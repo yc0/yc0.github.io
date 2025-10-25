@@ -1,0 +1,45 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "frontmatter"
+version = "3.0.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8b/de/7425e1c97db39ca6615ccf89d8c3b47f2ee8dfdabb754fc99f925ee1a702/frontmatter-3.0.8.tar.gz", hash = "sha256:d913619d20f607e03557d52a8bf9b249e0b3093c770c5213c0f1231d2c97fe73", size = 5254, upload-time = "2024-03-08T07:55:51.023Z" }
+
+[[package]]
+name = "pyaml"
+version = "25.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c4/01/41f63d66a801a561c9e335523516bd5f761bc43cc61f8b75918306bf2da8/pyaml-25.7.0.tar.gz", hash = "sha256:e113a64ec16881bf2b092e2beb84b7dcf1bd98096ad17f5f14e8fb782a75d99b", size = 29814, upload-time = "2025-07-10T18:44:51.824Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a8/ee/a878f2ad010cbccb311f947f0f2f09d38f613938ee28c34e60fceecc75a1/pyaml-25.7.0-py3-none-any.whl", hash = "sha256:ce5d7867cc2b455efdb9b0448324ff7b9f74d99f64650f12ca570102db6b985f", size = 26418, upload-time = "2025-07-10T18:44:50.679Z" },
+]
+
+[[package]]
+name = "pyyaml"
+version = "5.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9f/2c/9417b5c774792634834e730932745bc09a7d36754ca00acf1ccd1ac2594d/PyYAML-5.1.tar.gz", hash = "sha256:436bc774ecf7c103814098159fbb84c2715d25980175292c648f2da143909f95", size = 274244, upload-time = "2019-03-13T16:35:50.361Z" }
+
+[[package]]
+name = "scripts"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "frontmatter" },
+    { name = "pyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "frontmatter", specifier = ">=3.0.8" },
+    { name = "pyaml", specifier = ">=25.7.0" },
+]

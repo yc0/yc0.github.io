@@ -1,13 +1,12 @@
 ---
-title: C++ vtable ptr & vtable
-tags:
-  - c++
-  - vtable
-  - virtual
-categories:
-  - language
-  - c++
 date: 2019-10-08 00:50:18
+draft: false
+slug: C-vtable-ptr-vtable
+tags:
+- c++
+- vtable
+- virtual
+title: C++ vtable ptr & vtable
 ---
 
 ## C++ vtable/vtable ptr C++中的virtual
