@@ -44,7 +44,10 @@ params:
   # Disable profile to show posts directly
   ProfileMode:
     enabled: false
-  
+  mermaid:
+    enable: true
+  plantuml: true
+    # theme: neutral  # or 'dark', 'light', 'forest', 'neutral'
   # Post listing settings
   ShowAllPagesInLists: true
   ShowReadingTime: true

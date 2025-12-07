@@ -1,0 +1,17 @@
+<script src="https://cdn.jsdelivr.net/gh/jmnote/plantuml-encoder@1.2.4/dist/plantuml-encoder.min.js" crossorigin="anonymous"></script>
+<div class="plantuml-wrapper">
+  <pre class="language-plantuml" style="display:none">
+{{ .Inner }}
+  </pre>
+  <img class="plantuml-image" alt="PlantUML Diagram" />
+</div>
+<script>
+(function(){
+  const wrapper = document.currentScript.previousElementSibling;
+  const code = wrapper.querySelector('.language-plantuml');
+  const img = wrapper.querySelector('.plantuml-image');
+  if (code && img) {
+    img.src = 'https://www.plantuml.com/plantuml/svg/~1' + plantumlEncoder.encode(code.innerText);
+  }
+})();
+</script>

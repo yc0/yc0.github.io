@@ -1,0 +1,3 @@
+{{ if .Site.Params.mermaid.enable | default false }}
+    {{ partial "mermaid.html" . }}
+{{ end }}
