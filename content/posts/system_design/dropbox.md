@@ -6,6 +6,427 @@ categories:
   - system design
 title: File Storage Service（Dropbox 類系統）
 ---
+# Dropbox / Google Drive --- **Format 3C 完整版**
+
+## （Hybrid：口語講稿 + Technical Deep Dive + Multi-Region Sync）
+---
+# 🎤 0. Opening（面試開場 45--60 秒）
+
+我會把 Dropbox / Google Drive 類系統分成三層進行說明：
+
+1.  **單 Region baseline 架構**：metadata + object storage + sync model\
+2.  **Scalability 深度解析**：chunking、dedup、metadata sharding、change
+    journal\
+3.  **Multi-region global sync**：primary region、cross-region
+    sync、conflict handling
+
+整個系統的核心不是儲存檔案，而是**如何做到正確、高效率、可恢復的同步機制（synchronization
+model）**。
+
+------------------------------------------------------------------------
+
+# 1. 問題定義與 Use Cases
+
+使用者需求：
+
+-   多裝置同步檔案（手機 / PC / 平板）\
+-   單一裝置編輯檔案 → 所有裝置快速同步\
+-   支援 offline editing\
+-   支援 conflict resolve\
+-   檔案版本管理\
+-   支援大量小檔案、大檔案（\>1GB）
+
+系統需保持：
+
+-   **高 durability（不能遺失資料）**\
+-   **可預測、強一致的 metadata**\
+-   **高 QPS 的 sync event 推播能力**
+
+------------------------------------------------------------------------
+
+# 2. 功能性需求（Functional Requirements）
+
+核心：
+
+1.  Upload / Download\
+2.  Multi-device sync\
+3.  Versioning\
+4.  Conflict resolution\
+5.  Sharing\
+6.  Directory management（rename, move, delete）
+
+進階：
+
+7.  Selective sync\
+8.  LAN sync\
+9.  Deep deduplication\
+10. File preview / thumbnail service
+
+------------------------------------------------------------------------
+
+# 3. 非功能性需求 + Capacity & Performance 估算
+
+## 3.1 Performance Targets
+
+  行為                     延遲
+  ------------------------ --------------
+  metadata update          P95 \< 150ms
+  sync event propagation   \< 5 秒
+  chunk upload             可容忍數秒
+
+## 3.2 QPS & Order-of-Magnitude Estimation
+
+假設：
+
+-   50M daily active users\
+-   每人每天平均 40 個 sync events
+
+則：
+
+    2B sync events / day ≈ 23k events/s
+    峰值：100k–200k events/s
+
+Metadata operations（如 rename/move）：
+
+-   5M ops/day → \~60 ops/sec （峰值 1k--3k）
+
+## 3.3 Storage Estimation
+
+假設：
+
+-   500M users
+-   平均每人 10GB
+
+```
+    500M * 10GB = 5 exabytes (raw)
+```
+
+透過 chunk-level dedup：
+
+-   儲存量可下降 50--90%
+-   Network 傳輸也大量減少
+
+------------------------------------------------------------------------
+
+# 4. 系統架構（Single-Region Baseline）
+
+### Core Components
+
+1.  **Metadata Service（strong consistency）**\
+2.  **Metadata DB（SQL sharded / NoSQL）**\
+3.  **Object Storage（chunk-based, immutable）**\
+4.  **Sync Change Journal**\
+5.  **Sync Service（增量同步）**\
+6.  **Notification Service（push events）**\
+7.  **Client Sync Agent（local diff engine）**
+
+------------------------------------------------------------------------
+
+# 5. Component Deep Dive
+
+## 5.1 Chunking & Dedup（核心）
+
+使用固定長度（4MB）或 Rabin Fingerprint 可變長 chunk。
+
+### 優點：
+
+-   減少上傳量（只上傳新增 chunks）\
+-   Global dedup（跨使用者共享相同 chunks）\
+-   支援 resumable upload
+
+### Chunk Metadata
+
+    chunk_id (hash)
+    size
+    checksum
+    physical location
+
+### File Version Metadata
+
+    file_id
+    list_of_chunks
+    mtime
+    etag
+    version
+
+------------------------------------------------------------------------
+
+## 5.2 Metadata Service（強一致主體）
+
+管理：
+
+-   folder tree（inode 結構）\
+-   file attributes\
+-   version history\
+-   ACL / sharing metadata
+
+Rename / move 僅修改 metadata pointer → O(1)
+
+Sharding：
+
+-   依 user_id 或 namespace 分片\
+-   大用戶（大量檔案）可單獨分片
+
+------------------------------------------------------------------------
+
+## 5.3 Sync Change Journal（Dropbox 的靈魂）
+
+每個 user 有：
+
+    seq_id: monotonic increasing integer
+    entries: (seq_id, file_id, operation, version)
+
+裝置同步：
+
+    client → server: give me changes since seq = X
+    server → client: list of changes
+
+特性：
+
+-   增量同步（不需傳整棵 folder tree）\
+-   crash-safe\
+-   conflict detection
+
+------------------------------------------------------------------------
+
+## 5.4 Notification Service
+
+負責推播 "有更新" 事件。
+
+技術選項：
+
+-   WebSocket\
+-   Long polling\
+-   Pub/Sub（Kafka / Redis Stream）
+
+------------------------------------------------------------------------
+
+# 6. 核心流程
+
+## 6.1 Upload File Workflow
+
+1.  Client 偵測檔案變更（local FS watcher）\
+2.  切 chunk + 計算 hash\
+3.  問 server 哪些 chunks 已存在\
+4.  上傳 missing chunks\
+5.  更新 metadata\
+6.  journal append\
+7.  push 通知其他裝置
+
+------------------------------------------------------------------------
+
+## 6.2 Multi-device Sync Workflow
+
+1.  Client 啟動\
+2.  送出 last seen seq\
+3.  Server 回傳增量 changes\
+4.  Client 套用變更\
+5.  若發生 conflict → 建立 "conflicted copy"
+
+------------------------------------------------------------------------
+
+## 6.3 Sharing Workflow
+
+-   public link：anonymous object fetch\
+-   permission-based share：folder pointer share\
+-   shared folder = shared metadata namespace
+
+------------------------------------------------------------------------
+
+# 7. Multi-Region Architecture（進階）
+
+------------------------------------------------------------------------
+
+## 7.1 Why multi-region is complicated?
+
+因為：
+
+-   metadata **需要強一致**，跨 region consensus 成本極高\
+-   chunk storage **可 eventual**（immutable）\
+-   sync journal 需要按順序、不能亂序
+
+------------------------------------------------------------------------
+
+## 7.2 Architecture Pattern A：Global Strong Consistency（Google Drive Style）
+
+使用：
+
+-   Spanner\
+-   TrueTime API\
+-   globally ordered metadata updates
+
+優點：
+
+-   無亂序問題\
+-   sharing、rename、move 非常乾淨
+
+缺點：
+
+-   貴\
+-   寫入延遲略高
+
+------------------------------------------------------------------------
+
+## 7.3 Architecture Pattern B（更普遍）：**Per-user Primary Region**
+
+每個 user 的 metadata：
+
+-   只位於一個 primary region（如 US-East）\
+-   所有 sync 都往 primary region 送\
+-   若 user 移動地理位置 → 可 migrate primary region
+
+### 優點：
+
+-   避免 global coordination\
+-   metadata consistency 不會亂\
+-   cross-user sharing 時才需要跨區溝通
+
+------------------------------------------------------------------------
+
+## 7.4 Chunk Storage Multi-Region
+
+Chunks 屬 immutable：
+
+-   可在 local region 儲存副本\
+-   用 CDN 加速下載\
+-   更改 chunk references（metadata）就能同步版本
+
+------------------------------------------------------------------------
+
+# 8. Scalability Engineering
+
+## Metadata Scaling
+
+-   Sharding by user\
+-   Using SQL（MySQL shard）或 NoSQL（FoundationDB / Cassandra）\
+-   Folder caching
+
+## Sync Journal Scaling
+
+-   append-only log\
+-   separate per-user shard\
+-   queries independent
+
+## Object Storage Scaling
+
+-   chunk immutable\
+-   S3-like storage\
+-   low-cost replication
+
+------------------------------------------------------------------------
+
+# 9. Failure Scenarios & Recovery
+
+### Metadata DB crash
+
+-   replicate + consensus\
+-   WAL-based recovery
+
+### Journal corruption
+
+-   checksum\
+-   shadow log\
+-   snapshot based recovery
+
+### Chunk storage outage
+
+-   fallback to replica\
+-   long-term: erasure coding
+
+------------------------------------------------------------------------
+
+# 10. Follow-up Questions + 標準回答
+
+------------------------------------------------------------------------
+
+### Q1. 如何避免 metadata hot partition？
+
+**A：**
+
+-   shard by user\
+-   large users 分裂 shard\
+-   cache frequently accessed directory listing\
+-   batch operations
+
+------------------------------------------------------------------------
+
+### Q2. 如何處理大量小檔案（100k+ files）？
+
+**A：**
+
+-   batch sync events\
+-   compact directory representation\
+-   Bloom filter avoid unnecessary fetch\
+-   reduce metadata calls
+
+------------------------------------------------------------------------
+
+### Q3. 如何支援 offline editing？
+
+**A：**
+
+-   local delta log\
+-   conflict detection with version vector\
+-   reconcile on reconnect
+
+------------------------------------------------------------------------
+
+### Q4. rename / move 為何是 O(1)？
+
+**A：**
+
+-   metadata pointer update\
+-   chunk 不變\
+-   no physical movement
+
+------------------------------------------------------------------------
+
+### Q5. 如何處理 1GB+ 大檔案？
+
+**A：**
+
+-   multipart upload\
+-   chunk resume\
+-   speculative parallel upload
+
+------------------------------------------------------------------------
+
+### Q6. 如何達成 global dedup？
+
+**A：**
+
+-   chunk hash\
+-   index table for chunk store\
+-   salted hash to prevent privacy leak
+
+------------------------------------------------------------------------
+
+### Q7. multi-region conflict 如何處理？
+
+**A：**
+
+-   per-user region → avoid most conflict\
+-   shared folder uses version vector or timestamp ordering\
+-   if conflict → auto create conflict copy
+
+------------------------------------------------------------------------
+
+# 11. PlantUML（Hugo Shortcode）
+
+{{< plantuml >}} 
+@startuml 
+actor Client
+Client --> "Sync Service" : upload/download diff 
+Client --> "Notification Service" : subscribe
+"Sync Service" --> "Metadata Service" : update metadata 
+"Metadata Service" --> "Metadata DB" : read/write
+"Sync Service" --> "Object Storage" : upload chunks 
+"Metadata Service" --> "Change Journal" : append changes "Notification Service" --> Client : notify updates
+
+@enduml 
+{{< /plantuml >}}
+
+---
 ## 2. File Storage Service（Dropbox 類系統）
 
 ### 2.1 題目重述與假設
@@ -86,569 +507,5 @@ CHANGELOG --> CLIENT : sync updates
 > 下載則是先問 Metadata Service 拿到某個檔案版本對應的 chunk 列表，再向 Object Store 抓取並在 Client 端組裝。  
 > <br>
 > 多裝置同步依賴 Change Log：Metadata Service 將每個檔案變動寫進一個 log stream，Client 端會追這個 log，看到有新的版本或刪除動作就同步本地資料夾。衝突時可以依 timestamp 或用 three-way merge 策略處理。  
-
----
-
-## 3. Ticketing System（Ticketmaster 類）
-
-### 3.1 題目重述與假設
-
-- 題目：設計一個線上售票系統（演唱會 / 球賽）。  
-- 功能需求：  
-  - 查詢活動、場次、座位區域與價格  
-  - 選位、鎖座、付款、出票  
-  - 防止超賣、避免同一座位被重複購買  
-- 非功能需求：  
-  - 高峰流量：開賣瞬間激增（瞬間數十萬人搶票）  
-  - 極高一致性需求：不能 oversell 某個 seat  
-  - 容許部分操作排隊或等待  
-
-### 3.2 高階架構說明
-
-- Seat inventory model：每個 event / section / seat 有一筆紀錄，包含狀態（available / reserved / sold）。  
-- 流程：  
-  - 查詢座位圖：讀取 cache / DB 中的 seat map。  
-  - 用戶選位時：在 Seat Service 上做 lock（短時間 hold），寫入 `reserved_by = user_id`，同時用 TTL。  
-  - 用戶完成付款：Payment 成功後，Seat Service 將 seat 狀態轉為 sold。  
-  - 用戶未在期限內付款：background job 過期保留，釋放 seat。  
-- 為防 oversell：Seat Service 要用強一致操作（例如：Row-level lock / compare-and-swap / Redis 分布式鎖）。  
-
-### 3.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Ticketing System - High Level Architecture
-
-actor User
-rectangle "Web / Mobile Client" as CLIENT
-
-rectangle "API Gateway" as API
-rectangle "Event & Seat Service" as SEAT
-database "Seat Inventory DB" as SEATDB
-
-rectangle "Order Service" as ORDER
-database "Order DB" as ORDERDB
-
-rectangle "Payment Service" as PAY
-queue "Reservation Expiry Queue" as EXPQ
-
-User --> CLIENT : browse / buy tickets
-CLIENT --> API : search events / seats
-API --> SEAT : get seat map
-SEAT --> SEATDB : read seat status
-
-CLIENT --> API : reserve seats
-API --> ORDER : create pending order
-ORDER --> SEAT : lock seats (reserve)
-SEAT --> SEATDB : update seat state=reserved
-
-ORDER --> EXPQ : push reservation TTL
-
-CLIENT --> API : pay order
-API --> PAY : charge payment
-PAY --> ORDER : payment result
-ORDER --> SEAT : confirm seats (sold)
-SEAT --> SEATDB : state=sold
-ORDER --> ORDERDB : update order status=PAID
-
-' Reservation expiry
-EXPQ --> ORDER : reservation timeout
-ORDER --> SEAT : release seats
-SEAT --> SEATDB : state=available
-
-@enduml
-{{< /plantuml >}}
-
-### 3.4 口頭講稿（約 2–3 分鐘）
-
-> 這一題的核心是 seat inventory 的一致性管理。我要確保同一張椅子不會被兩個人買到。  
-> <br>
-> 我會設計一個 Seat Service，背後有 Seat Inventory DB，存每個 event/seat 的狀態。當使用者選位時，會走 reserve 流程：Seat Service 在資料庫中把該座位從 available 改成 reserved，並標註 reserved_by，這個更新操作必須是原子性的，例如用 row-level lock 或條件更新。  
-> <br>
-> 產生的訂單狀態會先是 pending，同時放一個訊息進 Reservation Expiry Queue。使用者完成付款後，Order Service 會將訂單狀態改為 PAID，並把 seat 狀態改為 sold。如果超過 TTL 還沒付款，Background job 根據 queue 事件回來通知 Order Service 取消訂單並釋放 seats。  
-> <br>
-> 開賣高峰時，可以用 queue / waiting room 來平滑請求，Seat Service 可以透過分區和讀寫分離來 scale。  
-
----
-
-## 4. News Feed（Facebook / Instagram 類）
-
-### 4.1 題目重述與假設
-
-- 題目：設計一個社群平台的 News Feed 系統。  
-- 功能需求：  
-  - 使用者看到「自己關注的人 / page」的貼文 feed  
-  - 支援時間排序 / 相關度排序  
-  - 支援無限捲動（pagination / cursor）  
-- 非功能需求：  
-  - Read-heavy、高 QPS  
-  - Feed latency 可接受 1–10 秒延遲  
-  - 要支援 ranking 演算法演進  
-
-### 4.2 高階架構說明
-
-- Fan-out on write / on read 混合：  
-  - 高度活躍使用者：on read 從 Post Store + Social Graph 動態組裝。  
-  - 一般使用者：維護 precomputed feed timeline（cache / DB）。  
-- Ranking service：  
-  - 依據文本、互動（likes/comments）、社交距離、時間 decay 等信號計算 score。  
-
-### 4.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title News Feed - High Level Architecture
-
-actor User
-rectangle "Mobile / Web App" as CLIENT
-rectangle "Feed API Service" as FEEDAPI
-
-rectangle "Social Graph Service" as GRAPH
-database "Graph DB (follows)" as GRAPHDB
-
-rectangle "Post Service" as POST
-database "Post Store" as POSTDB
-
-rectangle "Feed Fanout Service" as FANOUT
-database "User Feed Store (precomputed timelines)" as FEEDDB
-
-rectangle "Ranking Service" as RANK
-database "Engagement Store" as ENGDB
-
-User --> CLIENT : open app
-CLIENT --> FEEDAPI : get /feed
-
-FEEDAPI --> FEEDDB : get precomputed feed
-FEEDDB --> FEEDAPI : candidate posts
-FEEDAPI --> RANK : rank candidates
-RANK --> ENGDB : fetch engagement signals
-RANK --> FEEDAPI : ranked posts
-FEEDAPI --> CLIENT : personalized feed
-
-' Publishing flow
-CLIENT --> POST : create post
-POST --> POSTDB : store post
-POST --> GRAPH : get followers
-GRAPH --> GRAPHDB
-POST --> FANOUT : fan-out post to followers
-FANOUT --> FEEDDB : append to user timelines
-
-@enduml
-{{< /plantuml >}}
-
-### 4.4 口頭講稿（約 2–3 分鐘）
-
-> Feed 系統的關鍵在於 fan-out 策略和 ranking。  
-> <br>
-> 對於一般使用者，我會採用「fan-out on write」：當某人發文時，系統會查出他的 followers，然後把這篇貼文的 ID append 到 followers 的 feed timeline 存在 User Feed Store 中。之後讀 feed 時就只是從自己的 feed list 取出一批 candidate，再交給 Ranking Service 排序。  
-> <br>
-> 對於有超大量 followers 的大 V，我可以改成部分 fan-out on read：讀取時動態從 Post Store + Graph 取資料，避免寫入爆炸。  
-> <br>
-> Ranking Service 會根據文本、互動行為、社交距離與貼文新舊做 scoring。整個系統可以透過 cache、sharding 以及異步 fan-out 來 scale。  
-
----
-
-## 5. Messaging System（WhatsApp / Messenger 類）
-
-### 5.1 題目重述與假設
-
-- 題目：設計一個即時訊息系統（1:1 / group chat）。  
-- 功能需求：  
-  - 發送文字訊息（後續可增圖片 / 檔案）  
-  - 已讀 / 送達狀態  
-  - 離線訊息、重新上線可收回歷史  
-- 非功能需求：  
-  - 低延遲（< 100ms）  
-  - 高可用性、訊息不丟失  
-  - 全球多 region 部署  
-
-### 5.2 高階架構說明
-
-- Client 與 Gateway 透過 WebSocket 或長連線維持通道。  
-- Gateway 將訊息寫入 Message Queue（例如 Kafka）、再由 Chat Service 處理路由與存儲。  
-- Message Store：可依 chat_id 分 shard，存訊息有序列表。  
-- Push 路徑：接收訊息 → 寫入存儲 → 推送線上接收者；若離線，存離線隊列。  
-
-### 5.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Messaging System - High Level Architecture
-
-actor UserA
-actor UserB
-
-rectangle "Mobile / Web Client" as CLIENTA
-rectangle "Mobile / Web Client " as CLIENTB
-
-rectangle "Gateway (WebSocket / Long-lived)" as GW
-queue "Message Queue (Kafka)" as MQ
-rectangle "Chat Service" as CHAT
-database "Message Store (sharded by chat_id)" as MSGDB
-rectangle "Presence Service" as PRES
-
-UserA --> CLIENTA : send message
-CLIENTA --> GW : WS frame(msg)
-GW --> MQ : enqueue message
-
-MQ --> CHAT : consume msg
-CHAT --> MSGDB : append to chat history
-CHAT --> PRES : check recipient online?
-PRES --> CHAT : online/offline
-
-CHAT --> GW : push to online recipient
-GW --> CLIENTB : deliver message
-
-' Offline
-CHAT --> MSGDB : mark undelivered
-CLIENTB --> GW : reconnect
-GW --> CHAT : sync request
-CHAT --> MSGDB : load undelivered msgs
-MSGDB --> CHAT
-CHAT --> GW
-GW --> CLIENTB : deliver offline messages
-
-@enduml
-{{< /plantuml >}}
-
-### 5.4 口頭講稿（約 2–3 分鐘）
-
-> 即時訊息系統的關鍵是「可靠投遞」與「低延遲」。  
-> <br>
-> 我會讓 Client 與 Gateway 維持 WebSocket 長連線，所有訊息透過 Gateway 進入後端。Gateway 把訊息寫入 Message Queue，再由 Chat Service 消費、存入 Message Store。這樣可以 decouple 短連線壓力，並利用 MQ 保證至少一次傳遞。  
-> <br>
-> Chat Service 寫入成功後，會查 Presence Service 判斷收件者是否在線，如果在線，透過 Gateway 的連線 channel 推送。如果不在線，就只寫入 Message Store 並標記為未送達，等對方重連時再拉取未讀訊息。  
-> <br>
-> 消息排序可依照 per-chat 的 sequence id，透過 sharding chat_id 保持順序。整體可以在 multi-region 部署，透過 region stickiness 確保單個會話不跨 region，降低複雜度。  
-
----
-
-## 6. Post Search（社群貼文搜尋）
-
-> ✅ 詳細版請參考你之前的 `post_search_full.*`，這裡是濃縮版。
-
-### 6.1 問題與需求
-
-- 全文搜尋貼文 content（title + body）  
-- 支援 filters（時間、作者、board、visibility）  
-- 支援排序（relevance / time）  
-- Read-heavy，寫入 async，eventual consistency 可接受。  
-
-### 6.2 簡化版 PlantUML（高階）
-
-{{< plantuml >}}
-@startuml
-title Post Search - High Level Architecture (Simplified)
-
-actor User
-rectangle "Frontend" as FE
-rectangle "Search API Service" as API
-rectangle "Query Cache" as QC
-rectangle "Search Cluster (Inverted Index)" as SC
-rectangle "Post Cache" as PC
-database "Post DB" as DB
-rectangle "Post Service" as POST
-queue "Event Log (Kafka)" as LOG
-rectangle "Indexers" as IDX
-
-User --> FE : search / create post
-FE --> API : search query
-API --> QC : check cache
-QC --> API : hit/miss
-API --> SC : full-text query
-SC --> API : doc_ids
-API --> PC : fetch hot posts
-API --> DB : fetch post details
-API --> FE : results
-
-FE --> POST : create / update post
-POST --> DB : write post
-POST --> LOG : publish post-events
-LOG --> IDX : consume
-IDX --> SC : update index
-
-@enduml
-{{< /plantuml >}}
-
-### 6.3 口頭講稿（簡版 2 分鐘）
-
-> 我會把 Post Search 設計成一個 read-heavy、async indexed 的搜尋系統。  
-> <br>
-> 寫入時，貼文先透過 Post Service 寫入主 DB，成功後將事件丟給 Kafka 這類 Event Log，由多個 Indexer workers 非同步地做分詞與倒排索引更新。這樣發文 latency 不會因 index 更新而被拉高。  
-> <br>
-> 搜尋時，Search API 先查 Query Cache，miss 再打 Search Cluster（Elasticsearch/OpenSearch），取得一批 doc_ids 後到 Post Cache 或 DB 補齊貼文內容。Index 裡會內嵌過濾欄位，例如時間、作者、board、visibility，讓大部分權限/條件過濾在 search engine 層完成。  
-> <br>
-> 排序一開始可以用 BM25 + time decay，之後再引入 engagement signals 和 personal ranking。  
-
----
-
-## 7. Online Judge / Coding Platform（LeetCode 類）
-
-### 7.1 題目重述與假設
-
-- 題目：設計一個線上刷題 / 線上評測系統（像 LeetCode）。  
-- 功能需求：  
-  - 使用者提交程式碼，系統在 sandbox 中編譯 / 執行 / 判斷結果  
-  - 顯示執行結果、錯誤輸出、耗時與記憶體  
-  - 題目管理、測資管理  
-- 非功能需求：  
-  - 隔離性：每個 submission 不得影響平台安全  
-  - 延遲：允許數秒～十數秒等待  
-  - 可水平擴展評測 worker  
-
-### 7.2 高階架構說明
-
-- Submission 進入 queue，由多個 Judge Worker 消費。  
-- Worker 在 sandbox（container / VM）中拉題目測資，編譯並執行使用者程式。  
-- 結果寫回 DB，並透過 WebSocket / polling 通知前端。  
-
-### 7.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Online Judge - High Level Architecture
-
-actor User
-rectangle "Web UI" as UI
-rectangle "API Server" as API
-database "Problem & Submission DB" as DB
-
-queue "Submission Queue" as SUBQ
-rectangle "Judge Worker Pool" as WORKERS
-cloud "Sandbox Environment (Docker/VM)" as SANDBOX
-database "Test Case Store" as TESTS
-
-User --> UI : submit solution
-UI --> API : POST /submission
-API --> DB : create submission(record)
-API --> SUBQ : enqueue submission_id
-
-SUBQ --> WORKERS : dequeue submission
-WORKERS --> DB : load submission & problem meta
-WORKERS --> TESTS : fetch test cases
-WORKERS --> SANDBOX : compile & run
-SANDBOX --> WORKERS : result (AC/WA/TLE/MLE/...)
-WORKERS --> DB : update submission result
-
-UI --> API : GET /submission/{id}
-API --> DB : query result
-DB --> API
-API --> UI : result + logs
-
-@enduml
-{{< /plantuml >}}
-
-### 7.4 口頭講稿（約 2–3 分鐘）
-
-> 我會把 Online Judge 當成一個「非即時但要高度隔離的批處理系統」。  
-> <br>
-> 使用者在 Web UI 提交程式碼，API Server 建立 submission record，將 submission_id 丟到 Submission Queue。Judge Worker Pool 從 queue 取出任務，根據 problem id 去 Test Case Store 抓測資，然後在隔離好的 sandbox 中完成 compile & run。  
-> <br>
-> Sandbox 可以用 Docker / Firecracker 這類技術，每次提交在新的容器環境下執行，確保安全與資源限制。執行完後 Worker 寫回結果到 DB。使用者可以透過 polling 或 WebSocket 查詢結果。  
-> <br>
-> 整個系統可以透過增加 Worker 節點來水平擴展，submission queue 本身具備 buffer 能力。  
-
----
-
-## 8. Ride Hailing（Uber / Lyft 類）
-
-### 8.1 題目重述與假設
-
-- 題目：設計類 Uber 系統。  
-- 功能需求：  
-  - 乘客發起叫車，匹配附近司機  
-  - 計算預估到達時間（ETA）  
-  - 行程建立、費用計算與付款  
-- 非功能需求：  
-  - 位置更新頻繁（幾秒一次）  
-  - 大量即時讀寫（查附近司機）  
-  - 需考慮多 region / city 的擴展性  
-
-### 8.2 高階架構說明
-
-- Driver / Rider App 持續上報 GPS 到 Location Service。  
-- 匹配服務從 Location Store 中查詢附近可接單司機。  
-- 狀態機：driver 狀態（available / matching / on-trip），trip 狀態（requested / accepted / on-going / finished）。  
-
-### 8.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Ride Hailing - High Level Architecture
-
-actor Rider
-actor Driver
-
-rectangle "Rider App" as RA
-rectangle "Driver App" as DA
-
-rectangle "API Gateway" as API
-rectangle "Location Service" as LOC
-cloud "Location Store (Geo-indexed)" as LOCSTORE
-
-rectangle "Matching Service" as MATCH
-rectangle "Trip Service" as TRIP
-database "Trip DB" as TRIPDB
-
-rectangle "Pricing Service" as PRICE
-rectangle "Payment Service" as PAY
-
-Driver --> DA : send GPS updates
-DA --> API : /driver/location
-API --> LOC : update location
-LOC --> LOCSTORE : upsert driver location
-
-Rider --> RA : request ride
-RA --> API : POST /ride-request
-API --> MATCH : find nearby drivers
-MATCH --> LOCSTORE : query drivers near rider
-LOCSTORE --> MATCH : candidate drivers
-MATCH --> DA : push request
-DA --> API : accept/decline
-API --> MATCH
-MATCH --> TRIP : create trip
-TRIP --> TRIPDB : persist trip
-
-TRIP --> PRICE : fare estimate
-PRICE --> TRIP
-TRIP --> PAY : charge on completion
-PAY --> TRIP : payment result
-
-@enduml
-{{< /plantuml >}}
-
-### 8.4 口頭講稿（約 2–3 分鐘）
-
-> Ride Hailing 系統的核心是「位置服務 + 匹配引擎 + 行程狀態機」。  
-> <br>
-> 司機端 App 定期回報 GPS 給 Location Service，Location Service 會把司機的位置寫入一個支持 geo index 的儲存（例如 Redis GEO、專用 geo store）。乘客發起叫車時，Matching Service 根據乘客位置在 Location Store 中查詢附近的 available drivers。  
-> <br>
-> 匹配成功後會在 Trip Service 中創建一個 trip 記錄，並進入狀態機管理整個行程（requested、accepted、on-trip、completed 等）。價格可由 Pricing Service 根據路程、時間與 surge 等因素計算，行程結束後由 Payment Service 進行扣款。  
-> <br>
-> 整體系統可以按城市做分區部署，Location Service 與 Matching Service 一般會強依賴 local region 的資料，以降低延遲。  
-
----
-
-## 9. Web Crawler
-
-### 9.1 題目重述與假設
-
-- 題目：設計一個可擴展的 Web Crawler。  
-- 功能需求：  
-  - 從 seed URLs 開始，遵守 robots.txt，抓取頁面內容  
-  - 控制抓取頻率，避免對單一網站過載  
-  - 支援 URL 去重、內容存儲、後續索引使用  
-- 非功能需求：  
-  - 高吞吐（每秒多頁）  
-  - 可根據 domain 做 politeness control  
-  - 容錯與重試  
-
-### 9.2 高階架構說明
-
-- Frontier：待抓取 URL 隊列，可按 domain 分 bucket。  
-- Fetcher：從 Frontier 拿 URL，發 HTTP request 抓內容。  
-- Parser：解析 HTML，抽出文字與新 URL，寫入 content store 與 dedup system。  
-- robots.txt & politeness：每個 domain 有自己的抓取頻率與延遲。  
-
-### 9.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Web Crawler - High Level Architecture
-
-rectangle "URL Frontier (priority queues by domain)" as FRONTIER
-rectangle "Fetcher Workers" as FETCH
-rectangle "Parser & Extractor" as PARSER
-database "Content Store (raw HTML / parsed)" as CONTENT
-database "URL Seen Store (dedup)" as SEEN
-rectangle "Robots & Politeness Manager" as ROBOTS
-
-FRONTIER --> FETCH : pop next URL
-FETCH --> ROBOTS : check robots.txt / delay
-ROBOTS --> FETCH : allowed / wait
-
-FETCH --> CONTENT : store raw HTML
-FETCH --> PARSER : send HTML
-
-PARSER --> CONTENT : store parsed content
-PARSER --> SEEN : check / add new URLs
-SEEN --> FRONTIER : enqueue unseen URLs
-
-@enduml
-{{< /plantuml >}}
-
-### 9.4 口頭講稿（約 2–3 分鐘）
-
-> Crawler 的核心是 Frontier 管理、去重與 politeness。  
-> <br>
-> Frontier 可以是按 domain 分桶的 priority queue，每個 domain 有自己的抓取速率控制，搭配 Robots & Politeness Manager 來判斷是否可以抓取，以及下一次抓取時間。Fetcher 從 Frontier 拿 URL，先檢查 robots 和訪問間隔，合適時發 HTTP request 抓 HTML。  
-> <br>
-> Parser 負責解析 HTML，抽取文字、標題、連結等結構化資訊，寫入 Content Store，同時將頁面上的連結送入 Seen Store 做 dedup。未出現過的 URL 才會被丟回 Frontier。  
-> <br>
-> 整體可以水平擴展：多個 Fetcher / Parser 節點，共享 Frontier 和 Seen Store。對於失敗的 URL，可加 retry 計數與 backoff。  
-
----
-
-## 10. Ad Click Aggregator
-
-### 10.1 題目重述與假設
-
-- 題目：設計一個即時廣告點擊聚合系統，用於統計 CTR、展示量、點擊量。  
-- 功能需求：  
-  - 實時接受 impression / click 事件  
-  - 依照 campaign / ad / time window 聚合計數  
-  - 支援 dashboard 查詢最近幾分鐘～幾小時的統計數據  
-- 非功能需求：  
-  - 高吞吐（每秒數十萬事件）  
-  - 允許輕微延遲（數秒以內）  
-  - 準確度需求可討論（exactly-once / at-least-once）  
-
-### 10.2 高階架構說明
-
-- Event Ingress：前端 / SDK 上報 impression & click 到 Ingestion API。  
-- 事件寫入 Kafka，後端有 streaming job（Flink/Spark Streaming）做聚合（per ad, per minute）。  
-- 聚合結果寫入 OLAP store（如 Druid / ClickHouse / BigQuery）供 dashboard 查詢。  
-
-### 10.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Ad Click Aggregator - High Level Architecture
-
-actor User
-rectangle "Web / App" as CLIENT
-
-rectangle "Ingestion API" as INGEST
-queue "Event Stream (Kafka)" as KAFKA
-
-rectangle "Stream Processor (Flink / Spark)" as STREAM
-database "Aggregated Store (OLAP: Druid/ClickHouse)" as OLAP
-database "Raw Event Store (HDFS / Object Store)" as RAW
-
-rectangle "Analytics Dashboard" as DASH
-
-User --> CLIENT : view ad / click ad
-CLIENT --> INGEST : send impression/click event
-INGEST --> KAFKA : append event
-INGEST --> RAW : optional raw dump
-
-KAFKA --> STREAM : consume events
-STREAM --> OLAP : upsert counters by ad, campaign, time window
-
-DASH --> OLAP : query metrics
-OLAP --> DASH : stats
-
-@enduml
-{{< /plantuml >}}
-
-### 10.4 口頭講稿（約 2–3 分鐘）
-
-> Ad Click Aggregator 本質上是一個流式資料處理系統。  
-> <br>
-> 使用者在 App 或網頁看到廣告、點擊廣告時，SDK 會將 impression 和 click event 傳到 Ingestion API。Ingestion API 把事件寫進 Kafka，並可選擇同步寫一份 raw log 到 Object Store 以便離線分析。  
-> <br>
-> 後端有一個流處理任務（例如 Flink / Spark Streaming），從 Kafka 消費這些事件，按照 campaign、ad_id 以及時間窗（例如 1 分鐘）做聚合，將結果寫入 OLAP 資料庫。Dashboard 則直接查 OLAP，取得 CTR、展示量、點擊量。  
-> <br>
-> 與 exactly-once 的關係可以透過 Kafka + Flink 的 checkpoint 與兩階段提交來靠近實作，若業務容忍輕微誤差，也可以選擇 at-least-once + 偶爾重算。  
 
 ---

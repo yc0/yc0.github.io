@@ -149,11 +149,9 @@ DNS --> PodA : 回傳 10.96.0.10
 
 PodA --> KP1 : 封包 Dst=10.96.0.10:80
 KP1 --> SVC : 匹配 Service 規則
-SVC --> KP1 : 選擇一個後端 Pod IP
-(例如 10.244.2.8:8080)
+SVC --> KP1 : 選擇一個後端 Pod IP (例如 10.244.2.8:8080)
 
-KP1 --> PodB : DNAT 後轉送封包
-Dst=10.244.2.8:8080
+KP1 --> PodB : DNAT 後轉送封包 Dst=10.244.2.8:8080
 
 @enduml
 {{< /plantuml >}}
@@ -183,23 +181,20 @@ CNI（例如 Calico BGP / Flannel host-gw）幫你自動寫好這些路由，封
 
 ### 4.2 只用 Routing 的流程圖（不含 VXLAN）
 
-```plantuml
+{{< plantuml >}}
 @startuml
 title L3 Routing：跨 Node Pod 通訊（不使用 VXLAN）
 
 node "Node1" {
-  rectangle "Pod A
-10.244.1.5" as PodA
-  rectangle "CNI Bridge" as CNI1
-  node "Node1 OS" as OS1
+  rectangle "Pod A 10.244.1.5" as PodA
+  rectangle "CNI Bridge" as CNI1 node "Node1 OS" as OS1
 }
 
 node "Core Router" as CR
 
 node "Node2" {
   rectangle "CNI Bridge" as CNI2
-  rectangle "Pod B
-10.244.2.8" as PodB
+  rectangle "Pod B 10.244.2.8" as PodB
   node "Node2 OS" as OS2
 }
 
@@ -211,7 +206,7 @@ OS2 --> CNI2 : 交給 CNI bridge
 CNI2 --> PodB : 投遞封包
 
 @enduml
-```
+{{< /plantuml >}}
 
 > 這種模式依賴「實體網路（Router）願意幫你管理 PodCIDR」。  
 > 常見實作：**Calico BGP 模式**、**Flannel host-gw**。
@@ -262,29 +257,22 @@ CNI2 --> PodB : 投遞封包
 
 ### 5.4 VXLAN Overlay 的流程圖（PlantUML）
 
-```plantuml
+{{< plantuml >}}
 @startuml
 title VXLAN Overlay：Pod A -> Pod B 跨 Node 通訊
 
 node "Node1" {
-  rectangle "Pod A
-10.244.1.5" as PodA
-  rectangle "CNI Bridge
-(cni0)" as CNI1
-  rectangle "VXLAN IF
-flannel.1 / cilium_vxlan" as VX1
+  rectangle "Pod A 10.244.1.5" as PodA
+  rectangle "CNI Bridge (cni0)" as CNI1
+  rectangle "VXLAN IF flannel.1 / cilium_vxlan" as VX1
 }
 
-cloud "Underlay Network
-(實體 L3 網路)" as Underlay
+cloud "Underlay Network (實體 L3 網路)" as Underlay
 
 node "Node2" {
-  rectangle "VXLAN IF
-flannel.1 / cilium_vxlan" as VX2
-  rectangle "CNI Bridge
-(cni0)" as CNI2
-  rectangle "Pod B
-10.244.2.8" as PodB
+  rectangle "VXLAN IF flannel.1 / cilium_vxlan" as VX2
+  rectangle "CNI Bridge (cni0)" as CNI2
+  rectangle "Pod B 10.244.2.8" as PodB
 }
 
 PodA --> CNI1 : Dst=10.244.2.8
@@ -297,7 +285,7 @@ VX2 --> CNI2 : 解封裝成 Pod 間封包
 CNI2 --> PodB : 投遞給 Pod B
 
 @enduml
-```
+{{< /plantuml >}}
 
 ---
 
@@ -358,25 +346,20 @@ CNI2 --> PodB : 投遞給 Pod B
 
 #### 7.5.1 On-Prem（需要 VXLAN 的典型情境）
 
-```plantuml
+{{< plantuml >}}
 @startuml
 title On-Prem：使用 VXLAN 的典型情境
 
 node "Node1" {
-  rectangle "Pod A
-10.244.1.5" as PodA
-  rectangle "VXLAN IF
-flannel.1" as VX1
+  rectangle "Pod A 10.244.1.5" as PodA
+  rectangle "VXLAN IF flannel.1" as VX1
 }
 
-cloud "企業實體網路
-(不認識 10.244.0.0/16)" as CorpNet
+cloud "企業實體網路 (不認識 10.244.0.0/16)" as CorpNet
 
 node "Node2" {
-  rectangle "VXLAN IF
-flannel.1" as VX2
-  rectangle "Pod B
-10.244.2.8" as PodB
+  rectangle "VXLAN IF flannel.1" as VX2
+  rectangle "Pod B 10.244.2.8" as PodB
 }
 
 PodA --> VX1 : Dst=10.244.2.8
@@ -387,32 +370,29 @@ CorpNet --> VX2
 VX2 --> PodB
 
 @enduml
-```
+{{< /plantuml >}}
 
 #### 7.5.2 雲端（原生 SDN，不需要 VXLAN）
 
-```plantuml
+{{< plantuml >}}
 @startuml
 title 雲端：Pod 直接使用 VPC/VNet 可路由 IP
 
 cloud "Cloud SDN / VPC Router" as SDN
 
 node "Node1" {
-  rectangle "Pod A
-10.0.1.25" as PodA
+  rectangle "Pod A 10.0.1.25" as PodA
 }
 
 node "Node2" {
-  rectangle "Pod B
-10.0.2.30" as PodB
+  rectangle "Pod B 10.0.2.30" as PodB
 }
 
 PodA --> SDN : 送往 10.0.2.30
-SDN --> PodB : 原生 L3 路由
-(無封裝、無 VXLAN)
+SDN --> PodB : 原生 L3 路由 (無封裝、無 VXLAN)
 
 @enduml
-```
+{{< /plantuml >}}
 
 > ✅ 關鍵差異：在雲端，**Pod IP 就是 SDN 的一等公民**，不需要額外用 VXLAN 再疊一層網路。
 

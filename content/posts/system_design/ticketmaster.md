@@ -87,485 +87,149 @@ SEAT --> SEATDB : state=available
 > 開賣高峰時，可以用 queue / waiting room 來平滑請求，Seat Service 可以透過分區和讀寫分離來 scale。  
 
 ---
+# Ticketmaster System Design: 座位庫存管理與鎖定機制
 
-## 4. News Feed（Facebook / Instagram 類）
+這份文件總結了關於 Ticketmaster 類型的票務系統設計討論，重點在於如何處理高併發下的座位庫存管理（Inventory Management）。
 
-### 4.1 題目重述與假設
+## 1. 初始構想：基於 Topic Queue 的架構
 
-- 題目：設計一個社群平台的 News Feed 系統。  
-- 功能需求：  
-  - 使用者看到「自己關注的人 / page」的貼文 feed  
-  - 支援時間排序 / 相關度排序  
-  - 支援無限捲動（pagination / cursor）  
-- 非功能需求：  
-  - Read-heavy、高 QPS  
-  - Feed latency 可接受 1–10 秒延遲  
-  - 要支援 ranking 演算法演進  
+### 提問
+系統目標是處理約 10 萬人/場，總共 100 萬張票的庫存。是否可以為**每個座位建立一個 Queue Topic**，由 Queue Service 來管理一致性？
 
-### 4.2 高階架構說明
+### 分析：為什麼「單座位單 Topic」不可行？
+雖然 100 萬個物件在資料庫中不多，但在 Message Queue (如 Kafka, Pulsar) 中是不可行的。
 
-- Fan-out on write / on read 混合：  
-  - 高度活躍使用者：on read 從 Post Store + Social Graph 動態組裝。  
-  - 一般使用者：維護 precomputed feed timeline（cache / DB）。  
-- Ranking service：  
-  - 依據文本、互動（likes/comments）、社交距離、時間 decay 等信號計算 score。  
-
-### 4.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title News Feed - High Level Architecture
-
-actor User
-rectangle "Mobile / Web App" as CLIENT
-rectangle "Feed API Service" as FEEDAPI
-
-rectangle "Social Graph Service" as GRAPH
-database "Graph DB (follows)" as GRAPHDB
-
-rectangle "Post Service" as POST
-database "Post Store" as POSTDB
-
-rectangle "Feed Fanout Service" as FANOUT
-database "User Feed Store (precomputed timelines)" as FEEDDB
-
-rectangle "Ranking Service" as RANK
-database "Engagement Store" as ENGDB
-
-User --> CLIENT : open app
-CLIENT --> FEEDAPI : get /feed
-
-FEEDAPI --> FEEDDB : get precomputed feed
-FEEDDB --> FEEDAPI : candidate posts
-FEEDAPI --> RANK : rank candidates
-RANK --> ENGDB : fetch engagement signals
-RANK --> FEEDAPI : ranked posts
-FEEDAPI --> CLIENT : personalized feed
-
-' Publishing flow
-CLIENT --> POST : create post
-POST --> POSTDB : store post
-POST --> GRAPH : get followers
-GRAPH --> GRAPHDB
-POST --> FANOUT : fan-out post to followers
-FANOUT --> FEEDDB : append to user timelines
-
-@enduml
-{{< /plantuml >}}
-
-### 4.4 口頭講稿（約 2–3 分鐘）
-
-> Feed 系統的關鍵在於 fan-out 策略和 ranking。  
-> <br>
-> 對於一般使用者，我會採用「fan-out on write」：當某人發文時，系統會查出他的 followers，然後把這篇貼文的 ID append 到 followers 的 feed timeline 存在 User Feed Store 中。之後讀 feed 時就只是從自己的 feed list 取出一批 candidate，再交給 Ranking Service 排序。  
-> <br>
-> 對於有超大量 followers 的大 V，我可以改成部分 fan-out on read：讀取時動態從 Post Store + Graph 取資料，避免寫入爆炸。  
-> <br>
-> Ranking Service 會根據文本、互動行為、社交距離與貼文新舊做 scoring。整個系統可以透過 cache、sharding 以及異步 fan-out 來 scale。  
+1.  **Metadata 管理崩潰 (Topic Explosion)**：
+    * Kafka 等中介軟體並非設計來處理百萬級別的 Topic。過多的 Topic 會導致 Zookeeper/Controller 的 Metadata 管理壓力和 File Descriptor 資源耗盡。
+2.  **讀取困難 (The View Problem)**：
+    * 搶票是 **「讀多寫少」** 的場景。前端渲染 Seat Map 需要一次查詢數萬個座位的狀態。若使用 Queue，無法高效查詢所有 Queue 的當前狀態。
+3.  **原子性難題 (Atomicity)**：
+    * 購買連號座位（如 A1, A2）時，需同時從兩個 Queue 獲取訊息。若 A1 成功但 A2 失敗，回滾（Rollback）邏輯極其複雜，容易導致 Deadlock。
 
 ---
 
-## 5. Messaging System（WhatsApp / Messenger 類）
+## 2. 架構比較與修正方案
 
-### 5.1 題目重述與假設
+如果堅持使用 Queue，必須調整粒度（例如：單場次單 Queue）。以下是不同方案的詳細對比：
 
-- 題目：設計一個即時訊息系統（1:1 / group chat）。  
-- 功能需求：  
-  - 發送文字訊息（後續可增圖片 / 檔案）  
-  - 已讀 / 送達狀態  
-  - 離線訊息、重新上線可收回歷史  
-- 非功能需求：  
-  - 低延遲（< 100ms）  
-  - 高可用性、訊息不丟失  
-  - 全球多 region 部署  
+| 特性 | 方案 A：單座單 Queue (你的提議) | 方案 B：單場次單 Queue | 方案 C：Redis + Lua (業界標準) |
+| :--- | :--- | :--- | :--- |
+| **Topic 數量** | 100 萬 (極高，不可行) | 100 ~ 1000 (可控) | N/A (不依賴 Queue) |
+| **併發處理能力** | 差 (資源耗盡) | 中 (受限於 Consumer 處理速度) | **極高 (記憶體操作)** |
+| **查詢選位圖** | 極慢 (需掃描大量 Queue) | 需額外 DB 支援 | **極快 (讀 Cache)** |
+| **連號座位處理** | 極難 (分散式鎖問題) | 容易 (在 Consumer 記憶體內判斷) | **容易 (Lua 腳本一次判斷)** |
+| **實作複雜度** | 極高 | 中 | 中 |
 
-### 5.2 高階架構說明
-
-- Client 與 Gateway 透過 WebSocket 或長連線維持通道。  
-- Gateway 將訊息寫入 Message Queue（例如 Kafka）、再由 Chat Service 處理路由與存儲。  
-- Message Store：可依 chat_id 分 shard，存訊息有序列表。  
-- Push 路徑：接收訊息 → 寫入存儲 → 推送線上接收者；若離線，存離線隊列。  
-
-### 5.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Messaging System - High Level Architecture
-
-actor UserA
-actor UserB
-
-rectangle "Mobile / Web Client" as CLIENTA
-rectangle "Mobile / Web Client " as CLIENTB
-
-rectangle "Gateway (WebSocket / Long-lived)" as GW
-queue "Message Queue (Kafka)" as MQ
-rectangle "Chat Service" as CHAT
-database "Message Store (sharded by chat_id)" as MSGDB
-rectangle "Presence Service" as PRES
-
-UserA --> CLIENTA : send message
-CLIENTA --> GW : WS frame(msg)
-GW --> MQ : enqueue message
-
-MQ --> CHAT : consume msg
-CHAT --> MSGDB : append to chat history
-CHAT --> PRES : check recipient online?
-PRES --> CHAT : online/offline
-
-CHAT --> GW : push to online recipient
-GW --> CLIENTB : deliver message
-
-' Offline
-CHAT --> MSGDB : mark undelivered
-CLIENTB --> GW : reconnect
-GW --> CHAT : sync request
-CHAT --> MSGDB : load undelivered msgs
-MSGDB --> CHAT
-CHAT --> GW
-GW --> CLIENTB : deliver offline messages
-
-@enduml
-{{< /plantuml >}}
-
-### 5.4 口頭講稿（約 2–3 分鐘）
-
-> 即時訊息系統的關鍵是「可靠投遞」與「低延遲」。  
-> <br>
-> 我會讓 Client 與 Gateway 維持 WebSocket 長連線，所有訊息透過 Gateway 進入後端。Gateway 把訊息寫入 Message Queue，再由 Chat Service 消費、存入 Message Store。這樣可以 decouple 短連線壓力，並利用 MQ 保證至少一次傳遞。  
-> <br>
-> Chat Service 寫入成功後，會查 Presence Service 判斷收件者是否在線，如果在線，透過 Gateway 的連線 channel 推送。如果不在線，就只寫入 Message Store 並標記為未送達，等對方重連時再拉取未讀訊息。  
-> <br>
-> 消息排序可依照 per-chat 的 sequence id，透過 sharding chat_id 保持順序。整體可以在 multi-region 部署，透過 region stickiness 確保單個會話不跨 region，降低複雜度。  
+* **方案 B (Queue) 缺點**：熱門場次瞬間流量巨大，單一 Consumer 會成為瓶頸，導致使用者等待時間過長（Backpressure）。
+* **方案 C (Redis) 優點**：利用記憶體原子操作，解決了鎖定與效能問題。
 
 ---
 
-## 6. Post Search（社群貼文搜尋）
+## 3. 推薦方案：Redis + Lua Script (業界標準)
 
-> ✅ 詳細版請參考你之前的 `post_search_full.*`，這裡是濃縮版。
+目前高效能搶票系統的主流做法是結合 **Redis (Cache)** 與 **Database**。
 
-### 6.1 問題與需求
+* **Redis**：負責高併發的讀取與原子性鎖定 (Locking)。
+* **Database**：負責最終的資料持久化 (Persistence) 與付款紀錄。
 
-- 全文搜尋貼文 content（title + body）  
-- 支援 filters（時間、作者、board、visibility）  
-- 支援排序（relevance / time）  
-- Read-heavy，寫入 async，eventual consistency 可接受。  
+### 核心機制
+利用 Redis 單執行緒特性配合 **Lua Script**，確保「檢查庫存」與「鎖定座位」是原子操作 (Atomic Operation)。
 
-### 6.2 簡化版 PlantUML（高階）
+### 3.1 Lua Script 邏輯 (All-or-Nothing)
+此腳本保證：要嘛所有選擇的座位都鎖定成功，要嘛全部失敗（避免買到不完整的連號）。
 
-{{< plantuml >}}
-@startuml
-title Post Search - High Level Architecture (Simplified)
+```lua
+-- KEYS: 座位 Keys, 例如 {"{evt:1}:A1", "{evt:1}:A2"}
+-- ARGV[1]: User ID
+-- ARGV[2]: TTL (鎖定秒數)
 
-actor User
-rectangle "Frontend" as FE
-rectangle "Search API Service" as API
-rectangle "Query Cache" as QC
-rectangle "Search Cluster (Inverted Index)" as SC
-rectangle "Post Cache" as PC
-database "Post DB" as DB
-rectangle "Post Service" as POST
-queue "Event Log (Kafka)" as LOG
-rectangle "Indexers" as IDX
+-- 步驟 1: 檢查階段
+-- 只要有一個座位已存在 (被鎖定或售出)，則全部失敗
+for i, key in ipairs(KEYS) do
+    if redis.call("EXISTS", key) == 1 then
+        return 0 -- 失敗
+    end
+end
 
-User --> FE : search / create post
-FE --> API : search query
-API --> QC : check cache
-QC --> API : hit/miss
-API --> SC : full-text query
-SC --> API : doc_ids
-API --> PC : fetch hot posts
-API --> DB : fetch post details
-API --> FE : results
+-- 步驟 2: 執行階段
+-- 寫入鎖定資訊，並設定 TTL
+for i, key in ipairs(KEYS) do
+    redis.call("SET", key, ARGV[1], "NX", "EX", ARGV[2])
+end
 
-FE --> POST : create / update post
-POST --> DB : write post
-POST --> LOG : publish post-events
-LOG --> IDX : consume
-IDX --> SC : update index
+return 1 -- 成功
+```
 
-@enduml
-{{< /plantuml >}}
+### 3.2 C++ 實作範例
+使用 `redis-plus-plus` 函式庫示範如何呼叫上述腳本。
 
-### 6.3 口頭講稿（簡版 2 分鐘）
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sw/redis++/redis++.h>
 
-> 我會把 Post Search 設計成一個 read-heavy、async indexed 的搜尋系統。  
-> <br>
-> 寫入時，貼文先透過 Post Service 寫入主 DB，成功後將事件丟給 Kafka 這類 Event Log，由多個 Indexer workers 非同步地做分詞與倒排索引更新。這樣發文 latency 不會因 index 更新而被拉高。  
-> <br>
-> 搜尋時，Search API 先查 Query Cache，miss 再打 Search Cluster（Elasticsearch/OpenSearch），取得一批 doc_ids 後到 Post Cache 或 DB 補齊貼文內容。Index 裡會內嵌過濾欄位，例如時間、作者、board、visibility，讓大部分權限/條件過濾在 search engine 層完成。  
-> <br>
-> 排序一開始可以用 BM25 + time decay，之後再引入 engagement signals 和 personal ranking。  
+using namespace sw::redis;
 
----
+class SeatBookingSystem {
+private:
+    Redis _redis;
+    std::string _lua_script_sha;
 
-## 7. Online Judge / Coding Platform（LeetCode 類）
+public:
+    SeatBookingSystem(const std::string& uri) : _redis(uri) {
+        // 系統啟動時載入 Lua Script 以優化頻寬
+        std::string script = R"(
+            for i, key in ipairs(KEYS) do
+                if redis.call("EXISTS", key) == 1 then return 0 end
+            end
+            for i, key in ipairs(KEYS) do
+                redis.call("SET", key, ARGV[1], "NX", "EX", ARGV[2])
+            end
+            return 1
+        )";
+        _lua_script_sha = _redis.script_load(script);
+    }
 
-### 7.1 題目重述與假設
+    // 嘗試鎖定座位
+    bool reserveSeats(const std::string& userId, const std::string& eventId, const std::vector<std::string>& seatIds) {
+        std::vector<std::string> keys;
+        
+        // 組合 Key (使用 Hash Tag {} 確保在 Cluster 模式下位於同一 Slot)
+        for (const auto& seat : seatIds) {
+            keys.push_back("{evt:" + eventId + "}:seat:" + seat);
+        }
 
-- 題目：設計一個線上刷題 / 線上評測系統（像 LeetCode）。  
-- 功能需求：  
-  - 使用者提交程式碼，系統在 sandbox 中編譯 / 執行 / 判斷結果  
-  - 顯示執行結果、錯誤輸出、耗時與記憶體  
-  - 題目管理、測資管理  
-- 非功能需求：  
-  - 隔離性：每個 submission 不得影響平台安全  
-  - 延遲：允許數秒～十數秒等待  
-  - 可水平擴展評測 worker  
+        std::vector<std::string> args = {userId, "300"}; // TTL: 300秒
 
-### 7.2 高階架構說明
-
-- Submission 進入 queue，由多個 Judge Worker 消費。  
-- Worker 在 sandbox（container / VM）中拉題目測資，編譯並執行使用者程式。  
-- 結果寫回 DB，並透過 WebSocket / polling 通知前端。  
-
-### 7.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Online Judge - High Level Architecture
-
-actor User
-rectangle "Web UI" as UI
-rectangle "API Server" as API
-database "Problem & Submission DB" as DB
-
-queue "Submission Queue" as SUBQ
-rectangle "Judge Worker Pool" as WORKERS
-cloud "Sandbox Environment (Docker/VM)" as SANDBOX
-database "Test Case Store" as TESTS
-
-User --> UI : submit solution
-UI --> API : POST /submission
-API --> DB : create submission(record)
-API --> SUBQ : enqueue submission_id
-
-SUBQ --> WORKERS : dequeue submission
-WORKERS --> DB : load submission & problem meta
-WORKERS --> TESTS : fetch test cases
-WORKERS --> SANDBOX : compile & run
-SANDBOX --> WORKERS : result (AC/WA/TLE/MLE/...)
-WORKERS --> DB : update submission result
-
-UI --> API : GET /submission/{id}
-API --> DB : query result
-DB --> API
-API --> UI : result + logs
-
-@enduml
-{{< /plantuml >}}
-
-### 7.4 口頭講稿（約 2–3 分鐘）
-
-> 我會把 Online Judge 當成一個「非即時但要高度隔離的批處理系統」。  
-> <br>
-> 使用者在 Web UI 提交程式碼，API Server 建立 submission record，將 submission_id 丟到 Submission Queue。Judge Worker Pool 從 queue 取出任務，根據 problem id 去 Test Case Store 抓測資，然後在隔離好的 sandbox 中完成 compile & run。  
-> <br>
-> Sandbox 可以用 Docker / Firecracker 這類技術，每次提交在新的容器環境下執行，確保安全與資源限制。執行完後 Worker 寫回結果到 DB。使用者可以透過 polling 或 WebSocket 查詢結果。  
-> <br>
-> 整個系統可以透過增加 Worker 節點來水平擴展，submission queue 本身具備 buffer 能力。  
+        try {
+            long long result = _redis.evalsha<long long>(
+                _lua_script_sha, 
+                keys.begin(), keys.end(), 
+                args.begin(), args.end()
+            );
+            return result == 1;
+        } catch (const Error& e) {
+            std::cerr << "Redis Error: " << e.what() << std::endl;
+            return false;
+        }
+    }
+};
+```
 
 ---
 
-## 8. Ride Hailing（Uber / Lyft 類）
+## 4. 關鍵設計細節 (Deep Dive)
 
-### 8.1 題目重述與假設
+### A. TTL (Time To Live) 的重要性
+* **用途**：處理當機、網路中斷或使用者放棄付款的情況。
+* **機制**：Redis 會在 TTL 到期後自動刪除 Key，釋放座位回到庫存池。無需額外的 Cleanup Cron Job。
 
-- 題目：設計類 Uber 系統。  
-- 功能需求：  
-  - 乘客發起叫車，匹配附近司機  
-  - 計算預估到達時間（ETA）  
-  - 行程建立、費用計算與付款  
-- 非功能需求：  
-  - 位置更新頻繁（幾秒一次）  
-  - 大量即時讀寫（查附近司機）  
-  - 需考慮多 region / city 的擴展性  
+### B. Redis Cluster 與 Hash Tags
+* **問題**：Redis Cluster 將資料分片到不同節點。Lua Script 要求所有操作的 Keys 必須在同一個 Hash Slot。
+* **解法**：使用 **Hash Tags `{...}`**。
+    * 錯誤：`evt:1:seat:A`, `evt:1:seat:B` (可能在不同機器)
+    * 正確：`{evt:1}:seat:A`, `{evt:1}:seat:B` (強制根據 `evt:1` 計算雜湊，保證在同一台機器)
 
-### 8.2 高階架構說明
-
-- Driver / Rider App 持續上報 GPS 到 Location Service。  
-- 匹配服務從 Location Store 中查詢附近可接單司機。  
-- 狀態機：driver 狀態（available / matching / on-trip），trip 狀態（requested / accepted / on-going / finished）。  
-
-### 8.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Ride Hailing - High Level Architecture
-
-actor Rider
-actor Driver
-
-rectangle "Rider App" as RA
-rectangle "Driver App" as DA
-
-rectangle "API Gateway" as API
-rectangle "Location Service" as LOC
-cloud "Location Store (Geo-indexed)" as LOCSTORE
-
-rectangle "Matching Service" as MATCH
-rectangle "Trip Service" as TRIP
-database "Trip DB" as TRIPDB
-
-rectangle "Pricing Service" as PRICE
-rectangle "Payment Service" as PAY
-
-Driver --> DA : send GPS updates
-DA --> API : /driver/location
-API --> LOC : update location
-LOC --> LOCSTORE : upsert driver location
-
-Rider --> RA : request ride
-RA --> API : POST /ride-request
-API --> MATCH : find nearby drivers
-MATCH --> LOCSTORE : query drivers near rider
-LOCSTORE --> MATCH : candidate drivers
-MATCH --> DA : push request
-DA --> API : accept/decline
-API --> MATCH
-MATCH --> TRIP : create trip
-TRIP --> TRIPDB : persist trip
-
-TRIP --> PRICE : fare estimate
-PRICE --> TRIP
-TRIP --> PAY : charge on completion
-PAY --> TRIP : payment result
-
-@enduml
-{{< /plantuml >}}
-
-### 8.4 口頭講稿（約 2–3 分鐘）
-
-> Ride Hailing 系統的核心是「位置服務 + 匹配引擎 + 行程狀態機」。  
-> <br>
-> 司機端 App 定期回報 GPS 給 Location Service，Location Service 會把司機的位置寫入一個支持 geo index 的儲存（例如 Redis GEO、專用 geo store）。乘客發起叫車時，Matching Service 根據乘客位置在 Location Store 中查詢附近的 available drivers。  
-> <br>
-> 匹配成功後會在 Trip Service 中創建一個 trip 記錄，並進入狀態機管理整個行程（requested、accepted、on-trip、completed 等）。價格可由 Pricing Service 根據路程、時間與 surge 等因素計算，行程結束後由 Payment Service 進行扣款。  
-> <br>
-> 整體系統可以按城市做分區部署，Location Service 與 Matching Service 一般會強依賴 local region 的資料，以降低延遲。  
-
----
-
-## 9. Web Crawler
-
-### 9.1 題目重述與假設
-
-- 題目：設計一個可擴展的 Web Crawler。  
-- 功能需求：  
-  - 從 seed URLs 開始，遵守 robots.txt，抓取頁面內容  
-  - 控制抓取頻率，避免對單一網站過載  
-  - 支援 URL 去重、內容存儲、後續索引使用  
-- 非功能需求：  
-  - 高吞吐（每秒多頁）  
-  - 可根據 domain 做 politeness control  
-  - 容錯與重試  
-
-### 9.2 高階架構說明
-
-- Frontier：待抓取 URL 隊列，可按 domain 分 bucket。  
-- Fetcher：從 Frontier 拿 URL，發 HTTP request 抓內容。  
-- Parser：解析 HTML，抽出文字與新 URL，寫入 content store 與 dedup system。  
-- robots.txt & politeness：每個 domain 有自己的抓取頻率與延遲。  
-
-### 9.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Web Crawler - High Level Architecture
-
-rectangle "URL Frontier (priority queues by domain)" as FRONTIER
-rectangle "Fetcher Workers" as FETCH
-rectangle "Parser & Extractor" as PARSER
-database "Content Store (raw HTML / parsed)" as CONTENT
-database "URL Seen Store (dedup)" as SEEN
-rectangle "Robots & Politeness Manager" as ROBOTS
-
-FRONTIER --> FETCH : pop next URL
-FETCH --> ROBOTS : check robots.txt / delay
-ROBOTS --> FETCH : allowed / wait
-
-FETCH --> CONTENT : store raw HTML
-FETCH --> PARSER : send HTML
-
-PARSER --> CONTENT : store parsed content
-PARSER --> SEEN : check / add new URLs
-SEEN --> FRONTIER : enqueue unseen URLs
-
-@enduml
-{{< /plantuml >}}
-
-### 9.4 口頭講稿（約 2–3 分鐘）
-
-> Crawler 的核心是 Frontier 管理、去重與 politeness。  
-> <br>
-> Frontier 可以是按 domain 分桶的 priority queue，每個 domain 有自己的抓取速率控制，搭配 Robots & Politeness Manager 來判斷是否可以抓取，以及下一次抓取時間。Fetcher 從 Frontier 拿 URL，先檢查 robots 和訪問間隔，合適時發 HTTP request 抓 HTML。  
-> <br>
-> Parser 負責解析 HTML，抽取文字、標題、連結等結構化資訊，寫入 Content Store，同時將頁面上的連結送入 Seen Store 做 dedup。未出現過的 URL 才會被丟回 Frontier。  
-> <br>
-> 整體可以水平擴展：多個 Fetcher / Parser 節點，共享 Frontier 和 Seen Store。對於失敗的 URL，可加 retry 計數與 backoff。  
-
----
-
-## 10. Ad Click Aggregator
-
-### 10.1 題目重述與假設
-
-- 題目：設計一個即時廣告點擊聚合系統，用於統計 CTR、展示量、點擊量。  
-- 功能需求：  
-  - 實時接受 impression / click 事件  
-  - 依照 campaign / ad / time window 聚合計數  
-  - 支援 dashboard 查詢最近幾分鐘～幾小時的統計數據  
-- 非功能需求：  
-  - 高吞吐（每秒數十萬事件）  
-  - 允許輕微延遲（數秒以內）  
-  - 準確度需求可討論（exactly-once / at-least-once）  
-
-### 10.2 高階架構說明
-
-- Event Ingress：前端 / SDK 上報 impression & click 到 Ingestion API。  
-- 事件寫入 Kafka，後端有 streaming job（Flink/Spark Streaming）做聚合（per ad, per minute）。  
-- 聚合結果寫入 OLAP store（如 Druid / ClickHouse / BigQuery）供 dashboard 查詢。  
-
-### 10.3 PlantUML
-
-{{< plantuml >}}
-@startuml
-title Ad Click Aggregator - High Level Architecture
-
-actor User
-rectangle "Web / App" as CLIENT
-
-rectangle "Ingestion API" as INGEST
-queue "Event Stream (Kafka)" as KAFKA
-
-rectangle "Stream Processor (Flink / Spark)" as STREAM
-database "Aggregated Store (OLAP: Druid/ClickHouse)" as OLAP
-database "Raw Event Store (HDFS / Object Store)" as RAW
-
-rectangle "Analytics Dashboard" as DASH
-
-User --> CLIENT : view ad / click ad
-CLIENT --> INGEST : send impression/click event
-INGEST --> KAFKA : append event
-INGEST --> RAW : optional raw dump
-
-KAFKA --> STREAM : consume events
-STREAM --> OLAP : upsert counters by ad, campaign, time window
-
-DASH --> OLAP : query metrics
-OLAP --> DASH : stats
-
-@enduml
-{{< /plantuml >}}
-
-### 10.4 口頭講稿（約 2–3 分鐘）
-
-> Ad Click Aggregator 本質上是一個流式資料處理系統。  
-> <br>
-> 使用者在 App 或網頁看到廣告、點擊廣告時，SDK 會將 impression 和 click event 傳到 Ingestion API。Ingestion API 把事件寫進 Kafka，並可選擇同步寫一份 raw log 到 Object Store 以便離線分析。  
-> <br>
-> 後端有一個流處理任務（例如 Flink / Spark Streaming），從 Kafka 消費這些事件，按照 campaign、ad_id 以及時間窗（例如 1 分鐘）做聚合，將結果寫入 OLAP 資料庫。Dashboard 則直接查 OLAP，取得 CTR、展示量、點擊量。  
-> <br>
-> 與 exactly-once 的關係可以透過 Kafka + Flink 的 checkpoint 與兩階段提交來靠近實作，若業務容忍輕微誤差，也可以選擇 at-least-once + 偶爾重算。  
-
----
+### C. 為什麼不直接用 DB?
+* 關聯式資料庫 (RDBMS) 的 Row Lock 在高併發下（如每秒數萬次請求）會導致嚴重的效能下降和 Deadlock 風險。Redis 記憶體操作是此類「秒殺」場景的最佳解。
